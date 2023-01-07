@@ -36,13 +36,15 @@ func main() {
     router.GET("/albums", getAlbums)
     router.GET("/albums/:id", getAlbumByID)
     router.POST("/albums/addAlbum", postAlbums)
-    router.GET("/albums/docServeTest", serveHTML)
+    router.GET("/albums/docServeTest/:id", serveHTML)
 
     router.Run("localhost:8080")
 }
 
 func serveHTML(c *gin.Context) {
-    c.HTML(http.StatusOK, "index.tmpl", nil)
+    c.HTML(http.StatusOK, "index.tmpl", gin.H{
+        "id":c.Param("id"),
+    })
 }
 
 // getAlbums responds with the list of all albums as JSON.

@@ -1,8 +1,10 @@
 package main
 
 import (
+    "io/ioutil"
+
     "net/http"
-    //"html/template"
+    "encoding/json"
     "github.com/gin-gonic/gin"
 )
 
@@ -12,6 +14,14 @@ type album struct {
     Title  string  `json:"title"`
     Artist string  `json:"artist"`
     Price  float64 `json:"price"`
+}
+
+type User struct {
+    Username string `json:"username"`
+    Password string `json:"password"`
+    FirstName string `json:"firstname"`
+    LastName string `json:"lastname"`
+    Email string `json:"email"`
 }
 
 const (
@@ -30,21 +40,44 @@ var albums = []album{
 }
 
 func main() {
+    initDB()
+
     router := gin.Default()
     router.LoadHTMLGlob("templates/*")
 
     router.GET("/albums", getAlbums)
     router.GET("/albums/:id", getAlbumByID)
     router.POST("/albums/addAlbum", postAlbums)
-    router.GET("/albums/docServeTest/:id", serveHTML)
+    router.GET("/", serveLogin) // TEMP: get an actual homepage later
+    router.GET("/login", serveLogin)
+    router.GET("/newuser", serveNewUser)
+    router.POST("/newuser", createNewUser)
 
     router.Run("localhost:8080")
 }
 
-func serveHTML(c *gin.Context) {
-    c.HTML(http.StatusOK, "index.tmpl", gin.H{
-        "id":c.Param("id"),
-    })
+func createNewUser(c *gin.Context) {
+    req, err := ioutil.ReadAll(c.Request.Body)
+
+    if err != nil {
+        c.IndentedJSON(http.StatusBadRequest, gin.H{ "message": "Bad request" })
+        return
+    }
+
+    newUser := User{}
+    json.Unmarshal(req, &newUser)
+
+    addUser(newUser)
+
+    c.IndentedJSON(http.StatusOK, gin.H{ "message": "User created successfully" })
+}
+
+func serveLogin(c *gin.Context) {
+    c.HTML(http.StatusOK, "login.tmpl", gin.H{})
+}
+
+func serveNewUser(c *gin.Context) {
+    c.HTML(http.StatusOK, "newuser.tmpl", gin.H{})
 }
 
 // getAlbums responds with the list of all albums as JSON.

@@ -2,6 +2,7 @@ package main
 
 import (
     "net/http"
+    //"html/template"
     "github.com/gin-gonic/gin"
 )
 
@@ -13,6 +14,14 @@ type album struct {
     Price  float64 `json:"price"`
 }
 
+const (
+    ContentTypeBinary = "application/octet-stream"
+    ContentTypeForm   = "application/x-www-form-urlencoded"
+    ContentTypeJSON   = "application/json"
+    ContentTypeHTML   = "text/html; charset=utf-8"
+    ContentTypeText   = "text/plain; charset=utf-8"
+)
+
 // albums slice to seed record album data.
 var albums = []album{
     {ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
@@ -22,11 +31,18 @@ var albums = []album{
 
 func main() {
     router := gin.Default()
+    router.LoadHTMLGlob("templates/*")
+
     router.GET("/albums", getAlbums)
     router.GET("/albums/:id", getAlbumByID)
     router.POST("/albums/addAlbum", postAlbums)
+    router.GET("/albums/docServeTest", serveHTML)
 
     router.Run("localhost:8080")
+}
+
+func serveHTML(c *gin.Context) {
+    c.HTML(http.StatusOK, "index.tmpl", nil)
 }
 
 // getAlbums responds with the list of all albums as JSON.

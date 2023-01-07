@@ -44,6 +44,13 @@ func postAlbums(c *gin.Context) {
         return
     }
 
+    newAlbum = album{
+        ID:     "4",
+        Title:  "Lil Koto",
+        Artist: "Kevin",
+        Price:  0.99,
+    }
+
     // Add the new album to the slice.
     albums = append(albums, newAlbum)
     c.IndentedJSON(http.StatusCreated, newAlbum)

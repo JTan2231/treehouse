@@ -15,7 +15,6 @@
     }
 
     function createUserAttempt() {
-        return;
         const values = getFieldValues();
         fetch('http://localhost:8080/newuser', {
             method: 'POST',
@@ -30,8 +29,12 @@
                 'Content-Type': 'application/json',
             },
         }).then(res => res.json()).then(res => {
-            document.getElementById('newUserStatus').innerHTML = res.message;
-        });
+            //document.getElementById('newUserStatus').innerHTML = res.message;
+            console.log('user created');
+            window.location.replace("http://localhost:8080/albums");
+        }).catch(e => {
+            console.log(e);
+        })
     }
 
     function getFieldValues() {

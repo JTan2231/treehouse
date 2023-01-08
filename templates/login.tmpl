@@ -7,6 +7,10 @@
     <title>Document</title>
 </head>
 <script>
+
+    //easier to change after hosting and getting domain
+    var route = 'http://localhost:8080'
+
     function keydown(e) {
         if (e.keyCode === 13) {
             createUserAttempt();
@@ -15,9 +19,9 @@
     }
 
     function createUserAttempt() {
-        return;
+        //return;
         const values = getFieldValues();
-        fetch('http://localhost:8080/login', {
+        fetch(`${route}/newuser`, {
             method: 'POST',
             body: JSON.stringify({
                 username: values.username,

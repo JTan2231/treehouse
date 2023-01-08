@@ -2,7 +2,7 @@ package main
 
 import (
     "io/ioutil"
-
+    "fmt"
     "net/http"
     "encoding/json"
     "github.com/gin-gonic/gin"
@@ -40,7 +40,7 @@ var albums = []album{
 }
 
 func main() {
-    initDB()
+    //initDB()
 
     router := gin.Default()
     router.LoadHTMLGlob("templates/*")
@@ -59,6 +59,9 @@ func main() {
 func createNewUser(c *gin.Context) {
     req, err := ioutil.ReadAll(c.Request.Body)
 
+    //print the json request sent
+    fmt.Println(string(req))
+
     if err != nil {
         c.IndentedJSON(http.StatusBadRequest, gin.H{ "message": "Bad request" })
         return
@@ -67,7 +70,7 @@ func createNewUser(c *gin.Context) {
     newUser := User{}
     json.Unmarshal(req, &newUser)
 
-    addUser(newUser)
+    //addUser(newUser) to DB and hash pw with bcrypt
 
     c.IndentedJSON(http.StatusOK, gin.H{ "message": "User created successfully" })
 }

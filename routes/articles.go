@@ -7,6 +7,7 @@ import (
     "encoding/json"
     "github.com/gin-gonic/gin"
 
+    "treehouse/config"
     "treehouse/schema"
     "treehouse/db"
 )
@@ -25,7 +26,7 @@ func CreateArticle(c *gin.Context) {
     newArticle := schema.Article{}
     json.Unmarshal(req, &newArticle)
 
-    _, err = createArticle(newArticle)
+    _, err = addArticleToDB(newArticle)
 
     if err != nil {
         fmt.Println(err)
@@ -35,13 +36,19 @@ func CreateArticle(c *gin.Context) {
     }
 }
 
+func GetCreateArticle(c *gin.Context) {
+    c.HTML(http.StatusOK, "blogPost.tmpl", gin.H{
+        "API_ROOT": config.API_ROOT,
+    })
+}
+
 // TODO
 func verifyArticle(article  schema.Article) (schema.Article, error) {
     return article, nil
 }
 
 // TODO: better error handling/DB constraints (duplicates, missing fields, etc.)
-func createArticle(article schema.Article) (int64, error) {
+func addArticleToDB(article schema.Article) (int64, error) {
     conn := db.GetDB()
 
     newArticle, err := verifyArticle(article)

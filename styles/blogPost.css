@@ -22,10 +22,7 @@ input::placeholder {
     font-size: 21px;
 }
 
-textarea::placeholder {
-    font-size: 20px;
-}
-
+/* TODO: variables for font sizes */
 
 .header {
     padding:10px;
@@ -36,6 +33,21 @@ textarea::placeholder {
     align-items: center;
     width: 100%;
     background-color: white;
+}
+
+button {
+    font-size: 16px;
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+    padding: 0.25em 0.25em 0 0.25em;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+button:hover {
+    color: white;
+    background-color: black;
 }
 
 .articleTitle {
@@ -53,23 +65,23 @@ textarea::placeholder {
 }
 
 .textarea {
-  width: 55vw;
-  height: 22vw;
-  resize: initial;
+    font-size: 20px;
+    font-family: URW Gothic L;
+    width: 55vw;
+    height: 22vw;
+    resize: initial;
 }
 .pad {
-  padding-top: 10px;
-  padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 5px;
 }
 
 .postButton {
-  font-size:18px;
-  height:22px;
-  position: relative;
-  float: right;
+    position: relative;
+    float: right;
 }
 
 .formfield * {
-  display: flex;
-  vertical-align: middle;
+    display: flex;
+    vertical-align: middle;
 }

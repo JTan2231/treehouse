@@ -17,15 +17,30 @@ body {
     font-weight: 400;
 }
 
+input,
+input::placeholder {
+    font-size: 21px;
+}
+
+textarea::placeholder {
+    font-size: 20px;
+}
+
+
 .header {
+    padding:10px;
     font-size: 30px;
+    border: 1px solid black;
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
-    background-color: #f1f1f1;
+    background-color: white;
 }
 
+.articleTitle {
+    padding-bottom:100px;
+}
 
 
 .title {
@@ -38,8 +53,8 @@ body {
 }
 
 .textarea {
-  width: 47vw;
-  height: 25vw;
+  width: 55vw;
+  height: 22vw;
   resize: initial;
 }
 .pad {
@@ -48,7 +63,8 @@ body {
 }
 
 .postButton {
-  height:17px;
+  font-size:18px;
+  height:22px;
   position: relative;
   float: right;
 }

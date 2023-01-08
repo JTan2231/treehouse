@@ -11,9 +11,22 @@
 </script>
 <link rel="stylesheet" href="/styles/blogPost.css">
 <body>
+
+    <div class="header">
+    <div class="title text">TREEHOUSE</div>
+    </div>
+
     <div class="container">
-        <h1>Blog Post</h1>
-        <p> {{ .post }}</p>
+      <div class="main"> 
+        <h1 class="text article-title">Post New Article</h1>
+        <form class="formfield" action="/blogPost" method="POST">
+            <input type="text" name="articleTitle" id="title" placeholder="Essay Title">
+            <div class="pad">
+            <textarea class="textarea" name="content" id="content" placeholder="Essay Content"></textarea>
+            </div>
+            <button class="postButton text" type="submit">Post</button>
+        </form>
+      </div>
     </div>
 </body>
 </html>

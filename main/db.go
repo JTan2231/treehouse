@@ -8,6 +8,8 @@ import (
 
     "github.com/go-sql-driver/mysql"
     "golang.org/x/crypto/bcrypt"
+
+    schema "treehouse/schema"
 )
 
 var db *sql.DB
@@ -37,11 +39,11 @@ func initDB() {
 }
 
 // TODO
-func verifyUser(user User) (User, error) {
+func verifyUser(user schema.User) (schema.User, error) {
     return user, nil;
 }
 
-func addUser(user User) (int64, error) {
+func addUser(user schema.User) (int64, error) {
     newUser, err := verifyUser(user)
 
     if err != nil {
@@ -54,14 +56,10 @@ func addUser(user User) (int64, error) {
     result, err := db.Exec(
         `insert into User (
             Username,
-            FirstName,
-            LastName,
             Email,
             Password
         ) values (?, ?, ?, ?, ?)`,
         newUser.Username,
-        newUser.FirstName,
-        newUser.LastName,
         newUser.Email,
         hashed,
     )

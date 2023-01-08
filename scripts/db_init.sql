@@ -1,10 +1,20 @@
 drop table if exists User;
 create table User (
-    ID int auto_increment not null,
+    UserID int auto_increment not null,
     Username varchar(64) not null,
-    FirstName varchar(32) not null,
-    LastName varchar(32) not null,
     Email varchar(64) not null,
     Password varchar(256) not null,
-    primary key (`ID`)
+
+    primary key (`UserID`)
+);
+
+drop table if exists Article;
+create table Article (
+    ArticleID int auto_increment not null,
+    UserID int not null,
+    Title varchar(64) not null,
+    Content text not null,
+
+    primary key (`ArticleID`),
+    foreign key (`UserID`) references User(`UserID`)
 );

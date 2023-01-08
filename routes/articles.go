@@ -24,6 +24,9 @@ func CreateArticle(c *gin.Context) {
     //addUser(newUser) to DB and hash pw with bcrypt
 
     c.IndentedJSON(http.StatusOK, gin.H{ "message": "Success" })
+    c.HTML(http.StatusOK, "newuser.tmpl", gin.H{
+        "post"  : "post test",
+    })
 }
 
 func serveNewUser(c *gin.Context) {

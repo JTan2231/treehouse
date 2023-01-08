@@ -1,0 +1,105 @@
+body {
+    margin: 0;
+  }
+
+  body,
+  input,
+  button {
+    font-family: URW Gothic L;
+  }
+
+  input,
+  button {
+    font-size: 16px;
+    margin: 0.5em;
+  }
+
+  input {
+    border: 1px solid transparent;
+    border-bottom: 1px solid black;
+    outline: 0;
+    transition: 0.5s all;
+    padding: 0.25em 0 0.25em 0.25em;
+    width: 20em;
+  }
+
+  input:hover {
+    border: 1px solid black;
+  }
+
+  input:focus {
+    border: 1px solid black;
+    background-color: #ddd;
+  }
+
+  button {
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+    padding: 0.25em 0.25em 0 0.25em;
+    transition: all 0.5s;
+    cursor: pointer;
+  }
+
+  button:hover {
+    color: white;
+    background-color: black;
+  }
+
+  a {
+    position: relative;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  a::after {
+    content: "";
+    position: absolute;
+    height: 0.1em;
+    width: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    transition: width 0.3s;
+  }
+
+  a:hover::after {
+    left: 0;
+    width: 100%;
+  }
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .item,
+  .footer {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer {
+    margin-top: 10em;
+  }
+
+  .title,
+  .subtitle {
+    flex-basis: 100%;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 96px;
+  }
+
+  .subtitle {
+    font-size: 30px;
+    margin-bottom: 1.5em;
+  }

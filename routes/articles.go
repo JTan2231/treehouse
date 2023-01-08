@@ -6,7 +6,7 @@ import (
     "net/http"
     "encoding/json"
     "github.com/gin-gonic/gin"
-
+    //"strconv"
     "treehouse/config"
     "treehouse/schema"
     "treehouse/db"
@@ -24,6 +24,8 @@ func CreateArticle(c *gin.Context) {
     }
 
     newArticle := schema.Article{}
+
+
     json.Unmarshal(req, &newArticle)
 
     _, err = addArticleToDB(newArticle)
@@ -32,7 +34,10 @@ func CreateArticle(c *gin.Context) {
         fmt.Println(err)
         c.IndentedJSON(400, gin.H{ "message" : err })
     } else {
-        c.IndentedJSON(http.StatusOK, gin.H{ "message": "Success" })
+        //userIDInt := strconv.Itoa(newArticle.UserID)
+        //redirect user back to "/"
+        c.Redirect(302, "/")
+        fmt.Println("post redirect")
     }
 }
 

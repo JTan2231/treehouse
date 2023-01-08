@@ -7,7 +7,7 @@ import (
     "encoding/json"
     "github.com/gin-gonic/gin"
     "golang.org/x/crypto/bcrypt"
-
+    "treehouse/config"
     "treehouse/db"
     "treehouse/schema"
 )
@@ -28,12 +28,15 @@ func CreateNewUser(c *gin.Context) {
     if err != nil {
         c.IndentedJSON(400, gin.H{ "message": err })
     } else {
+        fmt.Println("User created successfully")
         c.IndentedJSON(http.StatusOK, gin.H{ "message": "User created successfully" })
     }
 }
 
 func ServeNewUser(c *gin.Context) {
-    c.HTML(http.StatusOK, "newuser.tmpl", gin.H{})
+    c.HTML(http.StatusOK, "newuser.tmpl", gin.H{
+        "API_ROOT": config.API_ROOT,
+    })
 }
 
 // TODO

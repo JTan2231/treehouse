@@ -25,6 +25,8 @@ func main() {
     router.GET("/", routes.ServeLogin) // TEMP: get an actual homepage later
     router.POST("/articles", routes.CreateArticle)
 
+    router.GET("/makePost", routes.MakePost)
+
     router.Run(config.DOMAIN)
 }
 

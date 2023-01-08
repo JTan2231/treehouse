@@ -89,9 +89,8 @@ body {
     margin-top: 10em;
   }
 
-  .title {
-    height:20px;
-    background-color: blue;
+  .title,
+  .subtitle {
     flex-basis: 100%;
     text-align: center;
   }

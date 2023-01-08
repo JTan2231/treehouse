@@ -21,12 +21,15 @@ func main() {
 
     router := gin.Default()
     router.LoadHTMLGlob("templates/*")
+    router.Static("/styles", "./styles")
 
     router.GET("/", routes.ServeLogin) // TODO: get an actual homepage
     router.GET("/users/:username/:title", routes.GetArticle)
 
     router.POST("/articles", routes.CreateArticle)
     router.POST("/newuser", routes.CreateNewUser)
+
+    router.GET("/makePost", routes.MakePost)
 
     router.Run(config.DOMAIN)
 }

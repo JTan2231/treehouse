@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+
+</script>
+<link rel="stylesheet" href="/styles/blogPost.css">
+<body>
+
+    <div class="header">
+    <div class="title text">TREEHOUSE</div>
+    </div>
+
+    <div class="container">
+      <div class="main"> 
+        <h1 class="text article-title">Post New Article</h1>
+        <form class="formfield" action="/blogPost" method="POST">
+            <input type="text" name="articleTitle" id="title" placeholder="Essay Title">
+            <div class="pad">
+            <textarea class="textarea" name="content" id="content" placeholder="Essay Content"></textarea>
+            </div>
+            <button class="postButton text" type="submit">Post</button>
+        </form>
+      </div>
+    </div>
+</body>
+</html>

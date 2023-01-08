@@ -1,8 +1,59 @@
 .container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+    margin: 0;
+}
+
+.text {
+    font-family: URW Gothic L;
+    font-weight: 400;
+}
+
+.header {
+    font-size: 30px;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    align-items: center;
     width: 100%;
-    height: 100vh;
-    background-color: #000;
+    background-color: #f1f1f1;
+}
+
+
+
+.title {
+    flex-basis: 100%;
+    text-align: center;
+}
+
+.article-title {
+    font-size: 40px;
+}
+
+.textarea {
+  width: 47vw;
+  height: 25vw;
+  resize: initial;
+}
+.pad {
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
+.postButton {
+  height:17px;
+  position: relative;
+  float: right;
+}
+
+.formfield * {
+  display: flex;
+  vertical-align: middle;
 }

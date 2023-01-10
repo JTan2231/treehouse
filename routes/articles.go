@@ -6,7 +6,6 @@ import (
     "net/http"
     "encoding/json"
     "github.com/gin-gonic/gin"
-    //"strconv"
     "treehouse/config"
     "treehouse/schema"
     "treehouse/db"
@@ -31,13 +30,13 @@ func CreateArticle(c *gin.Context) {
 
     json.Unmarshal(req, &newArticle)
 
-    _, err = addArticleToDB(newArticle)
+    _, err = addArticleToDB(newArticle,c)
 
     if err != nil {
         fmt.Println(err)
         c.IndentedJSON(400, gin.H{ "message" : err })
     } else {
-        //cant figure out how to redirect to the new article
+        //send a 200 response and check for 200 on frontened then redirect
     }
 }
 
@@ -53,11 +52,21 @@ func verifyArticle(article  schema.Article) (schema.Article, error) {
 }
 
 // TODO: better error handling/DB constraints (duplicates, missing fields, etc.)
-func addArticleToDB(article schema.Article) (int64, error) {
+func addArticleToDB(article schema.Article , c *gin.Context) (int64, error) {
     conn := db.GetDB()
-
     newArticle, err := verifyArticle(article)
-    newArticle.UserID = 1
+
+
+    session, _ := config.Store.Get(c.Request, "session")
+
+    idOfUser,ok := session.Values["userID"]
+    newArticle.UserID = idOfUser.(int)
+
+    if(!ok) {
+        fmt.Printf("you are not logged in")
+        return -1, fmt.Errorf("createArticle: %v", err)
+    }
+
 
     if err != nil {
         return 0, fmt.Errorf("createArticle: %v", err)

@@ -5,18 +5,14 @@ import (
     "github.com/gin-gonic/gin"
     "fmt"
     "treehouse/db"
+    "treehouse/schema"
     "golang.org/x/crypto/bcrypt"
     config "treehouse/config"
 )
 
-type LoginUser struct {
-    Username string `json:"username"`
-    Password string `json:"password"`
-}
-
 func AuthenticateLogin(c *gin.Context) {
     conn := db.GetDB()
-    user := LoginUser{}
+    user := schema.LoginUser{}
     c.BindJSON(&user)
 
 

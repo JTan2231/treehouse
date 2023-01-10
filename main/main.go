@@ -30,6 +30,9 @@ func main() {
     router.GET("/users/:username/:title", routes.GetArticle)
     router.GET("/users/:username/create-article", routes.GetCreateArticle)
 
+    router.POST("/login", routes.AuthenticateLogin)
+
+    //change to /users/articles
     router.POST("/articles", routes.CreateArticle)
 
     router.Run(config.DOMAIN)

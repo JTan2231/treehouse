@@ -2,7 +2,6 @@ package main
 
 import (
     "github.com/gin-gonic/gin"
-
     "treehouse/db"
     "treehouse/routes"
     "treehouse/config"
@@ -24,6 +23,7 @@ func main() {
     router.Static("/styles", "./styles")
 
     router.GET("/", routes.ServeLogin) // TODO: get an actual homepage
+    router.GET("/newuser" ,routes.ServeNewUser)
 
     // TODO: this is gross. gotta be a better way to organize routes/endpoints than below
     router.GET("/users/:username/:title", routes.GetArticle)

@@ -24,18 +24,13 @@ func main() {
 
     //router.GET("/users/:username", routes.GetProfile)
     router.GET("/", routes.ServeLogin) // TODO: get an actual homepage
-    router.GET("/users/:username/:title", routes.GetArticle)
-    router.GET("/users/:username/createarticle", routes.GetCreateArticle)
     router.GET("/newuser" ,routes.ServeNewUser)
-    
-    router.POST("/login", routes.AuthenticateLogin)
-    router.POST("/newuser", routes.CreateNewUser)
+
+    // TODO: this is gross. gotta be a better way to organize routes/endpoints than below
+    router.GET("/users/:username/:title", routes.GetArticle)
+    router.GET("/users/:username/create-article", routes.GetCreateArticle)
+
     router.POST("/articles", routes.CreateArticle)
-
-
-    //authRouter := router.Group("/user",auth)
-
-    
 
     router.Run(config.DOMAIN)
 }

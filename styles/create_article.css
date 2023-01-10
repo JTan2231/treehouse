@@ -1,0 +1,103 @@
+body {
+    margin: 0;
+    --transition-background-color: #eee;
+}
+
+button {
+    align-self: right;
+    font-size: 16px;
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+button:hover {
+    color: white;
+    background-color: black;
+}
+
+.buttonWrapper {
+    display: flex;
+    flex-basis: 100%;
+    justify-content: right;
+}
+
+.flexWrapperVertical {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+.pageContents {
+    height: calc(80vh - var(--header-height));
+    width: 40%;
+    align-self: center;
+}
+
+.flexWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+
+.pageTitle {
+    font-size: var(--page-title-font-size);
+    font-family: var(--styled-font-family);
+    flex-basis: 100%;
+    margin-bottom: 0.5em;
+    margin-top: 2em;
+}
+
+.articleTitleInputContainer {
+    flex-basis: 100%;
+    margin: 1em 0;
+}
+
+.articleTitleInput {
+    font-size: 24px;
+    font-family: var(--readable-font-family);
+    padding-left: 0.35em;
+    outline: 0;
+    border: 1px solid transparent;
+    border-bottom: 1px solid black;
+    transition: all 0.5s;
+}
+
+.articleTitleInput:hover {
+    border: 1px solid black;
+}
+
+.articleTitleInput:focus {
+    border: 1px solid black;
+    background-color: var(--transition-background-color);
+}
+
+.articleContentInput {
+    font-size: var(--article-content-font-size);
+    font-family: var(--readable-font-family);
+    resize: initial;
+    line-height: 1.5em;
+    height: 20em;
+    width: 60%;
+    flex-basis: 100%;
+    margin-bottom: 1em;
+    padding: 0.5em;
+    border: 1px solid transparent;
+    border-bottom: 1px solid black;
+    outline: 0;
+    transition: all 0.5s;
+}
+
+.articleContentInput:hover {
+    border: 1px solid black;
+}
+
+.articleContentInput:focus {
+    border: 1px solid black;
+    background-color: var(--transition-background-color);
+}

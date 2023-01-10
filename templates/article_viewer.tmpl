@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    const root = {{ .API_ROOT }};
+</script>
+<link rel="stylesheet" href="../styles/root.css">
+<link rel="stylesheet" href="../styles/article_viewer.css">
+<body class="flexWrapperVertical">
+    <div class="header fixed">
+        TREEHOUSE
+    </div>
+
+    <div class="flexWrapper pageContentsScroll">
+        <div class="pageTitle">{{ .title }}</div>
+        <div class="articleBody">
+            {{ range $c := .content }}
+                <p>{{ $c }}</p>
+            {{ end }}
+        </div>
+    </div>
+</body>
+</html>

@@ -3,6 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
+    "strings"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
@@ -101,9 +102,9 @@ func GetArticle(c *gin.Context) {
 
 	article := queryArticle(username, title)
 
-	c.HTML(http.StatusOK, "login.tmpl", gin.H{
+	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
 		"title":   article.Title,
-		"content": article.Content,
+		"content": strings.Split(article.Content, "\n"),
 	})
 }
 
@@ -120,8 +121,6 @@ func queryArticle(username string, title string) schema.Article {
             inner join User u on u.Username = ? and u.UserID = a.UserID
             where a.Title = ?
         `, username, title).Scan(&article.Title, &article.Content)
-
-	fmt.Printf("\n\n\n%v\n\n%v\n\n\n", article.Title, article.Content)
 
 	return article
 }

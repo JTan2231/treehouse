@@ -1,0 +1,8 @@
+.articleBody {
+    font-size: var(--article-content-font-size);
+    line-height: 1.5em;
+}
+
+.articleBody p {
+    text-indent: 4em;
+}

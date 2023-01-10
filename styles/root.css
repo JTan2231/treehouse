@@ -10,6 +10,8 @@ body {
     --header-padding-total: calc(0.25em + 0.15em);
     --header-border-width: 1px;
     --header-height: calc(1em + 2 * var(--header-border-width) + var(--header-padding-total));
+
+    margin: 0;
 }
 
 .header {
@@ -24,4 +26,47 @@ body {
     align-content: center;
     width: calc(100% - 2px);
     background-color: white;
+}
+
+.fixed {
+    position: fixed;
+    top: 0;
+    z-index: 1;
+}
+
+.pageTitle {
+    font-size: var(--page-title-font-size);
+    font-family: var(--styled-font-family);
+    flex-basis: 100%;
+    margin-bottom: 0.5em;
+    margin-top: 2em;
+}
+
+.pageContents {
+    height: calc(80vh - var(--header-height));
+    width: 40%;
+    align-self: center;
+}
+
+.pageContentsScroll {
+    width: 40%;
+    align-self: center;
+    top: var(--header-height);
+    position: relative;
+    margin-bottom: 20em;
+}
+
+.flexWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+
+.flexWrapperVertical {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
 }

@@ -1,5 +1,4 @@
 body {
-    margin: 0;
     --transition-background-color: #eee;
 }
 
@@ -22,35 +21,6 @@ button:hover {
     display: flex;
     flex-basis: 100%;
     justify-content: right;
-}
-
-.flexWrapperVertical {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
-}
-
-.pageContents {
-    height: calc(80vh - var(--header-height));
-    width: 40%;
-    align-self: center;
-}
-
-.flexWrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
-}
-
-.pageTitle {
-    font-size: var(--page-title-font-size);
-    font-family: var(--styled-font-family);
-    flex-basis: 100%;
-    margin-bottom: 0.5em;
-    margin-top: 2em;
 }
 
 .articleTitleInputContainer {

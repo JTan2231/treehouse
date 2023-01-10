@@ -16,7 +16,7 @@
 
     function loginAttempt() {
         const values = getFieldValues();
-        fetch(`${ {{ .API_ROOT }} }/login`, {
+        fetch(`/login`, {
             method: 'POST',
             body: JSON.stringify({
                 username: values.username,
@@ -30,6 +30,7 @@
                   window.location.href = '/users/test/create-article'
               } else {
                   alert("invalid username or password");
+                  console.log(res.message)
               }
             })
     }

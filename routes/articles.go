@@ -59,6 +59,8 @@ func addArticleToDB(article schema.Article , c *gin.Context) (int64, error) {
 
     session, _ := config.Store.Get(c.Request, "session")
 
+
+    //error checking to make sure this value is not null******
     idOfUser,ok := session.Values["userID"]
     newArticle.UserID = idOfUser.(int)
 

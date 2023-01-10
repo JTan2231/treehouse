@@ -24,6 +24,7 @@ func AuthenticateLogin(c *gin.Context) {
     err := row.Scan(&userID, &hash)
     if err != nil {
         fmt.Println(err)
+        fmt.Println("user not found")
         c.IndentedJSON(http.StatusBadRequest, gin.H{ "message": "Bad request" })
         return;
     }
@@ -40,14 +41,18 @@ func AuthenticateLogin(c *gin.Context) {
             fmt.Println("passwords do not match")
             c.IndentedJSON(http.StatusBadRequest, gin.H{ "message": "Bad request" })
             return
+        }
+}
+
+func AuthRequired(c *gin.Context) {
+    session, _ := config.Store.Get(c.Request, "session")
+    _,ok := session.Values["userID"]
+    if !ok {
+        c.HTML(http.StatusForbidden, "login.tmpl", nil)
+        c.Abort()
+        return
     }
-    //check db to see if the user is within it
-    //if they are create a session and log them in
-    //query their username, find their userID
-    //compare theire hash to the password inputted
-
-
-    //need middleware for routes that have /users which whill check if a user is authenticated
+    c.Next()
 }
 
 func ServeLogin(c *gin.Context) { 

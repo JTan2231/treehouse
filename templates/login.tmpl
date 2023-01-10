@@ -14,10 +14,9 @@
         }
     }
 
-    function createUserAttempt() {
-        //return;
+    function loginAttempt() {
         const values = getFieldValues();
-        fetch(`${ {{ .API_ROOT }} }/newuser`), {
+        fetch(`/login`, {
             method: 'POST',
             body: JSON.stringify({
                 username: values.username,
@@ -25,12 +24,16 @@
             }),
             headers: {
                 'Content-Type': 'application/json',
-            }.then(res => res.json()).then(res => {
-            console.log('response received:', res);
-        });
+            }}).then(res => {
+                if (res.status === 200) {
+                  console.log("status 200")
+                  window.location.href = '/users/test/create-article'
+              } else {
+                  alert("invalid username or password");
+                  console.log(res.message)
+              }
+            })
     }
-
-
     function getFieldValues() {
         return {
             username: document.getElementById('username').value,
@@ -62,7 +65,7 @@
           />
         </div>
         <div class="item">
-          <button onclick="createUserAttempt()">Login</button>
+          <button onclick="loginAttempt()">Login</button>
         </div>
         <div class="footer">
           No account?&nbsp;<a href="http://localhost:8080/newuser"

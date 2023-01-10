@@ -34,10 +34,7 @@ func CreateArticle(c *gin.Context) {
         fmt.Println(err)
         c.IndentedJSON(400, gin.H{ "message" : err })
     } else {
-        //userIDInt := strconv.Itoa(newArticle.UserID)
-        //redirect user back to "/"
-        c.Redirect(302, "/")
-        fmt.Println("post redirect")
+        //cant figure out how to redirect to the new article
     }
 }
 

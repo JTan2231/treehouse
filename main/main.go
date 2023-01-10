@@ -22,19 +22,20 @@ func main() {
     router.LoadHTMLGlob("templates/*")
     router.Static("/styles", "./styles")
 
-    router.GET("/", routes.ServeLogin) // TODO: get an actual homepage
     //router.GET("/users/:username", routes.GetProfile)
+    router.GET("/", routes.ServeLogin) // TODO: get an actual homepage
     router.GET("/users/:username/:title", routes.GetArticle)
     router.GET("/users/:username/createarticle", routes.GetCreateArticle)
-    
-    router.POST("/articles", routes.CreateArticle)
-    router.POST("/newuser", routes.CreateNewUser)
-
-
     router.GET("/newuser" ,routes.ServeNewUser)
     
+    router.POST("/login", routes.AuthenticateLogin)
+    router.POST("/newuser", routes.CreateNewUser)
+    router.POST("/articles", routes.CreateArticle)
 
-    router.GET("/makePost", routes.MakePost)
+
+    //authRouter := router.Group("/user",auth)
+
+    
 
     router.Run(config.DOMAIN)
 }

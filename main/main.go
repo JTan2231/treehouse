@@ -23,18 +23,14 @@ func main() {
     router.Static("/styles", "./styles")
 
     router.GET("/", routes.ServeLogin) // TODO: get an actual homepage
-    //router.GET("/users/:username", routes.GetProfile)
+    router.GET("/newuser" ,routes.ServeNewUser)
+
+    // TODO: this is gross. gotta be a better way to organize routes/endpoints than below
     router.GET("/users/:username/:title", routes.GetArticle)
-    router.GET("/users/:username/createarticle", routes.GetCreateArticle)
-    
+    router.GET("/users/:username/create-article", routes.GetCreateArticle)
+
     router.POST("/articles", routes.CreateArticle)
     router.POST("/newuser", routes.CreateNewUser)
-
-
-    router.GET("/newuser" ,routes.ServeNewUser)
-    
-
-    router.GET("/makePost", routes.MakePost)
 
     router.Run(config.DOMAIN)
 }

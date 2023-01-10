@@ -13,14 +13,17 @@ import (
 )
 
 func CreateArticle(c *gin.Context) {
-    req, err := ioutil.ReadAll(c.Request.Body)
+    if c.Request.Method != "POST" {
+        c.IndentedJSON(http.StatusMethodNotAllowed, gin.H{})
+        c.Abort()
+        return
+    }
 
-    //print the json request sent
-    fmt.Println(string(req))
+    req, err := ioutil.ReadAll(c.Request.Body)
 
     if err != nil {
         c.IndentedJSON(http.StatusBadRequest, gin.H{ "message": "Bad request" })
-        return
+        c.Abort()
     }
 
     newArticle := schema.Article{}
@@ -42,7 +45,7 @@ func CreateArticle(c *gin.Context) {
 }
 
 func GetCreateArticle(c *gin.Context) {
-    c.HTML(http.StatusOK, "blogPost.tmpl", gin.H{
+    c.HTML(http.StatusOK, "create_article.tmpl", gin.H{
         "API_ROOT": config.API_ROOT,
     })
 }

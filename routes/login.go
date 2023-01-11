@@ -32,7 +32,10 @@ func AuthenticateLogin(c *gin.Context) {
 	if err == nil {
 		fmt.Println("passwords match")
 		session, _ := config.Store.Get(c.Request, "session")
+
 		session.Values["userID"] = userID
+		session.Values["username"] = user.Username
+
 		session.Save(c.Request, c.Writer)
 		c.IndentedJSON(http.StatusOK, gin.H{"message": "it works"})
 		return

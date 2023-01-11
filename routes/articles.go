@@ -30,13 +30,18 @@ func CreateArticle(c *gin.Context) {
 
 	json.Unmarshal(req, &newArticle)
 
-	_, err = addArticleToDB(newArticle, c)
+	newArticle, err = addArticleToDB(newArticle, c)
 
 	if err != nil {
 		fmt.Println(err)
 		c.IndentedJSON(400, gin.H{"message": err})
 	} else {
-		//send a 200 response and check for 200 on frontened then redirect
+        session, _ := config.Store.Get(c.Request, "session")
+
+        c.IndentedJSON(200, gin.H{
+            "slug": newArticle.Slug,
+            "username": session.Values["username"],
+        })
 	}
 }
 
@@ -52,7 +57,7 @@ func verifyArticle(article schema.Article) (schema.Article, error) {
 }
 
 // TODO: better error handling/DB constraints (duplicates, missing fields, etc.)
-func addArticleToDB(article schema.Article, c *gin.Context) (int64, error) {
+func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, error) {
 	conn := db.GetDB()
 	newArticle, err := verifyArticle(article)
 
@@ -60,47 +65,49 @@ func addArticleToDB(article schema.Article, c *gin.Context) (int64, error) {
 
 	//error checking to make sure this value is not null******
 	idOfUser, ok := session.Values["userID"]
-	newArticle.UserID = idOfUser.(int)
 
 	if !ok {
 		fmt.Printf("you are not logged in")
-		return -1, fmt.Errorf("createArticle: %v", err)
+		return newArticle, fmt.Errorf("createArticle: %v", err)
 	}
 
 	if err != nil {
-		return 0, fmt.Errorf("createArticle: %v", err)
+		return newArticle, fmt.Errorf("createArticle: %v", err)
 	}
+
+	newArticle.UserID = idOfUser.(int)
+    newArticle.Slug = strings.ToLower(strings.ReplaceAll(newArticle.Title, " ", "-"))
 
 	result, err := conn.Exec(
 		`insert into Article (
             Title,
+            Slug,
             Content,
             UserID
-        ) values (?, ?, ?)`,
+        ) values (?, ?, ?, ?)`,
 		newArticle.Title,
+		newArticle.Slug,
 		newArticle.Content,
 		newArticle.UserID,
 	)
 
 	if err != nil {
-		return 0, fmt.Errorf("createArticle: %v", err)
+		return newArticle, fmt.Errorf("createArticle: %v", err)
 	}
 
-	id, err := result.LastInsertId()
+	_, err = result.LastInsertId()
 	if err != nil {
-		return 0, fmt.Errorf("createArticle: %v", err)
+		return newArticle, fmt.Errorf("createArticle: %v", err)
 	}
 
-	fmt.Printf("NEW ARTICLE ADDED ID: %v", newArticle.Content)
-
-	return id, nil
+	return newArticle, nil
 }
 
 func GetArticle(c *gin.Context) {
 	var username = c.Param("username")
-	var title = c.Param("title")
+	var slug = c.Param("slug")
 
-	article := queryArticle(username, title)
+	article := queryArticle(username, slug)
 
 	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
 		"title":   article.Title,
@@ -108,7 +115,7 @@ func GetArticle(c *gin.Context) {
 	})
 }
 
-func queryArticle(username string, title string) schema.Article {
+func queryArticle(username string, slug string) schema.Article {
 	conn := db.GetDB()
 
 	var article schema.Article
@@ -119,8 +126,8 @@ func queryArticle(username string, title string) schema.Article {
                 Content
             from Article a 
             inner join User u on u.Username = ? and u.UserID = a.UserID
-            where a.Title = ?
-        `, username, title).Scan(&article.Title, &article.Content)
+            where a.Slug = ?
+        `, username, slug).Scan(&article.Title, &article.Content)
 
 	return article
 }

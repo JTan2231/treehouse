@@ -23,6 +23,8 @@ func main() {
 
 	router.GET("/", routes.ServeLogin) 
 	router.GET("/newuser", routes.ServeNewUser)
+
+    router.GET("/:username", routes.ServeProfile) 
     router.GET("/:username/:slug", routes.GetArticle)
 
 	router.POST("/login", routes.AuthenticateLogin)

@@ -56,6 +56,21 @@ func verifyArticle(article schema.Article) (schema.Article, error) {
 	return article, nil
 }
 
+// TODO: move this to a separate file
+func strip(s string) string {
+    var result strings.Builder
+    for i := 0; i < len(s); i++ {
+        b := s[i]
+        if ('a' <= b && b <= 'z') ||
+            ('A' <= b && b <= 'Z') ||
+            ('0' <= b && b <= '9') ||
+            b == ' ' {
+            result.WriteByte(b)
+        }
+    }
+    return result.String()
+}
+
 // TODO: better error handling/DB constraints (duplicates, missing fields, etc.)
 func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, error) {
 	conn := db.GetDB()
@@ -76,7 +91,10 @@ func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, err
 	}
 
 	newArticle.UserID = idOfUser.(int)
-    newArticle.Slug = strings.ToLower(strings.ReplaceAll(newArticle.Title, " ", "-"))
+    newArticle.Slug = strip(newArticle.Title)
+    newArticle.Slug = strings.ToLower(strings.ReplaceAll(newArticle.Slug, " ", "-"))
+
+    // TODO: Check if slug exists in DB
 
 	result, err := conn.Exec(
 		`insert into Article (

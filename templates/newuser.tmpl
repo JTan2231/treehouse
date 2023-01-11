@@ -28,6 +28,13 @@
             headers: {
                 'Content-Type': 'application/json',
             },
+        }).then(res => res.json()).then(res => {
+            //check res status and from there do accorindg changes
+            if (res.status === 400) {
+                alert(res.message)
+            } else {
+                //reroute to create article page
+            }
         })
     }
 

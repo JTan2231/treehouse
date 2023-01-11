@@ -20,6 +20,7 @@
 
     <div class="flexWrapper pageContentsScroll">
         <div class="pageTitle">{{ .title }}</div>
+        <p> By: {{ .author }} </p>
         <div class="articleBody">
             {{ range $c := .content }}
                 <p>{{ $c }}</p>

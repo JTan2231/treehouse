@@ -16,6 +16,12 @@
 
     function createUserAttempt() {
         const values = getFieldValues();
+
+        if(values.email === "" || values.username === "" || values.password === "" || values.firstname === "" || values.lastname === ""){
+            alert("Please input all fields to sign up.");
+            return;
+        }
+
         fetch(`${ {{ .API_ROOT }} }/newuser`, {
             method: 'POST',
             body: JSON.stringify({

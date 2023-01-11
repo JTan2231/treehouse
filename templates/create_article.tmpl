@@ -27,7 +27,7 @@
         const content = document.getElementById('content').value;
 
         if (verify(title, content)) {
-            fetch(`${ root }/articles`, {
+            fetch(`/create/articles`, {
                 method: 'POST',
                 body: JSON.stringify({
                     Title: title,
@@ -36,7 +36,9 @@
                 headers: {
                     'Content-Type': 'application/json',
                 }
-            }).then(res => res.json()).then(res => console.log(res));
+            }).then(res => res.json()).then(res => {
+                window.location.href = `/${res.username}/${res.slug}`;
+            });
         }
         else {
             // some error handling

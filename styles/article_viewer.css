@@ -1,0 +1,4 @@
+.articleBody {
+    font-size: var(--article-content-font-size);
+    line-height: 1.5em;
+}

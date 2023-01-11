@@ -27,7 +27,7 @@
             }}).then(res => {
                 if (res.status === 200) {
                   console.log("status 200")
-                  window.location.href = '/users/test/create-article'
+                  window.location.href = `/${values.username}`
               } else {
                   alert("invalid username or password");
                   console.log(res.message)

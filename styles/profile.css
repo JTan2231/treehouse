@@ -1,0 +1,22 @@
+.profileBody {
+    display: flex;
+    width: 40%;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.linkButton {
+    font-family: var(--styled-font-family);
+    padding: 0.15em;
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+    text-decoration: none;
+    transition: all 0.5s;
+    width: fit-content;
+}
+
+.linkButton:hover {
+    background-color: black;
+    color: white;
+}

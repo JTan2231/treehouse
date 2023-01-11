@@ -3,10 +3,10 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
-    "strings"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"treehouse/config"
 	"treehouse/db"
 	"treehouse/schema"
@@ -36,12 +36,12 @@ func CreateArticle(c *gin.Context) {
 		fmt.Println(err)
 		c.IndentedJSON(400, gin.H{"message": err})
 	} else {
-        session, _ := config.Store.Get(c.Request, "session")
+		session, _ := config.Store.Get(c.Request, "session")
 
-        c.IndentedJSON(200, gin.H{
-            "slug": newArticle.Slug,
-            "username": session.Values["username"],
-        })
+		c.IndentedJSON(200, gin.H{
+			"slug":     newArticle.Slug,
+			"username": session.Values["username"],
+		})
 	}
 }
 
@@ -58,17 +58,17 @@ func verifyArticle(article schema.Article) (schema.Article, error) {
 
 // TODO: move this to a separate file
 func strip(s string) string {
-    var result strings.Builder
-    for i := 0; i < len(s); i++ {
-        b := s[i]
-        if ('a' <= b && b <= 'z') ||
-            ('A' <= b && b <= 'Z') ||
-            ('0' <= b && b <= '9') ||
-            b == ' ' {
-            result.WriteByte(b)
-        }
-    }
-    return result.String()
+	var result strings.Builder
+	for i := 0; i < len(s); i++ {
+		b := s[i]
+		if ('a' <= b && b <= 'z') ||
+			('A' <= b && b <= 'Z') ||
+			('0' <= b && b <= '9') ||
+			b == ' ' {
+			result.WriteByte(b)
+		}
+	}
+	return result.String()
 }
 
 // TODO: better error handling/DB constraints (duplicates, missing fields, etc.)
@@ -91,10 +91,10 @@ func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, err
 	}
 
 	newArticle.UserID = idOfUser.(int)
-    newArticle.Slug = strip(newArticle.Title)
-    newArticle.Slug = strings.ToLower(strings.ReplaceAll(newArticle.Slug, " ", "-"))
+	newArticle.Slug = strip(newArticle.Title)
+	newArticle.Slug = strings.ToLower(strings.ReplaceAll(newArticle.Slug, " ", "-"))
 
-    // TODO: Check if slug exists in DB
+	// TODO: Check if slug exists in DB
 
 	result, err := conn.Exec(
 		`insert into Article (

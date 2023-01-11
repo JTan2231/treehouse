@@ -42,12 +42,23 @@ func CreateNewUser(c *gin.Context) {
 
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"message": err})
+		return
 	} else {
 		fmt.Println("User created successfully")
-		c.IndentedJSON(http.StatusOK, gin.H{"message": "User created successfully"})
 		//run a login auth here instead of routing them back to login, 
 		//this will allow them to be logged in after creating an account
-		
+		session, _ := config.Store.Get(c.Request, "session")
+		conn := db.GetDB()
+		stdmt := "SELECT UserID FROM User WHERE Username = ?"
+		var userID int
+		row := conn.QueryRow(stdmt,newUser.Username)
+		row.Scan(&userID)
+
+		session.Values["userID"] = userID
+		session.Values["username"] = newUser.Username
+
+		session.Save(c.Request, c.Writer)
+		c.IndentedJSON(http.StatusOK, gin.H{"message": "User created successfully"})
 	}
 }
 

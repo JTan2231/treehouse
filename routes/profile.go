@@ -9,6 +9,9 @@ import (
 )
 
 func ServeProfile(c *gin.Context) {
+	session, _ := config.Store.Get(c.Request, "session")
+	localusername := session.Values["username"]
+
 	var username = c.Param("username")
 	dbConn := db.GetDB()
 
@@ -40,10 +43,14 @@ func ServeProfile(c *gin.Context) {
 		articles = append(articles, article)
 	}
 
+	check := (localusername == user.Username)
+
+
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
 		"API_ROOT": config.API_ROOT,
 		"articles": articles,
 		"username": user.Username,
 		"user_id":  user.UserID,
+		"check": check,
 	})
 }

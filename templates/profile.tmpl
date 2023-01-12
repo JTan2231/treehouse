@@ -8,6 +8,25 @@
 </head>
 <script>
     const root = {{ .API_ROOT }};
+    const subscribeeID = {{ .user_id }};
+
+    function Subscribe() {
+        fetch("/create/subscribe", {
+            method: "POST",
+            body: JSON.stringify({
+                subscribeeID: subscribeeID,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then(res => res.json()).then(res => {
+            if (res.status == 200) {
+                alert("Subscribed!");
+            } else {
+                alert("Error subscribing!");
+            }
+        });
+    }
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
@@ -19,6 +38,14 @@
     <div class="pageContentsScroll profileBody">
         <div class="pageTitle">{{ .username }}</div>
         <a class="linkButton" href="/create/create-article">Create</a>
+        
+        {{if .check}}
+        <div></div>
+        {{else}}
+        <button onclick="Subscribe()">Subscribe</button>
+        {{end}}
+        
+
         <div class="articleBody">
             <ul>
                 {{ range $a := .articles }}

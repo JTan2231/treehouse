@@ -10,7 +10,7 @@
     const root = {{ .API_ROOT }};
     const subscribeeID = {{ .user_id }};
 
-    function Subscribe() {
+    function onSubscribe() {
         fetch("/create/subscribe", {
             method: "POST",
             body: JSON.stringify({
@@ -20,11 +20,13 @@
                 "Content-Type": "application/json",
             }
         }).then(res => res.json()).then(res => {
-            if (res.status == 200) {
-                alert("Subscribed!");
+            if(document.getElementById("subscribe").innerHTML == "Subscribe") {
+                document.getElementById("subscribe").innerHTML = "Unsubscribe";
             } else {
-                alert("Error subscribing!");
+                document.getElementById("subscribe").innerHTML = "Subscribe";
             }
+
+            alert(res.message);
         });
     }
 </script>
@@ -38,12 +40,15 @@
     <div class="pageContentsScroll profileBody">
         <div class="pageTitle">{{ .username }}</div>
         <a class="linkButton" href="/create/create-article">Create</a>
-        
+
         {{if .check}}
         <div></div>
+        {{else}}{{if .alreadySubscribed}}
+        <button  id="subscribe" class="linkButton" onclick="onSubscribe()">Unsubscribe</button>
         {{else}}
-        <button onclick="Subscribe()">Subscribe</button>
-        {{end}}
+        <button  id="subscribe" class="linkButton" onclick="onSubscribe()">Subscribe</button>
+        {{end}}{{end}}
+        
         
 
         <div class="articleBody">

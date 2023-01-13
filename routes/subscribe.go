@@ -27,7 +27,29 @@ func SubscribeToUser(c *gin.Context) {
 
 	//subscriber ID from cookie
 	//subscribeeID from request body
+	
 
+	//IF USER IS ALREADY SUBSCRIBED UNSUB THEM
+	var alreadySubscribedCount int
+	subscribedRowsError := conn.QueryRow(
+		`select COUNT(*) from Subscribe where SubscriberID = ? and SubscribeeID= ?`, userId, subscribeeID.SubscribeeID).Scan(&alreadySubscribedCount)
+	fmt.Println(subscribedRowsError)
+	fmt.Println(alreadySubscribedCount)
+
+	if (alreadySubscribedCount > 0) {
+		//delete the subscription
+		result, err := conn.Exec(
+			`delete from Subscribe where SubscriberID = ? and SubscribeeID= ?`, userId, subscribeeID.SubscribeeID)
+		fmt.Println(result)
+
+		if err == nil {
+			c.IndentedJSON(http.StatusOK, gin.H{"message": "Successfully Unsubscribed"})
+			fmt.Println(err)
+			return
+	 	}
+	} else {
+
+	//IF USER IS NOT ALREADY SUBSCRIBED THEM
 	result, err := conn.Exec(
 		`insert into Subscribe (
 			SubscriberID,
@@ -38,11 +60,8 @@ func SubscribeToUser(c *gin.Context) {
 	)
 	
 	fmt.Println(result)
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Bad request"})
-		fmt.Println(err)
-		return
-	}
+	fmt.Println(err)
 
-	c.IndentedJSON(http.StatusOK, gin.H{"status" : 200, "message": "user subscribed successfully"})
+	c.IndentedJSON(http.StatusOK, gin.H{"status" : 200, "message": "Subscribed successfully"})
+	}
 }

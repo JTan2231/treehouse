@@ -16,8 +16,9 @@
         TREEHOUSE
     </div>
 
-    <div class="flexWrapper pageContentsScroll">
-        <div class="pageTitle">{{ .title }}</div>
+    <div class="flexWrapper pageContentsScroll flexLeft">
+        <div class="pageTitle articleTitle">{{ .title }}</div>
+        <div class="styledFont marginBottom">By <a class="authorLink" href="/{{ .username }}">{{ .username }}</a></div>
         <div class="articleBody">
             {{ range $c := .content }}
                 <p>{{ $c }}</p>

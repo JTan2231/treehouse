@@ -20,11 +20,11 @@
         <div class="pageTitle">{{ .username }}</div>
         <a class="linkButton" href="/create/create-article">Create</a>
         <div class="articleBody">
-            <ul>
-                {{ range $a := .articles }}
-                    <li><a href="/{{ $.username }}/{{ $a.Slug }}">{{ $a.Title }}</a></li>
-                {{ end }}
-            </ul>
+            {{ range $a := .articles }}
+                <div class="linkContainer">
+                    <a class="articleLink" href="/{{ $.username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
+                </div>
+            {{ end }}
         </div>
     </div>
 </body>

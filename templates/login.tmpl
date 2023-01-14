@@ -9,7 +9,7 @@
   <script>
     function keydown(e) {
         if (e.keyCode === 13) {
-            createUserAttempt();
+            loginAttempt();
             return;
         }
     }
@@ -24,16 +24,18 @@
             }),
             headers: {
                 'Content-Type': 'application/json',
-            }}).then(res => {
-                if (res.status === 200) {
-                  console.log("status 200")
-                  window.location.href = `/${values.username}`
-              } else {
-                  alert("invalid username or password");
-                  console.log(res.message)
-              }
-            })
+            }
+        }).then(res => {
+            if (res.status === 200) {
+                window.location.href = `/${values.username}`
+            } else {
+                document.getElementById('errorText').classList.add('revealError');
+                document.getElementById('username').classList.add('error');
+                document.getElementById('password').classList.add('error');
+            }
+        });
     }
+
     function getFieldValues() {
         return {
             username: document.getElementById('username').value,
@@ -43,6 +45,7 @@
   </script>
   
   <link rel="stylesheet" href="/styles/login.css">
+  <link rel="stylesheet" href="/styles/root.css">
   <body>
     <div class="container">
       <div class="title">TREEHOUSE</div>
@@ -59,16 +62,19 @@
         <div class="item">
           <input
             id="password"
-            type="text"
+            type="password"
             placeholder="Password"
             onkeydown="keydown(event)"
           />
+        </div>
+        <div id="errorText" class="errorText">
+            Incorrect username or password
         </div>
         <div class="item">
           <button onclick="loginAttempt()">Login</button>
         </div>
         <div class="footer">
-          No account?&nbsp;<a href="http://localhost:8080/newuser"
+          No account?&nbsp;<a class="fancyLink" href="http://localhost:8080/newuser"
             >Create one here</a
           >.
         </div>

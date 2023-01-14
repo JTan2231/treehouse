@@ -129,6 +129,7 @@ func GetArticle(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
 		"title":   article.Title,
+        "username": username,
 		"content": strings.Split(article.Content, "\n"),
 	})
 }

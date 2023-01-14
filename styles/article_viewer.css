@@ -2,3 +2,18 @@
     font-size: var(--article-content-font-size);
     line-height: 1.5em;
 }
+
+.articleTitle {
+    margin-bottom: 0;
+}
+
+.authorLink {
+    font-weight: bold;
+    font-size: var(--article-content-font-size);
+    text-decoration: none;
+    color: black;
+}
+
+.marginBottom {
+    margin-bottom: 1.5em;
+}

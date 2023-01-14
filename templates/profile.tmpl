@@ -52,11 +52,11 @@
         
 
         <div class="articleBody">
-            <ul>
-                {{ range $a := .articles }}
-                    <li><a href="/{{ $.username }}/{{ $a.Slug }}">{{ $a.Title }}</a></li>
-                {{ end }}
-            </ul>
+            {{ range $a := .articles }}
+                <div class="linkContainer">
+                    <a class="articleLink" href="/{{ $.username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
+                </div>
+            {{ end }}
         </div>
     </div>
 </body>

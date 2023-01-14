@@ -14,9 +14,45 @@
     text-decoration: none;
     transition: all 0.5s;
     width: fit-content;
+    margin-bottom: 2.5em;
 }
 
 .linkButton:hover {
     background-color: black;
     color: white;
+}
+
+.linkContainer {
+    position: relative;
+    padding: 0.5em 0;
+    width: calc(100% - 0.5em);
+    border-bottom: 1px solid black;
+}
+
+.articleLink {
+    background-color: transparent;
+    position: relative;
+    width: 100%;
+    text-decoration: none;
+    color: black;
+    line-height: 2em;
+    width: 100%;
+    display: block;
+}
+
+.articleLink::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    background-color: #eee;
+    left: 0;
+    bottom: 0;
+    height: 2em;
+    width: 100%;
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.articleLink:hover::after {
+    opacity: 1;
 }

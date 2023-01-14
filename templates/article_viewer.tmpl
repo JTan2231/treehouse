@@ -16,11 +16,10 @@
     <div class="header fixed">
         <a href="/" style="color: #000000; text-decoration: none;"> TREEHOUSE </a>
     </div>
-    
 
-    <div class="flexWrapper pageContentsScroll">
-        <div class="pageTitle">{{ .title }}</div>
-        <p> By: {{ .author }} </p>
+    <div class="flexWrapper pageContentsScroll flexLeft">
+        <div class="pageTitle articleTitle">{{ .title }}</div>
+        <div class="styledFont marginBottom">By <a class="authorLink" href="/{{ .username }}">{{ .username }}</a></div>
         <div class="articleBody">
             {{ range $c := .content }}
                 <p>{{ $c }}</p>

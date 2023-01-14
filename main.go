@@ -21,7 +21,9 @@ func main() {
 	router.LoadHTMLGlob("templates/*")
 	router.Static("/styles", "./styles")
 
-	router.GET("/", routes.ServeLogin)
+	router.GET("/", routes.ServeLanding)
+
+	router.GET("/login", routes.ServeLogin)
 	router.GET("/newuser", routes.ServeNewUser)
 
 	router.GET("/:username", routes.ServeProfile)
@@ -32,6 +34,7 @@ func main() {
 
 	authRouter := router.Group("/create", routes.AuthRequired)
 	authRouter.GET("/create-article", routes.GetCreateArticle)
+	authRouter.GET("/home", routes.ServeHome)
 	authRouter.POST("/subscribe", routes.SubscribeToUser)
 	authRouter.POST("/articles", routes.CreateArticle)
 

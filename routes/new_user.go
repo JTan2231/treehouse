@@ -23,14 +23,80 @@ func CreateNewUser(c *gin.Context) {
 	newUser := schema.User{}
 	json.Unmarshal(req, &newUser)
 
+	//check if user is within db already
+	check := checkIfUserExists(c, newUser)
+
+	if (check == 3) {
+		c.IndentedJSON(400, gin.H{"status" : 400, "message": "An account with that Username already exists"})
+		return
+	} else if (check == 2) {
+		c.IndentedJSON(400, gin.H{"status" : 400, "message": "An account with that Email already exists"})
+		return
+	} else if (check == 1) {
+		c.IndentedJSON(400, gin.H{"status" : 400, "message": "Account already exists with this email and username"})
+		return
+	} 
+	
+
 	_, err = addUser(newUser)
 
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"message": err})
+		return
 	} else {
 		fmt.Println("User created successfully")
+		//run a login auth here instead of routing them back to login, 
+		//this will allow them to be logged in after creating an account
+		session, _ := config.Store.Get(c.Request, "session")
+		conn := db.GetDB()
+		stdmt := "SELECT UserID FROM User WHERE Username = ?"
+		var userID int
+		row := conn.QueryRow(stdmt,newUser.Username)
+		row.Scan(&userID)
+
+		session.Values["userID"] = userID
+		session.Values["username"] = newUser.Username
+
+		session.Save(c.Request, c.Writer)
 		c.IndentedJSON(http.StatusOK, gin.H{"message": "User created successfully"})
 	}
+}
+
+func checkIfUserExists(c *gin.Context, newUser schema.User) (int64) {
+	conn := db.GetDB()
+
+	//if it dosent exist return nil
+	//3 username already exists
+	//2 email already exists
+	//1 account already exists
+	//0 account does not exist
+
+	var emailCount int
+	email := conn.QueryRow(
+		`select COUNT(Email) from User where Email = ?`, newUser.Email,
+	)
+	email.Scan(&emailCount)
+
+	var usernameCount int
+	username := conn.QueryRow(
+		`select COUNT(Username) from User where Username = ?`, newUser.Username,
+	)
+	username.Scan(&usernameCount)
+
+	fmt.Println(emailCount)
+	fmt.Println(usernameCount)
+
+
+	if (emailCount != 0 && usernameCount != 0) {
+		return 1
+	} else if (emailCount != 0) {
+		return 2
+	} else if (usernameCount != 0) {
+		return 3
+	}
+
+
+	return 0
 }
 
 func ServeNewUser(c *gin.Context) {

@@ -16,6 +16,12 @@
 
     function createUserAttempt() {
         const values = getFieldValues();
+
+        if(values.email === "" || values.username === "" || values.password === "" || values.firstname === "" || values.lastname === ""){
+            alert("Please input all fields to sign up.");
+            return;
+        }
+
         fetch(`${ {{ .API_ROOT }} }/newuser`, {
             method: 'POST',
             body: JSON.stringify({
@@ -28,6 +34,13 @@
             headers: {
                 'Content-Type': 'application/json',
             },
+        }).then(res => res.json()).then(res => {
+            //check res status and from there do accorindg changes
+            if (res.status === 400) {
+                alert(res.message)
+            } else {
+                window.location.href = `/create/create-article`
+            }
         })
     }
 
@@ -123,19 +136,19 @@
         <div class="subtitle">Lightweight blogging platform.</div>
         <div>
             <div class="item">
-                <input id="newFirstName" type="text" placeholder="New first name" onkeydown="keydown(event)" />
+                <input  id="newFirstName" type="text" placeholder="New first name" onkeydown="keydown(event)" />
             </div>
             <div class="item">
-                <input id="newLastName" type="text" placeholder="New last name" onkeydown="keydown(event)" />
+                <input  id="newLastName" type="text" placeholder="New last name" onkeydown="keydown(event)" />
             </div>
             <div class="item">
-                <input id="newEmail" type="text" placeholder="New email" onkeydown="keydown(event)" />
+                <input  id="newEmail" type="text" placeholder="New email" onkeydown="keydown(event)" />
             </div>
             <div class="item">
-                <input id="newUsername" type="text" placeholder="New username" onkeydown="keydown(event)" />
+                <input  id="newUsername" type="text" placeholder="New username" onkeydown="keydown(event)" />
             </div>
             <div class="item">
-                <input id="newPassword" type="text" placeholder="New password" onkeydown="keydown(event)" />
+                <input  id="newPassword" type="text" placeholder="New password" onkeydown="keydown(event)" />
             </div>
             <div class="item">
                 <button onclick="createUserAttempt()">Create</button>

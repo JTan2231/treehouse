@@ -131,6 +131,7 @@ func GetArticle(c *gin.Context) {
 		"title":   article.Title,
         "username": username,
 		"content": strings.Split(article.Content, "\n"),
+		"author":  username,
 	})
 }
 

@@ -2,12 +2,12 @@ package routes
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"treehouse/config"
 	"treehouse/db"
 	"treehouse/schema"
-	"fmt"
 )
 
 func ServeProfile(c *gin.Context) {
@@ -64,7 +64,6 @@ func ServeProfile(c *gin.Context) {
 	alreadySubscribedBool := false
 	var alreadySubscribedCount int
 
-
 	//checking if they are already subscribed, if so, set alreadySubscribed to true
 	subscribedRowsError := dbConn.QueryRow(
 		`select COUNT(*) from Subscribe where SubscriberID = ? and SubscribeeID= ?`, localuserID, user.UserID).Scan(&alreadySubscribedCount)
@@ -73,18 +72,16 @@ func ServeProfile(c *gin.Context) {
 		fmt.Println(subscribedRowsError)
 	}
 
-	if (alreadySubscribedCount > 0){
+	if alreadySubscribedCount > 0 {
 		alreadySubscribedBool = true
 	}
 
-	
-
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
-		"API_ROOT": config.API_ROOT,
-		"articles": articles,
-		"username": username,
-		"user_id":  user.UserID,
-		"check": check,
+		"API_ROOT":          config.API_ROOT,
+		"articles":          articles,
+		"username":          username,
+		"user_id":           user.UserID,
+		"check":             check,
 		"alreadySubscribed": alreadySubscribedBool,
 	})
 }

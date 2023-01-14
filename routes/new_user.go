@@ -26,17 +26,16 @@ func CreateNewUser(c *gin.Context) {
 	//check if user is within db already
 	check := checkIfUserExists(c, newUser)
 
-	if (check == 3) {
-		c.IndentedJSON(400, gin.H{"status" : 400, "message": "An account with that Username already exists"})
+	if check == 3 {
+		c.IndentedJSON(400, gin.H{"status": 400, "message": "An account with that Username already exists"})
 		return
-	} else if (check == 2) {
-		c.IndentedJSON(400, gin.H{"status" : 400, "message": "An account with that Email already exists"})
+	} else if check == 2 {
+		c.IndentedJSON(400, gin.H{"status": 400, "message": "An account with that Email already exists"})
 		return
-	} else if (check == 1) {
-		c.IndentedJSON(400, gin.H{"status" : 400, "message": "Account already exists with this email and username"})
+	} else if check == 1 {
+		c.IndentedJSON(400, gin.H{"status": 400, "message": "Account already exists with this email and username"})
 		return
-	} 
-	
+	}
 
 	_, err = addUser(newUser)
 
@@ -45,13 +44,13 @@ func CreateNewUser(c *gin.Context) {
 		return
 	} else {
 		fmt.Println("User created successfully")
-		//run a login auth here instead of routing them back to login, 
+		//run a login auth here instead of routing them back to login,
 		//this will allow them to be logged in after creating an account
 		session, _ := config.Store.Get(c.Request, "session")
 		conn := db.GetDB()
 		stdmt := "SELECT UserID FROM User WHERE Username = ?"
 		var userID int
-		row := conn.QueryRow(stdmt,newUser.Username)
+		row := conn.QueryRow(stdmt, newUser.Username)
 		row.Scan(&userID)
 
 		session.Values["userID"] = userID
@@ -62,7 +61,7 @@ func CreateNewUser(c *gin.Context) {
 	}
 }
 
-func checkIfUserExists(c *gin.Context, newUser schema.User) (int64) {
+func checkIfUserExists(c *gin.Context, newUser schema.User) int64 {
 	conn := db.GetDB()
 
 	//if it dosent exist return nil
@@ -86,15 +85,13 @@ func checkIfUserExists(c *gin.Context, newUser schema.User) (int64) {
 	fmt.Println(emailCount)
 	fmt.Println(usernameCount)
 
-
-	if (emailCount != 0 && usernameCount != 0) {
+	if emailCount != 0 && usernameCount != 0 {
 		return 1
-	} else if (emailCount != 0) {
+	} else if emailCount != 0 {
 		return 2
-	} else if (usernameCount != 0) {
+	} else if usernameCount != 0 {
 		return 3
 	}
-
 
 	return 0
 }

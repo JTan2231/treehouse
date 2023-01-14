@@ -1,11 +1,11 @@
 package routes
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"treehouse/config"
 	"treehouse/db"
-	"fmt"
 )
 
 //user sends a post request to subscribe
@@ -21,13 +21,11 @@ func SubscribeToUser(c *gin.Context) {
 	session, _ := config.Store.Get(c.Request, "session")
 	userId := session.Values["userID"]
 
-
 	subscribeeID := SubscribeID{}
 	c.BindJSON(&subscribeeID)
 
 	//subscriber ID from cookie
 	//subscribeeID from request body
-	
 
 	//IF USER IS ALREADY SUBSCRIBED UNSUB THEM
 	var alreadySubscribedCount int
@@ -36,7 +34,7 @@ func SubscribeToUser(c *gin.Context) {
 	fmt.Println(subscribedRowsError)
 	fmt.Println(alreadySubscribedCount)
 
-	if (alreadySubscribedCount > 0) {
+	if alreadySubscribedCount > 0 {
 		//delete the subscription
 		result, err := conn.Exec(
 			`delete from Subscribe where SubscriberID = ? and SubscribeeID= ?`, userId, subscribeeID.SubscribeeID)
@@ -46,22 +44,22 @@ func SubscribeToUser(c *gin.Context) {
 			c.IndentedJSON(http.StatusOK, gin.H{"message": "Successfully Unsubscribed"})
 			fmt.Println(err)
 			return
-	 	}
+		}
 	} else {
 
-	//IF USER IS NOT ALREADY SUBSCRIBED THEM
-	result, err := conn.Exec(
-		`insert into Subscribe (
+		//IF USER IS NOT ALREADY SUBSCRIBED THEM
+		result, err := conn.Exec(
+			`insert into Subscribe (
 			SubscriberID,
 			SubscribeeID
         ) values (?, ?)`,
-		userId,
-		subscribeeID.SubscribeeID,
-	)
-	
-	fmt.Println(result)
-	fmt.Println(err)
+			userId,
+			subscribeeID.SubscribeeID,
+		)
 
-	c.IndentedJSON(http.StatusOK, gin.H{"status" : 200, "message": "Subscribed successfully"})
+		fmt.Println(result)
+		fmt.Println(err)
+
+		c.IndentedJSON(http.StatusOK, gin.H{"status": 200, "message": "Subscribed successfully"})
 	}
 }

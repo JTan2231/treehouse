@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"treehouse/db"
-	//"treehouse/config"
+	"treehouse/config"
 	"treehouse/schema"
 )
 

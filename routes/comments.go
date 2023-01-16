@@ -9,6 +9,7 @@ import (
 	"treehouse/db"
 	"treehouse/config"
 	"treehouse/schema"
+	"strconv"
 )
 
 func CreateComment(c *gin.Context) {
@@ -102,8 +103,17 @@ func GetComments(c *gin.Context) {
 
 	session, _ := config.Store.Get(c.Request, "session")
 
+
+	articleID, err := strconv.Atoi(c.Query("articleID"))
+	if err != nil {
+		c.IndentedJSON(400, gin.H{"message": "Bad request"})
+		c.Abort()
+		return
+	}
+	
+	
 	userID := session.Values["userID"].(int)
-	comments := queryComments(userID)
+	comments := queryComments(userID,articleID)
 
 	// construct n-ary comment tree from array of comments
 	//
@@ -139,7 +149,7 @@ func GetComments(c *gin.Context) {
 	})
 }
 
-func queryComments(userID int) []schema.Comment {
+func queryComments(userID int, articleID int) []schema.Comment {
 	dbConn := db.GetDB()
 	var comments []schema.Comment
 
@@ -150,7 +160,7 @@ func queryComments(userID int) []schema.Comment {
             ParentID,
             UserID,
             Content
-        from Comment c where c.UserID = ?`, userID)
+        from Comment c where c.UserID = ? and c.articleID = ?`, userID, articleID)
 
 	if err != nil {
 		fmt.Printf("error: %v", err)

@@ -10,10 +10,10 @@ import (
 )
 
 type ProfileArticle struct {
-    Title string `json:"title"`
-    Slug string `json:"slug"`
-    UserID int64 `json:"userid"`
-    Username string `json:"username"`
+	Title    string `json:"title"`
+	Slug     string `json:"slug"`
+	UserID   int64  `json:"userid"`
+	Username string `json:"username"`
 }
 
 func ServeProfile(c *gin.Context) {
@@ -95,7 +95,7 @@ func ServeProfile(c *gin.Context) {
 	alreadySubscribedBool := false
 	var alreadySubscribedCount int
 
-    // TODO: the following query can probably be removed/moved/merged
+	// TODO: the following query can probably be removed/moved/merged
 	// checking if they are already subscribed, if so, set alreadySubscribed to true
 	subscribedRowsError := dbConn.QueryRow(
 		`select COUNT(*) from Subscribe where SubscriberID = ? and SubscribeeID = ?`, localuserID, profileUserID).Scan(&alreadySubscribedCount)
@@ -104,14 +104,14 @@ func ServeProfile(c *gin.Context) {
 		fmt.Println(subscribedRowsError)
 	}
 
-    alreadySubscribedBool = alreadySubscribedCount > 0
+	alreadySubscribedBool = alreadySubscribedCount > 0
 
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
 		"API_ROOT":          config.API_ROOT,
 		"articles":          articles,
-        "subscriptions":     subscriptions,
+		"subscriptions":     subscriptions,
 		"username":          localusername,
-        "profileUsername":   username,
+		"profileUsername":   username,
 		"user_id":           profileUserID,
 		"check":             check,
 		"alreadySubscribed": alreadySubscribedBool,

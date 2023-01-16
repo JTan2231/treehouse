@@ -31,7 +31,7 @@ func main() {
 	router.GET("/:username/:slug", routes.GetArticle)
 
 	router.POST("/login", routes.AuthenticateLogin)
-    router.GET("/logout", routes.HandleLogout)
+	router.GET("/logout", routes.HandleLogout)
 	router.POST("/newuser", routes.CreateNewUser)
 
 	authRouter := router.Group("/create", routes.AuthRequired)

@@ -32,8 +32,13 @@ func main() {
 	router.POST("/login", routes.AuthenticateLogin)
 	router.POST("/newuser", routes.CreateNewUser)
 
-	authRouter := router.Group("/create", routes.AuthRequired)
-	authRouter.GET("/create-article", routes.GetCreateArticle)
+	router.POST("/comments", routes.CreateComment)
+	router.GET("/comments", routes.GetComments)
+
+	createGroup := router.Group("/create", routes.AuthRequired)
+	createGroup.GET("/create-article", routes.GetCreateArticle)
+
+	authRouter := router.Group("/", routes.AuthRequired)
 	authRouter.GET("/home", routes.ServeHome)
 	authRouter.POST("/subscribe", routes.SubscribeToUser)
 	authRouter.POST("/articles", routes.CreateArticle)

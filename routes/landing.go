@@ -7,10 +7,10 @@ import (
 )
 
 func ServeLanding(c *gin.Context) {
-	//session, _ := config.Store.Get(c.Request, "session")
+	session, _ := config.Store.Get(c.Request, "session")
 
-	//_, ok := session.Values["username"]
-	if false {
+	_, ok := session.Values["username"]
+	if ok {
 		c.HTML(200, "404_redirect.tmpl", gin.H{
 			"url": "/home",
 		})

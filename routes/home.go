@@ -11,8 +11,8 @@ func ServeHome(c *gin.Context) {
 
 	_, ok := session.Values["username"]
 	if !ok {
-		c.HTML(http.StatusOK, "landing.tmpl", gin.H{
-			"API_ROOT": config.API_ROOT,
+		c.HTML(200, "404_redirect.tmpl", gin.H{
+			"url": "/",
 		})
 	} else {
 		c.HTML(http.StatusOK, "home.tmpl", gin.H{})

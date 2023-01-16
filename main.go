@@ -22,6 +22,7 @@ func main() {
 	router.Static("/styles", "./styles")
 
 	router.GET("/", routes.ServeLanding)
+	router.GET("/home", routes.ServeHome)
 
 	router.GET("/login", routes.ServeLogin)
 	router.GET("/newuser", routes.ServeNewUser)
@@ -30,11 +31,11 @@ func main() {
 	router.GET("/:username/:slug", routes.GetArticle)
 
 	router.POST("/login", routes.AuthenticateLogin)
+    router.GET("/logout", routes.HandleLogout)
 	router.POST("/newuser", routes.CreateNewUser)
 
 	authRouter := router.Group("/create", routes.AuthRequired)
 	authRouter.GET("/create-article", routes.GetCreateArticle)
-	authRouter.GET("/home", routes.ServeHome)
 	authRouter.POST("/subscribe", routes.SubscribeToUser)
 	authRouter.POST("/articles", routes.CreateArticle)
 

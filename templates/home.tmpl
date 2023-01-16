@@ -9,16 +9,22 @@
 <script>
     const root = {{ .API_ROOT }};
 </script>
-<link rel="stylesheet" href="../styles/root.css">
+<link rel="stylesheet" href="/styles/root.css">
+<link rel="stylesheet" href="/styles/profile.css">
+<link rel="stylesheet" href="/styles/home.css">
 <body class="flexWrapperVertical">
-    <div class="header fixed">
-        TREEHOUSE
-    </div>
+    {{ template "header.tmpl" .}}
 
     <div class="flexWrapper pageContentsScroll">
         <div class="pageTitle">Home</div>
-        <div class="articleBody">
-            INSERT LATEST ARTICLES FROM USER'S SUBSCRIPTIONS HERE
+        <div class="linkList">
+            <div class="listHeader">Latest from your subscriptions</div>
+            {{ range $a := .articles }}    
+                <div class="linkContainer">
+                    <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
+                    <span class="author">{{ $a.Username }}</span>
+                </div>
+            {{ end }}
         </div>
     </div>
 </body>

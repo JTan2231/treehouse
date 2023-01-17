@@ -72,6 +72,13 @@ func addCommentToDB(comment schema.Comment, c *gin.Context) (schema.Comment, err
 		newComment.ParentID,
 		newComment.Content,
 	)
+	if(err != nil) {
+		return newComment, fmt.Errorf("CreateComment: %v", err)
+	}
+	
+
+	commentId, err := result.LastInsertId() 
+	newComment.CommentID = int(commentId)
 
 	if err != nil {
 		return newComment, fmt.Errorf("CreateComment: %v", err)
@@ -110,7 +117,7 @@ func GetComments(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	
+
 	
 	userID := session.Values["userID"].(int)
 	comments := queryComments(userID,articleID)

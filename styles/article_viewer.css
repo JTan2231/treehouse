@@ -17,3 +17,8 @@
 .marginBottom {
     margin-bottom: 1.5em;
 }
+
+.commentReply {
+    position: relative;
+    margin-left: 3rem;
+}

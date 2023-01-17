@@ -27,9 +27,61 @@
         .then(res => {
             const e = document.createElement('p');
             e.innerHTML = res.content;
+            e.id = res.comment_id;
             document.body.appendChild(e);
+
+            const reply = document.createElement('button');
+            reply.id = res.comment_id;
+            reply.onclick = function() {
+                    postReplyComment(this.id);
+                }
+            reply.innerHTML = "reply";
+            e.appendChild(reply);
         })
     }
+
+
+    function postReplyComment(id) {
+        const content = "TESTING";
+        const data = {
+            "userid": {{ .userID }},  
+            "articleid": {{ .articleID }},
+            "parentid": parseInt(id),
+            "content": content,
+        }
+        fetch("/comments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(res => {
+            const e = document.createElement('p');
+            e.innerHTML = content;
+            e.classList.add("commentReply");
+            
+            e.id = res.comment_id;
+            document.getElementById(id).appendChild(e);
+
+
+            const reply = document.createElement('button');
+            reply.id = res.comment_id;
+            reply.onclick = function() {
+                    postReplyComment(this.id);
+                }
+            reply.innerHTML = "reply";
+            e.appendChild(reply);
+        })
+    }
+
+
+
+
+
+
+
 
     function getComments() {
     console.log("test")
@@ -48,8 +100,19 @@
                 const e = document.createElement('p');
                 e.innerHTML = res.comments[i].Comment.content;
                 document.body.appendChild(e);
+
+                const reply = document.createElement('button');
+                reply.innerHTML = "reply";
+                e.appendChild(reply);
             }
         })
+    }
+
+    function dfs(comment) {
+        if(comment.children.length == 0) {
+            return comment;
+        }
+        
     }
 
     getComments();

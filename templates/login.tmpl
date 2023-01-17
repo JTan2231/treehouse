@@ -27,7 +27,7 @@
             }
         }).then(res => {
             if (res.status === 200) {
-                window.location.href = `/${values.username}`
+                window.location.href = `/home`
             } else {
                 document.getElementById('errorText').classList.add('revealError');
                 document.getElementById('username').classList.add('error');

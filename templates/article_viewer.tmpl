@@ -12,14 +12,13 @@
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/article_viewer.css">
 <body class="flexWrapperVertical">
-    
-    <div class="header fixed">
-        <a href="/" style="color: #000000; text-decoration: none;"> TREEHOUSE </a>
-    </div>
+    {{ template "header.tmpl" .}}
 
     <div class="flexWrapper pageContentsScroll flexLeft">
         <div class="pageTitle articleTitle">{{ .title }}</div>
-        <div class="styledFont marginBottom">By <a class="authorLink" href="/{{ .username }}">{{ .username }}</a></div>
+        <div class="styledFont author">
+            <a class="authorLink" href="/{{ .username }}">{{ .username }}</a>
+        </div>
         <div class="articleBody">
             {{ range $c := .content }}
                 <p>{{ $c }}</p>

@@ -3,6 +3,7 @@ body {
     --readable-font-family: Noto Sans;
 
     --header-font-size: 30px;
+    --header-link-font-size: 20px;
     --page-title-font-size: 44px;
 
     --article-content-font-size: 18px;
@@ -26,7 +27,7 @@ body {
     border: var(--header-border-width) solid black;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-content: center;
     width: calc(100% - 2px);
     background-color: white;
@@ -36,6 +37,16 @@ body {
     position: fixed;
     top: 0;
     z-index: 1;
+}
+
+.headerLink, .logoLink {
+    text-decoration: none;
+    color: black;
+}
+
+.headerLink {
+    font-size: var(--header-link-font-size);
+    margin: 0 1em;
 }
 
 .pageTitle {

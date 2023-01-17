@@ -130,10 +130,10 @@ func GetArticle(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
 		"articleID": article.ArticleID,
-		"title":    article.Title,
-		"username": username,
-		"userID" : session.Values["userID"],
-		"content":  strings.Split(article.Content, "\n"),
+		"title":     article.Title,
+		"username":  username,
+		"userID":    session.Values["userID"],
+		"content":   strings.Split(article.Content, "\n"),
 	})
 }
 

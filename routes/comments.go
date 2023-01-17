@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
-	"treehouse/db"
-	"treehouse/config"
-	"treehouse/schema"
 	"strconv"
+	"treehouse/config"
+	"treehouse/db"
+	"treehouse/schema"
 )
 
 func CreateComment(c *gin.Context) {
@@ -72,12 +72,11 @@ func addCommentToDB(comment schema.Comment, c *gin.Context) (schema.Comment, err
 		newComment.ParentID,
 		newComment.Content,
 	)
-	if(err != nil) {
+	if err != nil {
 		return newComment, fmt.Errorf("CreateComment: %v", err)
 	}
-	
 
-	commentId, err := result.LastInsertId() 
+	commentId, err := result.LastInsertId()
 	newComment.CommentID = int(commentId)
 
 	if err != nil {
@@ -110,7 +109,6 @@ func GetComments(c *gin.Context) {
 
 	session, _ := config.Store.Get(c.Request, "session")
 
-
 	articleID, err := strconv.Atoi(c.Query("articleID"))
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"message": "Bad request"})
@@ -118,9 +116,8 @@ func GetComments(c *gin.Context) {
 		return
 	}
 
-	
 	userID := session.Values["userID"].(int)
-	comments := queryComments(userID,articleID)
+	comments := queryComments(userID, articleID)
 
 	// construct n-ary comment tree from array of comments
 	//

@@ -79,13 +79,7 @@
 
 
 
-
-
-
-
     function getComments() {
-    console.log("test")
-
         const articleID = {{ .articleID }};
 
         fetch(`/comments/?articleID=${articleID}`, {
@@ -97,23 +91,38 @@
         .then(res => res.json())
         .then(res => {
             for(var i = 0; i < res.comments.length; i++) {
-                const e = document.createElement('p');
-                e.innerHTML = res.comments[i].Comment.content;
-                document.body.appendChild(e);
-
-                const reply = document.createElement('button');
-                reply.innerHTML = "reply";
-                e.appendChild(reply);
+                dfs(res.comments[i]);
             }
         })
     }
 
-    function dfs(comment) {
-        if(comment.children.length == 0) {
-            return comment;
-        }
-        
-    }
+        function dfs(comment) {
+                const e = document.createElement('p');
+                e.innerHTML = comment.Comment.content;
+                e.id = comment.Comment.commentid;
+
+                const reply = document.createElement('button');
+                reply.innerHTML = "reply";
+                reply.id = comment.Comment.commentid;
+                reply.onclick = function() {
+                    postReplyComment(this.id);
+                }
+                e.appendChild(reply);
+
+                if(comment.Comment.parentid == null) {
+                    document.body.appendChild(e);
+                } else {
+                    document.getElementById(comment.Comment.parentid).appendChild(e);
+                    e.classList.add("commentReply");
+                }
+
+                if(comment.Children.length > 0) {
+                    for(var i = 0; i < comment.Children.length; i++) {
+                        dfs(comment.Children[i]);
+                    }
+                } 
+    }      
+    
 
     getComments();
 

@@ -22,6 +22,7 @@ func main() {
 	router.Static("/styles", "./styles")
 
 	router.GET("/", routes.ServeLanding)
+	router.GET("/home", routes.ServeHome)
 
 	router.GET("/login", routes.ServeLogin)
 	router.GET("/newuser", routes.ServeNewUser)
@@ -30,6 +31,7 @@ func main() {
 	router.GET("/:username/:slug", routes.GetArticle)
 
 	router.POST("/login", routes.AuthenticateLogin)
+	router.GET("/logout", routes.HandleLogout)
 	router.POST("/newuser", routes.CreateNewUser)
 
 	router.POST("/comments", routes.CreateComment)

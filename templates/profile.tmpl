@@ -33,30 +33,36 @@
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
 <body class="flexWrapperVertical">
-    <div class="header fixed">
-        TREEHOUSE
-    </div>
+    {{ template "header.tmpl" .}}
 
     <div class="pageContentsScroll profileBody">
-        <div class="pageTitle">{{ .username }}</div>
-        <a class="linkButton" href="/create/create-article">Create</a>
+        <div class="pageTitle">{{ .profileUsername }}</div>
 
         {{if .check}}
-        <div></div>
+        <a class="linkButton" href="/create/create-article">Create</a>
         {{else}}{{if .alreadySubscribed}}
-        <button  id="subscribe" class="linkButton" onclick="onSubscribe()">Unsubscribe</button>
+        <button id="subscribe" class="linkButton" onclick="onSubscribe()">Unsubscribe</button>
         {{else}}
-        <button  id="subscribe" class="linkButton" onclick="onSubscribe()">Subscribe</button>
+        <button id="subscribe" class="linkButton" onclick="onSubscribe()">Subscribe</button>
         {{end}}{{end}}
-        
-        
 
-        <div class="articleBody">
-            {{ range $a := .articles }}
-                <div class="linkContainer">
-                    <a class="articleLink" href="/{{ $.username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
-                </div>
-            {{ end }}
+        <div class="contentContainer">
+            <div class="linkList">
+                <div class="listHeader">Writings</div>
+                {{ range $a := .articles }}
+                    <div class="linkContainer">
+                        <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
+                    </div>
+                {{ end }}
+            </div>
+            <div class="linkList">
+                <div class="listHeader">Subscriptions</div>
+                {{ range $s := .subscriptions }}
+                    <div class="linkContainer">
+                        <a class="articleLink" href="/{{ $s }}">{{ $s }}</a>
+                    </div>
+                {{ end }}
+            </div>
         </div>
     </div>
 </body>

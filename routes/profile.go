@@ -59,7 +59,7 @@ func ServeProfile(c *gin.Context) {
 		for rows.Next() {
 			var article ProfileArticle
 
-			if err := rows.Scan(&article.Title, &article.Slug, &article.UserID, &article.Username); err != nil {
+			if err := rows.Scan(&article.Title, &article.Slug, &article.Username); err != nil {
 				return
 			}
 

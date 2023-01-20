@@ -8,6 +8,32 @@
 </head>
 <script>
     const root = {{ .API_ROOT }};
+    const userID = {{ .localUserID }};
+    const articleID = {{ .articleID }};
+
+    function onFavorite() {
+        const bookMark = document.getElementById("bookMark");
+            fetch("/favorite", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    articleID: articleID,
+                }),
+            }).then(res => res.json())
+            .then(res => {
+                if(res.status === 200) {
+                    if(bookMark.src === "http://localhost:8080/assets/filledBookMark.png") {
+                        bookMark.src = "http://localhost:8080/assets/emptyBookMark.png";
+                    } else {
+                        bookMark.src = "http://localhost:8080/assets/filledBookMark.png";
+                    } 
+                } 
+            })
+    }
+
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/article_viewer.css">
@@ -18,6 +44,15 @@
         <div class="pageTitle articleTitle">{{ .title }}</div>
         <div class="styledFont author">
             <a class="authorLink" href="/{{ .username }}">{{ .username }}</a>
+
+            {{if .alreadyFavorited}}
+            <img onclick=onFavorite() id="bookMark" class="bookmark" src="http://localhost:8080/assets/filledBookMark.png" alt="favorite">
+            {{else}}
+            <img onclick=onFavorite() id="bookMark" class="bookmark" src="http://localhost:8080/assets/emptyBookMark.png" alt="favorite">
+            {{end}}
+            
+        
+        
         </div>
         <div class="articleBody">
             {{ range $c := .content }}

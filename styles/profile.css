@@ -29,7 +29,7 @@
 }
 
 .linkList {
-    flex-basis: 50%;
+    flex-basis: 33%;
     font-family: var(--styled-font-family);
 }
 

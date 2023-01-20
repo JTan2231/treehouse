@@ -20,3 +20,13 @@
     padding-bottom: 1.5em;
     flex-basis: 100%;
 }
+
+
+.bookmark {
+    height:2rem;
+}
+
+.titleRow {
+    display: flex;
+    flex-direction: row;
+}

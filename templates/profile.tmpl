@@ -56,6 +56,14 @@
                 {{ end }}
             </div>
             <div class="linkList">
+                <div class="listHeader">Favorites</div>
+                {{ range $f := .favorites }}
+                    <div class="linkContainer">
+                        <a class="articleLink" href="/{{ $f.Username }}/{{ $f.Slug }}">{{ $f.Title }}</a>
+                    </div>
+                {{ end }}
+            </div>
+            <div class="linkList">
                 <div class="listHeader">Subscriptions</div>
                 {{ range $s := .subscriptions }}
                     <div class="linkContainer">

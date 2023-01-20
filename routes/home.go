@@ -30,6 +30,9 @@ func ServeHome(c *gin.Context) {
             inner join Subscribe s on s.SubscriberID = ?
             inner join User u on u.UserID = s.SubscribeeID
             where a.UserID = s.SubscribeeID`, userID)
+			//temp table with all articles from users you are subscribed to
+			//understand 
+			
 
 		if err != nil {
 			c.IndentedJSON(400, gin.H{"errors": err})

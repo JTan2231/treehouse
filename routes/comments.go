@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
-	"treehouse/db"
 	"treehouse/config"
+	"treehouse/db"
 	"treehouse/schema"
 )
 

@@ -134,21 +134,20 @@ func GetArticle(c *gin.Context) {
 
 	favoriteRowsError := dbConn.QueryRow(
 		`select COUNT(*) from Favorite where UserID = ? and ArticleID= ?`, session.Values["userID"], article.ArticleID).Scan(&alreadyFavoritedCount)
-	
-	
-	if(favoriteRowsError != nil){
+
+	if favoriteRowsError != nil {
 		fmt.Println(favoriteRowsError)
 	}
 
 	alreadyFavoritedBool = alreadyFavoritedCount > 0
 
 	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
-		"title":    article.Title,
-		"username": username,
-		"content":  strings.Split(article.Content, "\n"),
-		"articleID": article.ArticleID,
-		"localUserID" : session.Values["userID"],
-		"alreadyFavorited":  alreadyFavoritedBool,
+		"title":            article.Title,
+		"username":         username,
+		"content":          strings.Split(article.Content, "\n"),
+		"articleID":        article.ArticleID,
+		"localUserID":      session.Values["userID"],
+		"alreadyFavorited": alreadyFavoritedBool,
 	})
 }
 

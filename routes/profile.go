@@ -90,7 +90,6 @@ func ServeProfile(c *gin.Context) {
 		}
 	}
 
-
 	rows, err = dbConn.Query(
 		`select
             a.Title,
@@ -100,7 +99,6 @@ func ServeProfile(c *gin.Context) {
         from Article a
         inner join User u on u.UserID = a.UserID
 		inner join Favorite f on f.UserID = ? and a.ArticleID = f.ArticleID`, localuserID)
-        
 
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"errors": err})
@@ -131,14 +129,12 @@ func ServeProfile(c *gin.Context) {
 	// checking if they are already subscribed, if so, set alreadySubscribed to true
 	subscribedRowsError := dbConn.QueryRow(
 		`select COUNT(*) from Subscribe where SubscriberID = ? and SubscribeeID = ?`, localuserID, profileUserID).Scan(&alreadySubscribedCount)
-	
+
 	if subscribedRowsError != nil {
 		fmt.Println(subscribedRowsError)
 	}
 
 	alreadySubscribedBool = alreadySubscribedCount > 0
-
-	
 
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
 		"API_ROOT":          config.API_ROOT,

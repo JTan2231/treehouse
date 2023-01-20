@@ -8,6 +8,9 @@
 </head>
 <script>
     const root = {{ .API_ROOT }};
+    const authorUsername = {{ .authorUsername }};
+    const localUsername = {{ .localUsername }};
+
     function postComment() {
         const content = document.querySelector("input").value;
         const data = {
@@ -26,23 +29,53 @@
         .then(res => res.json())
         .then(res => {
             const e = document.createElement('p');
-            e.innerHTML = res.content;
+            e.innerHTML = localUsername + ": " + res.content;
             e.id = res.comment_id;
             document.body.appendChild(e);
 
             const reply = document.createElement('button');
             reply.id = res.comment_id;
             reply.onclick = function() {
-                    postReplyComment(this.id);
-                }
+                createReply(this.id);
+            }
             reply.innerHTML = "reply";
             e.appendChild(reply);
         })
     }
 
+    function createReply(id) {
+        const replyInput = document.createElement('input');
+        replyInput.id = "replyInput";
+        replyInput.classList.add("commentReply");
+        document.getElementById(id).appendChild(replyInput);
+
+
+        const submitReply = document.createElement('button');
+        submitReply.innerHTML = "Submit";
+
+
+        const cancelButton = document.createElement('button');
+        cancelButton.innerHTML = "Cancel";
+        cancelButton.onclick = function() {
+            document.getElementById(id).removeChild(replyInput);
+            document.getElementById(id).removeChild(submitReply);
+            document.getElementById(id).removeChild(cancelButton);
+        }
+
+        document.getElementById(id).appendChild(submitReply);
+        document.getElementById(id).appendChild(cancelButton);
+
+        submitReply.onclick = function() {
+            postReplyComment(id); 
+            document.getElementById(id).removeChild(replyInput);
+            document.getElementById(id).removeChild(submitReply);
+            document.getElementById(id).removeChild(cancelButton);
+        }
+    }
 
     function postReplyComment(id) {
-        const content = "TESTING";
+        const content = document.getElementById("replyInput").value;
+        
         const data = {
             "userid": {{ .userID }},  
             "articleid": {{ .articleID }},
@@ -58,26 +91,25 @@
         })
         .then(res => res.json())
         .then(res => {
-            const e = document.createElement('p');
-            e.innerHTML = content;
-            e.classList.add("commentReply");
+                const e = document.createElement('p');
+                e.innerHTML = localUsername + ": " + content;
+                e.classList.add("commentReply");
             
-            e.id = res.comment_id;
-            document.getElementById(id).appendChild(e);
+                e.id = res.comment_id;
+                document.getElementById(id).appendChild(e);
 
-
-            const reply = document.createElement('button');
-            reply.id = res.comment_id;
-            reply.onclick = function() {
-                    postReplyComment(this.id);
+                const reply = document.createElement('button');
+                reply.id = res.comment_id;
+                reply.onclick = function() {
+                    createReply(this.id);
                 }
-            reply.innerHTML = "reply";
-            e.appendChild(reply);
+                reply.innerHTML = "reply";
+                e.appendChild(reply);
         })
     }
 
 
-
+   
 
     function getComments() {
         const articleID = {{ .articleID }};
@@ -96,23 +128,26 @@
         })
     }
 
+
+
         function dfs(comment) {
                 const e = document.createElement('p');
-                e.innerHTML = comment.Comment.content;
-                e.id = comment.Comment.commentid;
+                e.innerHTML = comment.Comment.Username + ": " + comment.Comment.Comment.content;
+                e.id = comment.Comment.Comment.commentid;
 
                 const reply = document.createElement('button');
                 reply.innerHTML = "reply";
-                reply.id = comment.Comment.commentid;
+                reply.id = comment.Comment.Comment.commentid;
                 reply.onclick = function() {
-                    postReplyComment(this.id);
+                    createReply(this.id);
                 }
                 e.appendChild(reply);
+                
 
-                if(comment.Comment.parentid == null) {
+                if(comment.Comment.Comment.parentid == null) {
                     document.body.appendChild(e);
                 } else {
-                    document.getElementById(comment.Comment.parentid).appendChild(e);
+                    document.getElementById(comment.Comment.Comment.parentid).appendChild(e);
                     e.classList.add("commentReply");
                 }
 
@@ -138,7 +173,7 @@
 
     <div class="flexWrapper pageContentsScroll flexLeft">
         <div class="pageTitle articleTitle">{{ .title }}</div>
-        <div class="styledFont marginBottom">By <a class="authorLink" href="/{{ .username }}">{{ .username }}</a></div>
+        <div class="styledFont marginBottom">By <a class="authorLink" href="/{{ .authorUsername }}">{{ .authorUsername }}</a></div>
         <div class="articleBody">
             {{ range $c := .content }}
                 <p>{{ $c }}</p>

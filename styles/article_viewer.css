@@ -19,6 +19,6 @@
 }
 
 .commentReply {
-    position: relative;
-    margin-left: 3rem;
+    padding-left: 0.5em;
+    border-left: 1px solid black;
 }

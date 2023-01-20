@@ -32,7 +32,6 @@ func ServeProfile(c *gin.Context) {
 		`select
             a.Title,
             a.Slug,
-            u.UserID,
             u.Username
         from Article a
         inner join User u on u.UserID = a.UserID
@@ -43,6 +42,8 @@ func ServeProfile(c *gin.Context) {
 		return
 	}
 
+	//diff select statement for user id if  it is getting passed incorrectly
+	//bug if user does not have an article
 	var user schema.User
 	var articles []schema.Article
 
@@ -50,13 +51,19 @@ func ServeProfile(c *gin.Context) {
 		defer rows.Close()
 		for rows.Next() {
 			var article schema.Article
-
-			if err := rows.Scan(&article.Title, &article.Slug, &user.UserID, &user.Username); err != nil {
+			if err := rows.Scan(&article.Title, &article.Slug, &user.Username); err != nil {
 				return
 			}
 
 			articles = append(articles, article)
 		}
+	}
+
+	//getting user id without being dependent on if they have an aritcle or not
+	userIDAndNameRow := dbConn.QueryRow("select UserID,Username from User where Username = ?", username).Scan(&user.UserID, &user.Username)
+
+	if userIDAndNameRow != nil {
+		fmt.Println(userIDAndNameRow)
 	}
 
 	check := (localusername == user.Username)

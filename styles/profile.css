@@ -15,6 +15,7 @@
     transition: all 0.5s;
     width: fit-content;
     margin-bottom: 2.5em;
+    cursor: pointer;
 }
 
 .linkButton:hover {
@@ -22,11 +23,25 @@
     color: white;
 }
 
-.linkContainer {
+.contentContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.linkList {
+    flex-basis: 50%;
+    font-family: var(--styled-font-family);
+}
+
+.linkContainer, .listHeader {
     position: relative;
     padding: 0.5em 0;
     width: calc(100% - 0.5em);
     border-bottom: 1px solid black;
+}
+
+.listHeader {
+    font-size: var(--header-link-font-size);
 }
 
 .articleLink {
@@ -36,8 +51,8 @@
     text-decoration: none;
     color: black;
     line-height: 2em;
-    width: 100%;
     display: block;
+    text-indent: 0.5em;
 }
 
 .articleLink::after {

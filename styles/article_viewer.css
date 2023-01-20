@@ -1,6 +1,7 @@
 .articleBody {
     font-size: var(--article-content-font-size);
     line-height: 1.5em;
+    flex-basis: 100%;
 }
 
 .articleTitle {
@@ -14,8 +15,10 @@
     color: black;
 }
 
-.marginBottom {
-    margin-bottom: 1.5em;
+.author {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1.5em;
+    flex-basis: 100%;
 }
 
 .commentReply {

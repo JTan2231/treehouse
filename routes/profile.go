@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"treehouse/config"
 	"treehouse/db"
+	"treehouse/schema"
 )
 
 type ProfileArticle struct {
@@ -73,7 +74,6 @@ func ServeProfile(c *gin.Context) {
 		fmt.Println(userIDAndNameRow)
 	}
 
-	check := (localusername == user.Username)
 	rows, err = dbConn.Query(
 		`select
             u.Username

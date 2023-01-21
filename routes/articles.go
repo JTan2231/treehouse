@@ -130,17 +130,37 @@ func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, err
 }
 
 func GetArticle(c *gin.Context) {
-	var username = c.Param("username")
+	var authorUsername = c.Param("username")
 	var slug = c.Param("slug")
+	session, _ := config.Store.Get(c.Request, "session")
+	dbConn := db.GetDB()
 
-	article := queryArticle(username, slug)
+	article := queryArticle(authorUsername, slug)
+
+	alreadyFavoritedBool := false
+	var alreadyFavoritedCount int
+
+	favoriteRowsError := dbConn.QueryRow(
+		`select COUNT(*) from Favorite where UserID = ? and ArticleID= ?`, session.Values["userID"], article.ArticleID).Scan(&alreadyFavoritedCount)
+
+	if favoriteRowsError != nil {
+		fmt.Println(favoriteRowsError)
+	}
+
+    fmt.Println("ARTICLE ID: ", article.ArticleID)
+
+	alreadyFavoritedBool = alreadyFavoritedCount > 0
 
 	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
-		"title":    article.Title,
+		"content":          strings.Split(article.Content, "\n"),
+		"localUserID":      session.Values["userID"],
+		"alreadyFavorited": alreadyFavoritedBool,
+		"articleID":        article.ArticleID,
+		"title":            article.Title,
         "subtitle": article.Subtitle,
         "timestamp": article.TimestampPosted,
-		"username": username,
-		"content":  strings.Split(article.Content, "\n"),
+		"authorUsername":   authorUsername,
+		"localUsername":    session.Values["username"],
 	})
 }
 
@@ -151,6 +171,7 @@ func queryArticle(username string, slug string) schema.Article {
 
     err := conn.QueryRow(`
             select
+                ArticleID,
                 Title,
                 Subtitle,
                 Content,
@@ -158,7 +179,7 @@ func queryArticle(username string, slug string) schema.Article {
             from Article a 
             inner join User u on u.Username = ? and u.UserID = a.UserID
             where a.Slug = ?
-        `, username, slug).Scan(&article.Title, &article.Subtitle, &article.Content, &article.TimestampPosted)
+        `, username, slug).Scan(&article.ArticleID, &article.Title, &article.Subtitle, &article.Content, &article.TimestampPosted)
 
     if err != nil {
         fmt.Println("queryArticle: ", err)

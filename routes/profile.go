@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"treehouse/config"
 	"treehouse/db"
+	"treehouse/schema"
 )
 
 type ProfileArticle struct {
@@ -38,7 +39,6 @@ func ServeProfile(c *gin.Context) {
 		`select
             a.Title,
             a.Slug,
-            u.UserID,
             u.Username
         from Article a
         inner join User u on u.UserID = a.UserID
@@ -49,6 +49,9 @@ func ServeProfile(c *gin.Context) {
 		return
 	}
 
+	//diff select statement for user id if  it is getting passed incorrectly
+	//bug if user does not have an article
+	var user schema.User
 	var articles []ProfileArticle
 
 	if rows != nil {
@@ -56,12 +59,19 @@ func ServeProfile(c *gin.Context) {
 		for rows.Next() {
 			var article ProfileArticle
 
-			if err := rows.Scan(&article.Title, &article.Slug, &article.UserID, &article.Username); err != nil {
+			if err := rows.Scan(&article.Title, &article.Slug, &article.Username); err != nil {
 				return
 			}
 
 			articles = append(articles, article)
 		}
+	}
+
+	//getting user id without being dependent on if they have an aritcle or not
+	userIDAndNameRow := dbConn.QueryRow("select UserID,Username from User where Username = ?", username).Scan(&user.UserID, &user.Username)
+
+	if userIDAndNameRow != nil {
+		fmt.Println(userIDAndNameRow)
 	}
 
 	rows, err = dbConn.Query(
@@ -90,6 +100,36 @@ func ServeProfile(c *gin.Context) {
 		}
 	}
 
+	rows, err = dbConn.Query(
+		`select
+            a.Title,
+            a.Slug,
+            u.UserID,
+            u.Username
+        from Article a
+        inner join User u on u.UserID = a.UserID
+		inner join Favorite f on f.UserID = ? and a.ArticleID = f.ArticleID`, localuserID)
+
+	if err != nil {
+		c.IndentedJSON(400, gin.H{"errors": err})
+		return
+	}
+
+	var favorites []ProfileArticle
+
+	if rows != nil {
+		defer rows.Close()
+		for rows.Next() {
+			var favorite ProfileArticle
+
+			if err := rows.Scan(&favorite.Title, &favorite.Slug, &favorite.UserID, &favorite.Username); err != nil {
+				return
+			}
+
+			favorites = append(favorites, favorite)
+		}
+	}
+
 	check := (localusername == username)
 
 	alreadySubscribedBool := false
@@ -110,6 +150,7 @@ func ServeProfile(c *gin.Context) {
 		"API_ROOT":          config.API_ROOT,
 		"articles":          articles,
 		"subscriptions":     subscriptions,
+		"favorites":         favorites,
 		"username":          localusername,
 		"profileUsername":   username,
 		"user_id":           profileUserID,

@@ -10,4 +10,4 @@ create table Comment (
     primary key (`CommentID`),
     foreign key (`ArticleID`) references Article(`ArticleID`),
     foreign key (`UserID`) references User(`UserID`)
-);
+);  

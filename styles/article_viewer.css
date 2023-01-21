@@ -25,11 +25,27 @@
 }
 
 .author {
+    flex-basis: 100%;
+}
+
+.separator {
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.5em;
-    flex-basis: 100%;
 }
 
 .timestamp {
     color: #aaa;
+}
+
+.bookmark {
+    height:2rem;
+}
+
+.titleRow {
+    display: flex;
+    flex-direction: row;
+}
+.commentReply {
+    padding-left: 0.5em;
+    border-left: 1px solid black;
 }

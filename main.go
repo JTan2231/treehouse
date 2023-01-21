@@ -20,6 +20,7 @@ func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
 	router.Static("/styles", "./styles")
+	router.Static("/assets", "./assets")
 
 	router.GET("/", routes.ServeLanding)
 	router.GET("/home", routes.ServeHome)
@@ -37,9 +38,15 @@ func main() {
 	router.POST("/comments", routes.CreateComment)
 	router.GET("/comments", routes.GetComments)
 
+    // TODO: clean this up
+	createGroup := router.Group("/create", routes.AuthRequired)
+	createGroup.GET("/create-article", routes.GetCreateArticle)
+	createGroup.POST("/create-article", routes.CreateArticle)
+
 	authRouter := router.Group("/", routes.AuthRequired)
 	authRouter.GET("/create-article", routes.GetCreateArticle)
 	authRouter.POST("/subscribe", routes.SubscribeToUser)
+	authRouter.POST("/favorite", routes.FavoriteArticle)
 	authRouter.POST("/articles", routes.CreateArticle)
 
 	router.Run(config.DOMAIN)

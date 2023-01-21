@@ -29,7 +29,7 @@
 }
 
 .linkList {
-    flex-basis: 50%;
+    flex-basis: 33%;
     font-family: var(--styled-font-family);
 }
 
@@ -62,7 +62,7 @@
     background-color: #eee;
     left: 0;
     bottom: 0;
-    height: 2em;
+    height: 100%;
     width: 100%;
     opacity: 0;
     transition: all 0.2s;

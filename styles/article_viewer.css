@@ -21,6 +21,15 @@
     flex-basis: 100%;
 }
 
+
+.bookmark {
+    height:2rem;
+}
+
+.titleRow {
+    display: flex;
+    flex-direction: row;
+}
 .commentReply {
     padding-left: 0.5em;
     border-left: 1px solid black;

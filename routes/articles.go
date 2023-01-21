@@ -125,16 +125,30 @@ func GetArticle(c *gin.Context) {
 	var authorUsername = c.Param("username")
 	var slug = c.Param("slug")
 	session, _ := config.Store.Get(c.Request, "session")
+	dbConn := db.GetDB()
 
 	article := queryArticle(authorUsername, slug)
 
+	alreadyFavoritedBool := false
+	var alreadyFavoritedCount int
+
+	favoriteRowsError := dbConn.QueryRow(
+		`select COUNT(*) from Favorite where UserID = ? and ArticleID= ?`, session.Values["userID"], article.ArticleID).Scan(&alreadyFavoritedCount)
+
+	if favoriteRowsError != nil {
+		fmt.Println(favoriteRowsError)
+	}
+
+	alreadyFavoritedBool = alreadyFavoritedCount > 0
+
 	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
-		"articleID":      article.ArticleID,
-		"title":          article.Title,
-		"authorUsername": authorUsername,
-		"userID":         session.Values["userID"],
-		"content":        strings.Split(article.Content, "\n"),
-		"localUsername":  session.Values["username"],
+		"content":          strings.Split(article.Content, "\n"),
+		"localUserID":      session.Values["userID"],
+		"alreadyFavorited": alreadyFavoritedBool,
+		"articleID":        article.ArticleID,
+		"title":            article.Title,
+		"authorUsername":   authorUsername,
+		"localUsername":    session.Values["username"],
 	})
 }
 

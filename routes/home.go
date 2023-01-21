@@ -54,7 +54,7 @@ func ServeHome(c *gin.Context) {
 		}
 
 		c.HTML(http.StatusOK, "home.tmpl", gin.H{
-			"username": username,
+			"signedInUsername": username,
 			"articles": articles,
             "count": len(articles),
 		})

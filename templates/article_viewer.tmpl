@@ -42,7 +42,7 @@
     }
 
     const authorUsername = {{ .authorUsername }};
-    const localUsername = {{ .localUsername }};
+    const signedInUsername = {{ .signedInUsername }};
 
     function postComment() {
         const content = document.querySelector("input").value;
@@ -62,7 +62,7 @@
         .then(res => res.json())
         .then(res => {
             const e = document.createElement('p');
-            e.innerHTML = localUsername + ": " + res.content;
+            e.innerHTML = signedInUsername + ": " + res.content;
             e.id = res.comment_id;
             document.body.appendChild(e);
 
@@ -127,7 +127,7 @@
         .then(res => res.json())
         .then(res => {
             const e = document.createElement('p');
-            e.innerHTML = localUsername + ": " + content;
+            e.innerHTML = signedInUsername + ": " + content;
             e.classList.add("commentReply");
         
             e.id = res.comment_id;

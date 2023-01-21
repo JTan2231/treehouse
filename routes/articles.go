@@ -41,7 +41,7 @@ func CreateArticle(c *gin.Context) {
 
 		c.IndentedJSON(200, gin.H{
 			"slug":     newArticle.Slug,
-			"username": session.Values["username"],
+			"signedInUsername": session.Values["username"],
 		})
 	}
 }
@@ -160,7 +160,7 @@ func GetArticle(c *gin.Context) {
         "subtitle": article.Subtitle,
         "timestamp": article.TimestampPosted,
 		"authorUsername":   authorUsername,
-		"localUsername":    session.Values["username"],
+		"signedInUsername":    session.Values["username"],
 	})
 }
 

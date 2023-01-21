@@ -40,7 +40,7 @@ func CreateComment(c *gin.Context) {
 		c.IndentedJSON(400, gin.H{"message": err})
 	} else {
 		c.IndentedJSON(200, gin.H{
-			"username":   session.Values["username"],
+			"signedInUsername":   session.Values["username"],
 			"comment_id": newComment.CommentID,
 			"content":    newComment.Content,
 		})

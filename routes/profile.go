@@ -151,7 +151,7 @@ func ServeProfile(c *gin.Context) {
 		"articles":          articles,
 		"subscriptions":     subscriptions,
 		"favorites":         favorites,
-		"username":          localusername,
+		"signedInUsername":          localusername,
 		"profileUsername":   username,
 		"user_id":           profileUserID,
 		"check":             check,

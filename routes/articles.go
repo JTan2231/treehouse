@@ -122,12 +122,12 @@ func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, err
 }
 
 func GetArticle(c *gin.Context) {
-	var username = c.Param("username")
+	var authorUsername = c.Param("username")
 	var slug = c.Param("slug")
 	session, _ := config.Store.Get(c.Request, "session")
 	dbConn := db.GetDB()
 
-	article := queryArticle(username, slug)
+	article := queryArticle(authorUsername, slug)
 
 	alreadyFavoritedBool := false
 	var alreadyFavoritedCount int
@@ -142,12 +142,13 @@ func GetArticle(c *gin.Context) {
 	alreadyFavoritedBool = alreadyFavoritedCount > 0
 
 	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
-		"title":            article.Title,
-		"username":         username,
 		"content":          strings.Split(article.Content, "\n"),
-		"articleID":        article.ArticleID,
 		"localUserID":      session.Values["userID"],
 		"alreadyFavorited": alreadyFavoritedBool,
+		"articleID":        article.ArticleID,
+		"title":            article.Title,
+		"authorUsername":   authorUsername,
+		"localUsername":    session.Values["username"],
 	})
 }
 

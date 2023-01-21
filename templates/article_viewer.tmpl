@@ -34,6 +34,153 @@
             })
     }
 
+    const authorUsername = {{ .authorUsername }};
+    const localUsername = {{ .localUsername }};
+
+    function postComment() {
+        const content = document.querySelector("input").value;
+        const data = {
+            "userid": userID,  
+            "articleid": {{ .articleID }},
+            "parentid": null,
+            "content": content,
+        }
+        fetch("/comments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(res => {
+            const e = document.createElement('p');
+            e.innerHTML = localUsername + ": " + res.content;
+            e.id = res.comment_id;
+            document.body.appendChild(e);
+
+            const reply = document.createElement('button');
+            reply.id = res.comment_id;
+            reply.onclick = function() {
+                createReply(this.id);
+            }
+            reply.innerHTML = "reply";
+            e.appendChild(reply);
+        })
+    }
+
+    function createReply(id) {
+        const commentElement = document.getElementById(id);
+
+        const replyInput = document.createElement('input');
+        replyInput.id = "replyInput";
+        replyInput.classList.add("commentReply");
+        commentElement.appendChild(replyInput);
+
+
+        const submitReply = document.createElement('button');
+        submitReply.innerHTML = "Submit";
+
+
+        const cancelButton = document.createElement('button');
+        cancelButton.innerHTML = "Cancel";
+        cancelButton.onclick = function() {
+            commentElement.removeChild(replyInput);
+            commentElement.removeChild(submitReply);
+            commentElement.removeChild(cancelButton);
+        }
+
+        commentElement.appendChild(submitReply);
+        commentElement.appendChild(cancelButton);
+
+        submitReply.onclick = function() {
+            postReplyComment(id); 
+            commentElement.removeChild(replyInput);
+            commentElement.removeChild(submitReply);
+            commentElement.removeChild(cancelButton);
+        }
+    }
+
+    function postReplyComment(id) {
+        const content = document.getElementById("replyInput").value;
+        
+        const data = {
+            "userid": userID,  
+            "articleid": {{ .articleID }},
+            "parentid": parseInt(id),
+            "content": content,
+        }
+        fetch("/comments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(res => {
+            const e = document.createElement('p');
+            e.innerHTML = localUsername + ": " + content;
+            e.classList.add("commentReply");
+        
+            e.id = res.comment_id;
+            document.getElementById(id).appendChild(e);
+
+            const reply = document.createElement('button');
+            reply.id = res.comment_id;
+            reply.onclick = function() {
+                createReply(this.id);
+            }
+            reply.innerHTML = "reply";
+            e.appendChild(reply);
+        })
+    }
+
+    function getComments() {
+        const articleID = {{ .articleID }};
+
+        fetch(`/comments/?articleID=${articleID}`, {
+        method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+        .then(res => res.json())
+        .then(res => {
+            for(var i = 0; i < res.comments.length; i++) {
+                dfs(res.comments[i]);
+            }
+        })
+    }
+
+    function dfs(comment) {
+        const e = document.createElement('p');
+        e.innerHTML = comment.Comment.Username + ": " + comment.Comment.Comment.content;
+        e.id = comment.Comment.Comment.commentid;
+
+        const reply = document.createElement('button');
+        reply.innerHTML = "reply";
+        reply.id = comment.Comment.Comment.commentid;
+        reply.onclick = function() {
+            createReply(this.id);
+        }
+        e.appendChild(reply);
+        
+
+        if(comment.Comment.Comment.parentid == null) {
+            document.body.appendChild(e);
+        } else {
+            document.getElementById(comment.Comment.Comment.parentid).appendChild(e);
+            e.classList.add("commentReply");
+        }
+
+        if(comment.Children.length > 0) {
+            for(var i = 0; i < comment.Children.length; i++) {
+                dfs(comment.Children[i]);
+            }
+        } 
+    }      
+    getComments();
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/article_viewer.css">
@@ -51,11 +198,15 @@
             <img onclick=onFavorite() id="bookMark" class="bookmark" src="http://localhost:8080/assets/emptyBookMark.png" alt="favorite">
             {{end}}
         </div>
+        <div class="styledFont marginBottom">By <a class="authorLink" href="/{{ .authorUsername }}">{{ .authorUsername }}</a></div>
         <div class="articleBody">
             {{ range $c := .content }}
                 <p>{{ $c }}</p>
             {{ end }}
         </div>
     </div>
+
+    <input placeholder="test comments"></input>
+    <button onclick="postComment()">Post Comment</button>
 </body>
 </html>

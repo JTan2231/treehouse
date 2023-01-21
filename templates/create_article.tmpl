@@ -27,7 +27,7 @@
         const content = document.getElementById('content').value;
 
         if (verify(title, content)) {
-            fetch(`/create/articles`, {
+            fetch(`/create/create-article`, {
                 method: 'POST',
                 body: JSON.stringify({
                     Title: title,

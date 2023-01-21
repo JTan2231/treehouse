@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"treehouse/config"
 	"treehouse/db"
 	"treehouse/schema"
@@ -31,11 +32,14 @@ func CreateComment(c *gin.Context) {
 
 	newComment, err = addCommentToDB(newComment, c)
 
+	session, _ := config.Store.Get(c.Request, "session")
+
 	if err != nil {
 		fmt.Println(err)
 		c.IndentedJSON(400, gin.H{"message": err})
 	} else {
 		c.IndentedJSON(200, gin.H{
+			"username":   session.Values["username"],
 			"comment_id": newComment.CommentID,
 			"content":    newComment.Content,
 		})
@@ -71,6 +75,12 @@ func addCommentToDB(comment schema.Comment, c *gin.Context) (schema.Comment, err
 		newComment.ParentID,
 		newComment.Content,
 	)
+	if err != nil {
+		return newComment, fmt.Errorf("CreateComment: %v", err)
+	}
+
+	commentId, err := result.LastInsertId()
+	newComment.CommentID = int(commentId)
 
 	if err != nil {
 		return newComment, fmt.Errorf("CreateComment: %v", err)
@@ -84,12 +94,17 @@ func addCommentToDB(comment schema.Comment, c *gin.Context) (schema.Comment, err
 	return newComment, nil
 }
 
-type CommentTree struct {
+type UserComment struct {
 	Comment  schema.Comment
+	Username string
+}
+
+type CommentTree struct {
+	Comment  UserComment
 	Children []*CommentTree
 }
 
-func treeFromComment(comment schema.Comment) CommentTree {
+func treeFromComment(comment UserComment) CommentTree {
 	return CommentTree{Comment: comment, Children: make([]*CommentTree, 0)}
 }
 
@@ -100,10 +115,14 @@ func GetComments(c *gin.Context) {
 		return
 	}
 
-	session, _ := config.Store.Get(c.Request, "session")
+	articleID, err := strconv.Atoi(c.Query("articleID"))
+	if err != nil {
+		c.IndentedJSON(400, gin.H{"message": "Bad request"})
+		c.Abort()
+		return
+	}
 
-	userID := session.Values["userID"].(int)
-	comments := queryComments(userID)
+	comments := queryComments(articleID)
 
 	// construct n-ary comment tree from array of comments
 	//
@@ -117,13 +136,13 @@ func GetComments(c *gin.Context) {
 
 	for i := 0; i < len(comments); i++ {
 		trees = append(trees, treeFromComment(comments[i]))
-		idPointerMap[comments[i].CommentID] = &trees[i]
+		idPointerMap[comments[i].Comment.CommentID] = &trees[i]
 	}
 
 	for i := 0; i < len(comments); i++ {
-		if current, ok := idPointerMap[comments[i].CommentID]; ok {
-			if current.Comment.ParentID != nil {
-				pid := *current.Comment.ParentID
+		if current, ok := idPointerMap[comments[i].Comment.CommentID]; ok {
+			if current.Comment.Comment.ParentID != nil {
+				pid := *current.Comment.Comment.ParentID
 				if parent, ok := idPointerMap[pid]; ok {
 					parent.Children = append(parent.Children, current)
 					idPointerMap[pid] = parent
@@ -139,18 +158,22 @@ func GetComments(c *gin.Context) {
 	})
 }
 
-func queryComments(userID int) []schema.Comment {
+func queryComments(articleID int) []UserComment {
 	dbConn := db.GetDB()
-	var comments []schema.Comment
+	var comments []UserComment
 
 	rows, err := dbConn.Query(
 		`select
-            CommentID,
-            ArticleID,
-            ParentID,
-            UserID,
-            Content
-        from Comment c where c.UserID = ?`, userID)
+            c.CommentID,
+            c.ArticleID,
+            c.ParentID,
+            c.UserID,
+            c.Content,
+			u.Username
+        from Comment c 
+		inner join User u 
+		on c.UserID = u.UserID
+		where c.articleID = ?`, articleID)
 
 	if err != nil {
 		fmt.Printf("error: %v", err)
@@ -160,14 +183,15 @@ func queryComments(userID int) []schema.Comment {
 	if rows != nil {
 		defer rows.Close()
 		for rows.Next() {
-			var comment schema.Comment
+			var comment UserComment
 
 			if err := rows.Scan(
-				&comment.CommentID,
-				&comment.ArticleID,
-				&comment.ParentID,
-				&comment.UserID,
-				&comment.Content); err != nil {
+				&comment.Comment.CommentID,
+				&comment.Comment.ArticleID,
+				&comment.Comment.ParentID,
+				&comment.Comment.UserID,
+				&comment.Comment.Content,
+				&comment.Username); err != nil {
 				fmt.Printf("error: %v", err)
 				return comments
 			}

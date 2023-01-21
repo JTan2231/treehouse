@@ -8,6 +8,15 @@
     margin-bottom: 0;
 }
 
+.articleSubtitle {
+    font-size: 28px;
+    color: #666;
+    margin: 0;
+    font-family: var(--styled-font-family);
+    flex-basis: 100%;
+    margin-bottom: 1em;
+}
+
 .authorLink {
     font-weight: bold;
     font-size: var(--article-content-font-size);
@@ -16,11 +25,17 @@
 }
 
 .author {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 1.5em;
     flex-basis: 100%;
 }
 
+.separator {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5em;
+}
+
+.timestamp {
+    color: #aaa;
+}
 
 .bookmark {
     height:2rem;

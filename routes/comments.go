@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 	"treehouse/config"
 	"treehouse/db"
 	"treehouse/schema"
@@ -39,9 +40,9 @@ func CreateComment(c *gin.Context) {
 		c.IndentedJSON(400, gin.H{"message": err})
 	} else {
 		c.IndentedJSON(200, gin.H{
-			"username":   session.Values["username"],
-			"comment_id": newComment.CommentID,
-			"content":    newComment.Content,
+			"signedInUsername": session.Values["username"],
+			"comment_id":       newComment.CommentID,
+			"content":          newComment.Content,
 		})
 	}
 }
@@ -57,6 +58,8 @@ func addCommentToDB(comment schema.Comment, c *gin.Context) (schema.Comment, err
 	conn := db.GetDB()
 	newComment, err := verifyComment(comment)
 
+	newComment.TimestampPosted = time.Now().Format("2006-01-02 15:04:05")
+
 	if err != nil {
 		return newComment, fmt.Errorf("CreateComment: %v", err)
 	}
@@ -68,12 +71,14 @@ func addCommentToDB(comment schema.Comment, c *gin.Context) (schema.Comment, err
             UserID,
             ArticleID,
             ParentID,
-            Content
-        ) values (?, ?, ?, ?)`,
+            Content,
+            TimestampPosted
+        ) values (?, ?, ?, ?, ?)`,
 		newComment.UserID,
 		newComment.ArticleID,
 		newComment.ParentID,
 		newComment.Content,
+		newComment.TimestampPosted,
 	)
 	if err != nil {
 		return newComment, fmt.Errorf("CreateComment: %v", err)

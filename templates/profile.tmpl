@@ -39,7 +39,7 @@
         <div class="pageTitle">{{ .profileUsername }}</div>
 
         {{if .check}}
-        <a class="linkButton" href="/create/create-article">Create</a>
+        <a class="linkButton" href="/create-article">Create</a>
         {{else}}{{if .alreadySubscribed}}
         <button id="subscribe" class="linkButton" onclick="onSubscribe()">Unsubscribe</button>
         {{else}}

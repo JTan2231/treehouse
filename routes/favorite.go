@@ -21,7 +21,7 @@ func FavoriteArticle(c *gin.Context) {
 	var alreadyFavoriteCount int
 	favoriteRowsError := db.QueryRow(
 		`select COUNT(*) from Favorite where UserID = ? and ArticleID= ?`, favorite.UserID, favorite.ArticleID).Scan(&alreadyFavoriteCount)
-	fmt.Println(favoriteRowsError)
+	fmt.Println("favoriteRowsError: ", favoriteRowsError)
 
 	if alreadyFavoriteCount > 0 {
 		result, err := db.Exec(

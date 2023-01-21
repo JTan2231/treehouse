@@ -8,8 +8,15 @@
 </head>
 <script>
     const root = {{ .API_ROOT }};
+    const timestamp = {{ .timestamp }};
     const userID = {{ .localUserID }};
     const articleID = {{ .articleID }};
+
+    const currentYear = new Date().toDateString().split(' ')[3];
+    let date = new Date(Date.parse(timestamp)).toDateString().split(' ');
+    date = `${date[1]} ${date[2]}` + (date[3] === currentYear ? `` : `, ${date[3]}`);
+
+    window.onload = () => document.getElementById('timestamp').innerHTML = date;
 
     function onFavorite() {
         const bookMark = document.getElementById("bookMark");
@@ -35,7 +42,7 @@
     }
 
     const authorUsername = {{ .authorUsername }};
-    const localUsername = {{ .localUsername }};
+    const signedInUsername = {{ .signedInUsername }};
 
     function postComment() {
         const content = document.querySelector("input").value;
@@ -55,7 +62,7 @@
         .then(res => res.json())
         .then(res => {
             const e = document.createElement('p');
-            e.innerHTML = localUsername + ": " + res.content;
+            e.innerHTML = signedInUsername + ": " + res.content;
             e.id = res.comment_id;
             document.body.appendChild(e);
 
@@ -120,7 +127,7 @@
         .then(res => res.json())
         .then(res => {
             const e = document.createElement('p');
-            e.innerHTML = localUsername + ": " + content;
+            e.innerHTML = signedInUsername + ": " + content;
             e.classList.add("commentReply");
         
             e.id = res.comment_id;
@@ -182,6 +189,12 @@
     }      
     getComments();
 </script>
+<style>
+    .authorFlex {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/article_viewer.css">
 <body class="flexWrapperVertical">
@@ -189,8 +202,12 @@
 
     <div class="flexWrapper pageContentsScroll flexLeft">
         <div class="pageTitle articleTitle">{{ .title }}</div>
+        <div class="articleSubtitle">{{ .subtitle }}</div>
         <div class="styledFont author">
-            <a class="authorLink" href="/{{ .username }}">{{ .username }}</a>
+            <div class="styledFont marginBottom"><a class="authorLink" href="/{{ .authorUsername }}">{{ .authorUsername }}</a></div>
+        </div>
+        <div class="styledFont author authorFlex separator">
+            <span class="styledFont timestamp" style="align-self:end;" id="timestamp"></span>
 
             {{if .alreadyFavorited}}
             <img onclick=onFavorite() id="bookMark" class="bookmark" src="http://localhost:8080/assets/filledBookMark.png" alt="favorite">
@@ -198,7 +215,6 @@
             <img onclick=onFavorite() id="bookMark" class="bookmark" src="http://localhost:8080/assets/emptyBookMark.png" alt="favorite">
             {{end}}
         </div>
-        <div class="styledFont marginBottom">By <a class="authorLink" href="/{{ .authorUsername }}">{{ .authorUsername }}</a></div>
         <div class="articleBody">
             {{ range $c := .content }}
                 <p>{{ $c }}</p>

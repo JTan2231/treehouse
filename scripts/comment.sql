@@ -5,6 +5,7 @@ create table Comment (
     ParentID int null references Comment(`CommentID`) on delete cascade,
     UserID int not null,
     Content text not null,
+    TimestampPosted timestamp not null,
 
     primary key (`CommentID`),
     foreign key (`ArticleID`) references Article(`ArticleID`),

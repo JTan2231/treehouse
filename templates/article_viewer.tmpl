@@ -93,25 +93,22 @@
         })
         .then(res => res.json())
         .then(res => {
-                const e = document.createElement('p');
-                e.innerHTML = localUsername + ": " + content;
-                e.classList.add("commentReply");
-            
-                e.id = res.comment_id;
-                document.getElementById(id).appendChild(e);
+            const e = document.createElement('p');
+            e.innerHTML = localUsername + ": " + content;
+            e.classList.add("commentReply");
+        
+            e.id = res.comment_id;
+            document.getElementById(id).appendChild(e);
 
-                const reply = document.createElement('button');
-                reply.id = res.comment_id;
-                reply.onclick = function() {
-                    createReply(this.id);
-                }
-                reply.innerHTML = "reply";
-                e.appendChild(reply);
+            const reply = document.createElement('button');
+            reply.id = res.comment_id;
+            reply.onclick = function() {
+                createReply(this.id);
+            }
+            reply.innerHTML = "reply";
+            e.appendChild(reply);
         })
     }
-
-
-   
 
     function getComments() {
         const articleID = {{ .articleID }};
@@ -130,35 +127,33 @@
         })
     }
 
-        function dfs(comment) {
-                const e = document.createElement('p');
-                e.innerHTML = comment.Comment.Username + ": " + comment.Comment.Comment.content;
-                e.id = comment.Comment.Comment.commentid;
+    function dfs(comment) {
+        const e = document.createElement('p');
+        e.innerHTML = comment.Comment.Username + ": " + comment.Comment.Comment.content;
+        e.id = comment.Comment.Comment.commentid;
 
-                const reply = document.createElement('button');
-                reply.innerHTML = "reply";
-                reply.id = comment.Comment.Comment.commentid;
-                reply.onclick = function() {
-                    createReply(this.id);
-                }
-                e.appendChild(reply);
-                
+        const reply = document.createElement('button');
+        reply.innerHTML = "reply";
+        reply.id = comment.Comment.Comment.commentid;
+        reply.onclick = function() {
+            createReply(this.id);
+        }
+        e.appendChild(reply);
+        
 
-                if(comment.Comment.Comment.parentid == null) {
-                    document.body.appendChild(e);
-                } else {
-                    document.getElementById(comment.Comment.Comment.parentid).appendChild(e);
-                    e.classList.add("commentReply");
-                }
+        if(comment.Comment.Comment.parentid == null) {
+            document.body.appendChild(e);
+        } else {
+            document.getElementById(comment.Comment.Comment.parentid).appendChild(e);
+            e.classList.add("commentReply");
+        }
 
-                if(comment.Children.length > 0) {
-                    for(var i = 0; i < comment.Children.length; i++) {
-                        dfs(comment.Children[i]);
-                    }
-                } 
+        if(comment.Children.length > 0) {
+            for(var i = 0; i < comment.Children.length; i++) {
+                dfs(comment.Children[i]);
+            }
+        } 
     }      
-    
-
     getComments();
 </script>
 <link rel="stylesheet" href="/styles/root.css">

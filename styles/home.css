@@ -7,3 +7,16 @@
     top: 0.5em;
     right: 0.5em;
 }
+
+.homeList {
+    flex-basis: 100%;
+    font-family: var(--styled-font-family);
+}
+
+.nothingText {
+    color: #aaa;
+    width: 100%;
+    line-height: 3em;
+    display: block;
+    text-indent: 0.5em;
+}

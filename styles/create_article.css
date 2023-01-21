@@ -38,6 +38,11 @@ button:hover {
     transition: all 0.5s;
 }
 
+.articleSubtitleInput {
+    font-size: 20px;
+    width: calc(100% - 0.35em - 4px);
+}
+
 .articleTitleInput:hover {
     border: 1px solid black;
 }

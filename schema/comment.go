@@ -6,4 +6,5 @@ type Comment struct {
 	ArticleID int    `json:"articleid"`
 	ParentID  *int   `json:"parentid"`
 	Content   string `json:"content"`
+    TimestampPosted string `json:"timestampPosted"`
 }

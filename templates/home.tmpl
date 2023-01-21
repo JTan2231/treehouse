@@ -7,7 +7,15 @@
     <title>TREEHOUSE</title>
 </head>
 <script>
-    const root = {{ .API_ROOT }};
+    const count = {{ .count }};
+
+    window.onload = () => {
+        if (count === 0) {
+            document.getElementById('list').innerHTML = `
+                <div class="nothingText">There's nobody here...</div>
+            `;
+        }
+    };
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
@@ -17,14 +25,16 @@
 
     <div class="flexWrapper pageContentsScroll">
         <div class="pageTitle">Home</div>
-        <div class="linkList">
+        <div class="homeList">
             <div class="listHeader">Latest from your subscriptions</div>
-            {{ range $a := .articles }}    
-                <div class="linkContainer">
-                    <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
-                    <span class="author">{{ $a.Username }}</span>
-                </div>
-            {{ end }}
+            <div id="list">
+                {{ range $a := .articles }}    
+                    <div class="linkContainer">
+                        <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
+                        <span class="author">{{ $a.Username }}</span>
+                    </div>
+                {{ end }}
+            </div>
         </div>
     </div>
 </body>

@@ -8,7 +8,19 @@
 </head>
 <script>
     const root = {{ .API_ROOT }};
+    const timestamp = {{ .timestamp }};
+    const currentYear = new Date().toDateString().split(' ')[3];
+    let date = new Date(Date.parse(timestamp)).toDateString().split(' ');
+    date = `${date[1]} ${date[2]}` + (date[3] === currentYear ? `` : `, ${date[3]}`);
+
+    window.onload = () => document.getElementById('timestamp').innerHTML = date;
 </script>
+<style>
+    .authorFlex {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/article_viewer.css">
 <body class="flexWrapperVertical">
@@ -16,8 +28,10 @@
 
     <div class="flexWrapper pageContentsScroll flexLeft">
         <div class="pageTitle articleTitle">{{ .title }}</div>
-        <div class="styledFont author">
+        <div class="articleSubtitle">{{ .subtitle }}</div>
+        <div class="styledFont author authorFlex">
             <a class="authorLink" href="/{{ .username }}">{{ .username }}</a>
+            <span class="styledFont timestamp" id="timestamp"></span>
         </div>
         <div class="articleBody">
             {{ range $c := .content }}

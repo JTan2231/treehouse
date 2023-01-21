@@ -39,7 +39,7 @@
                     'Content-Type': 'application/json',
                 }
             }).then(res => res.json()).then(res => {
-                window.location.href = `/${res.username}/${res.slug}`;
+                window.location.href = `/${res.signedInUsername}/${res.slug}`;
             });
         }
         else {

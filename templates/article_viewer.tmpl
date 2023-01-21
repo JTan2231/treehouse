@@ -44,10 +44,12 @@
     }
 
     function createReply(id) {
+        const commentElement = document.getElementById(id);
+
         const replyInput = document.createElement('input');
         replyInput.id = "replyInput";
         replyInput.classList.add("commentReply");
-        document.getElementById(id).appendChild(replyInput);
+        commentElement.appendChild(replyInput);
 
 
         const submitReply = document.createElement('button');
@@ -57,19 +59,19 @@
         const cancelButton = document.createElement('button');
         cancelButton.innerHTML = "Cancel";
         cancelButton.onclick = function() {
-            document.getElementById(id).removeChild(replyInput);
-            document.getElementById(id).removeChild(submitReply);
-            document.getElementById(id).removeChild(cancelButton);
+            commentElement.removeChild(replyInput);
+            commentElement.removeChild(submitReply);
+            commentElement.removeChild(cancelButton);
         }
 
-        document.getElementById(id).appendChild(submitReply);
-        document.getElementById(id).appendChild(cancelButton);
+        commentElement.appendChild(submitReply);
+        commentElement.appendChild(cancelButton);
 
         submitReply.onclick = function() {
             postReplyComment(id); 
-            document.getElementById(id).removeChild(replyInput);
-            document.getElementById(id).removeChild(submitReply);
-            document.getElementById(id).removeChild(cancelButton);
+            commentElement.removeChild(replyInput);
+            commentElement.removeChild(submitReply);
+            commentElement.removeChild(cancelButton);
         }
     }
 
@@ -128,8 +130,6 @@
         })
     }
 
-
-
         function dfs(comment) {
                 const e = document.createElement('p');
                 e.innerHTML = comment.Comment.Username + ": " + comment.Comment.Comment.content;
@@ -160,8 +160,6 @@
     
 
     getComments();
-
-
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/article_viewer.css">
@@ -180,10 +178,5 @@
 
     <input placeholder="test comments"></input>
     <button onclick="postComment()">Post Comment</button>
-
-
-
-
-
 </body>
 </html>

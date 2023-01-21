@@ -3,11 +3,11 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
-    "time"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 	"treehouse/config"
 	"treehouse/db"
 	"treehouse/schema"
@@ -40,7 +40,7 @@ func CreateArticle(c *gin.Context) {
 		session, _ := config.Store.Get(c.Request, "session")
 
 		c.IndentedJSON(200, gin.H{
-			"slug":     newArticle.Slug,
+			"slug":             newArticle.Slug,
 			"signedInUsername": session.Values["username"],
 		})
 	}
@@ -95,8 +95,8 @@ func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, err
 	newArticle.Slug = strip(newArticle.Title)
 	newArticle.Slug = strings.ToLower(strings.ReplaceAll(newArticle.Slug, " ", "-"))
 
-    newArticle.TimestampPosted = time.Now().Format("2006-01-02 15:04:05")
-    fmt.Println("New article at " + newArticle.TimestampPosted + " UTC!")
+	newArticle.TimestampPosted = time.Now().Format("2006-01-02 15:04:05")
+	fmt.Println("New article at " + newArticle.TimestampPosted + " UTC!")
 
 	// TODO: Check if slug exists in DB
 
@@ -110,11 +110,11 @@ func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, err
             TimestampPosted
         ) values (?, ?, ?, ?, ?, ?)`,
 		newArticle.Title,
-        newArticle.Subtitle,
+		newArticle.Subtitle,
 		newArticle.Slug,
 		newArticle.Content,
 		newArticle.UserID,
-        newArticle.TimestampPosted,
+		newArticle.TimestampPosted,
 	)
 
 	if err != nil {
@@ -147,7 +147,7 @@ func GetArticle(c *gin.Context) {
 		fmt.Println(favoriteRowsError)
 	}
 
-    fmt.Println("ARTICLE ID: ", article.ArticleID)
+	fmt.Println("ARTICLE ID: ", article.ArticleID)
 
 	alreadyFavoritedBool = alreadyFavoritedCount > 0
 
@@ -157,10 +157,10 @@ func GetArticle(c *gin.Context) {
 		"alreadyFavorited": alreadyFavoritedBool,
 		"articleID":        article.ArticleID,
 		"title":            article.Title,
-        "subtitle": article.Subtitle,
-        "timestamp": article.TimestampPosted,
+		"subtitle":         article.Subtitle,
+		"timestamp":        article.TimestampPosted,
 		"authorUsername":   authorUsername,
-		"signedInUsername":    session.Values["username"],
+		"signedInUsername": session.Values["username"],
 	})
 }
 
@@ -169,7 +169,7 @@ func queryArticle(username string, slug string) schema.Article {
 
 	var article schema.Article
 
-    err := conn.QueryRow(`
+	err := conn.QueryRow(`
             select
                 ArticleID,
                 Title,
@@ -181,9 +181,9 @@ func queryArticle(username string, slug string) schema.Article {
             where a.Slug = ?
         `, username, slug).Scan(&article.ArticleID, &article.Title, &article.Subtitle, &article.Content, &article.TimestampPosted)
 
-    if err != nil {
-        fmt.Println("queryArticle: ", err)
-    }
+	if err != nil {
+		fmt.Println("queryArticle: ", err)
+	}
 
 	return article
 }

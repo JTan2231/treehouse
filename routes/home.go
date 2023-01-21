@@ -55,8 +55,8 @@ func ServeHome(c *gin.Context) {
 
 		c.HTML(http.StatusOK, "home.tmpl", gin.H{
 			"signedInUsername": username,
-			"articles": articles,
-            "count": len(articles),
+			"articles":         articles,
+			"count":            len(articles),
 		})
 	} else {
 		c.HTML(200, "404_redirect.tmpl", gin.H{

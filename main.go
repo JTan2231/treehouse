@@ -38,7 +38,7 @@ func main() {
 	router.POST("/comments", routes.CreateComment)
 	router.GET("/comments", routes.GetComments)
 
-    // TODO: clean this up
+	// TODO: clean this up
 	createGroup := router.Group("/create", routes.AuthRequired)
 	createGroup.GET("/create-article", routes.GetCreateArticle)
 	createGroup.POST("/create-article", routes.CreateArticle)

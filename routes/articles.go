@@ -122,15 +122,19 @@ func addArticleToDB(article schema.Article, c *gin.Context) (schema.Article, err
 }
 
 func GetArticle(c *gin.Context) {
-	var username = c.Param("username")
+	var authorUsername = c.Param("username")
 	var slug = c.Param("slug")
+	session, _ := config.Store.Get(c.Request, "session")
 
-	article := queryArticle(username, slug)
+	article := queryArticle(authorUsername, slug)
 
 	c.HTML(http.StatusOK, "article_viewer.tmpl", gin.H{
-		"title":    article.Title,
-		"username": username,
-		"content":  strings.Split(article.Content, "\n"),
+		"articleID":      article.ArticleID,
+		"title":          article.Title,
+		"authorUsername": authorUsername,
+		"userID":         session.Values["userID"],
+		"content":        strings.Split(article.Content, "\n"),
+		"localUsername":  session.Values["username"],
 	})
 }
 
@@ -142,11 +146,12 @@ func queryArticle(username string, slug string) schema.Article {
 	conn.QueryRow(`
             select
                 Title,
-                Content
+                Content,
+				ArticleID
             from Article a 
             inner join User u on u.Username = ? and u.UserID = a.UserID
             where a.Slug = ?
-        `, username, slug).Scan(&article.Title, &article.Content)
+        `, username, slug).Scan(&article.Title, &article.Content, &article.ArticleID)
 
 	return article
 }

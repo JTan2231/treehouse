@@ -20,3 +20,8 @@
     padding-bottom: 1.5em;
     flex-basis: 100%;
 }
+
+.commentReply {
+    padding-left: 0.5em;
+    border-left: 1px solid black;
+}

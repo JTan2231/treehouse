@@ -11,7 +11,7 @@
     const subscribeeID = {{ .user_id }};
 
     function onSubscribe() {
-        fetch("/create/subscribe", {
+        fetch("/subscribe", {
             method: "POST",
             body: JSON.stringify({
                 subscribeeID: subscribeeID,

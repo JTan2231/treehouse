@@ -44,8 +44,41 @@
     const authorUsername = {{ .authorUsername }};
     const signedInUsername = {{ .signedInUsername }};
 
+    function createCommentElement(commentUsername, commentContent, id) {
+        const root = document.createElement('div');
+        const username = document.createElement('a');
+        username.classList.add('commentUsername');
+        username.innerHTML = commentUsername;
+        username.href = `/${commentUsername}`;
+        root.appendChild(username);
+
+        const content = document.createElement('div');
+        content.classList.add('commentContent');
+        content.innerHTML = commentContent;
+        root.appendChild(content);
+
+        root.id = id;
+        root.classList.add('comment');
+
+        return root;
+    }
+
+    function createReplyButton(id) {
+        const reply = document.createElement('div');
+        reply.id = id;
+        reply.onclick = function() {
+            createReply(this.id);
+            document.getElementById(id).removeChild(this);
+        }
+
+        reply.innerHTML = "reply";
+        reply.classList.add('replyButton');
+
+        return reply;
+    }
+
     function postComment() {
-        const content = document.querySelector("input").value;
+        const content = document.getElementById('commentInput').value;
         const data = {
             "userid": userID,  
             "articleid": {{ .articleID }},
@@ -61,51 +94,52 @@
         })
         .then(res => res.json())
         .then(res => {
-            const e = document.createElement('p');
-            e.innerHTML = signedInUsername + ": " + res.content;
-            e.id = res.comment_id;
-            document.body.appendChild(e);
+            const comment = createCommentElement(signedInUsername, res.content, res.comment_id);
+            comment.appendChild(createReplyButton(res.comment_id));
 
-            const reply = document.createElement('button');
-            reply.id = res.comment_id;
-            reply.onclick = function() {
-                createReply(this.id);
-            }
-            reply.innerHTML = "reply";
-            e.appendChild(reply);
+            const container = document.getElementById('commentContainer');
+            container.insertBefore(comment, container.childNodes[0]);
+
+            document.getElementById('commentInput').value = '';
+            commentInputChange();
         })
     }
 
     function createReply(id) {
         const commentElement = document.getElementById(id);
 
-        const replyInput = document.createElement('input');
+        const replyInput = document.createElement('textarea');
         replyInput.id = "replyInput";
-        replyInput.classList.add("commentReply");
-        commentElement.appendChild(replyInput);
+        replyInput.classList.add('commentInput');
+        replyInput.placeholder = 'Write a reply';
 
+        const actionsWrapper = document.createElement('div');
+        actionsWrapper.classList.add('actionsWrapper');
+        actionsWrapper.appendChild(replyInput);
 
-        const submitReply = document.createElement('button');
+        const actions = document.createElement('div');
+
+        const submitReply = document.createElement('span');
+        submitReply.classList.add('actionButton');
         submitReply.innerHTML = "Submit";
-
-
-        const cancelButton = document.createElement('button');
-        cancelButton.innerHTML = "Cancel";
-        cancelButton.onclick = function() {
-            commentElement.removeChild(replyInput);
-            commentElement.removeChild(submitReply);
-            commentElement.removeChild(cancelButton);
-        }
-
-        commentElement.appendChild(submitReply);
-        commentElement.appendChild(cancelButton);
-
         submitReply.onclick = function() {
             postReplyComment(id); 
-            commentElement.removeChild(replyInput);
-            commentElement.removeChild(submitReply);
-            commentElement.removeChild(cancelButton);
+            commentElement.removeChild(actionsWrapper);
+            commentElement.insertBefore(createReplyButton(id), commentElement.childNodes[2]);
         }
+
+        const cancelButton = document.createElement('span');
+        cancelButton.classList.add('actionButton');
+        cancelButton.innerHTML = "Cancel";
+        cancelButton.onclick = function() {
+            commentElement.removeChild(actionsWrapper);
+            commentElement.insertBefore(createReplyButton(id), commentElement.childNodes[2]);
+        }
+
+        actionsWrapper.appendChild(cancelButton);
+        actionsWrapper.appendChild(submitReply);
+
+        commentElement.insertBefore(actionsWrapper, commentElement.childNodes[3]); // indexing with a constant is gross; it'd be nice if we could make this better
     }
 
     function postReplyComment(id) {
@@ -126,20 +160,12 @@
         })
         .then(res => res.json())
         .then(res => {
-            const e = document.createElement('p');
-            e.innerHTML = signedInUsername + ": " + content;
-            e.classList.add("commentReply");
-        
-            e.id = res.comment_id;
-            document.getElementById(id).appendChild(e);
+            const e = createCommentElement(signedInUsername, res.content, res.comment_id);
 
-            const reply = document.createElement('button');
-            reply.id = res.comment_id;
-            reply.onclick = function() {
-                createReply(this.id);
-            }
-            reply.innerHTML = "reply";
-            e.appendChild(reply);
+            const parent = document.getElementById(id);
+            parent.insertBefore(e, parent.childNodes[3]);
+
+            e.appendChild(createReplyButton(res.comment_id));
         })
     }
 
@@ -161,32 +187,38 @@
     }
 
     function dfs(comment) {
-        const e = document.createElement('p');
-        e.innerHTML = comment.Comment.Username + ": " + comment.Comment.Comment.content;
-        e.id = comment.Comment.Comment.commentid;
+        const username = comment.Comment.Username;
+        const content = comment.Comment.Comment.content;
+        const id = comment.Comment.Comment.commentid;
 
-        const reply = document.createElement('button');
-        reply.innerHTML = "reply";
-        reply.id = comment.Comment.Comment.commentid;
-        reply.onclick = function() {
-            createReply(this.id);
-        }
-        e.appendChild(reply);
+        const commentElement = createCommentElement(username, content, id);
+        commentElement.appendChild(createReplyButton(id));
         
-
-        if(comment.Comment.Comment.parentid == null) {
-            document.body.appendChild(e);
+        if (comment.Comment.Comment.parentid == null) {
+            document.getElementById('commentContainer').appendChild(commentElement);
         } else {
-            document.getElementById(comment.Comment.Comment.parentid).appendChild(e);
-            e.classList.add("commentReply");
+            document.getElementById(comment.Comment.Comment.parentid).appendChild(commentElement);
         }
 
-        if(comment.Children.length > 0) {
+        if (comment.Children.length > 0) {
             for(var i = 0; i < comment.Children.length; i++) {
                 dfs(comment.Children[i]);
             }
         } 
-    }      
+    }
+
+    function commentInputChange() {
+        const value = document.getElementById('commentInput').value;
+        let cover = document.getElementById('postCommentCover');
+
+        if (value.length > 0) {
+            cover.style.width = '0';
+        }
+        else {
+            cover.style.width = '100%';
+        }
+    }
+
     getComments();
 </script>
 <style>
@@ -196,6 +228,7 @@
     }
 </style>
 <link rel="stylesheet" href="/styles/root.css">
+<link rel="stylesheet" href="/styles/profile.css">
 <link rel="stylesheet" href="/styles/article_viewer.css">
 <body class="flexWrapperVertical">
     {{ template "header.tmpl" .}}
@@ -220,9 +253,16 @@
                 <p>{{ $c }}</p>
             {{ end }}
         </div>
+
+        <div class="commentsWrapper">
+            <textarea class="commentInput" id="commentInput" placeholder="Write a comment" oninput="commentInputChange()"></textarea>
+            <div style="position:relative;">
+                <div class="postComment" id="postComment" onclick="postComment()">Post Comment</div>
+                <div class="postCommentCover" id="postCommentCover"></div>
+            </div>
+            <div class="commentContainer" id="commentContainer"></div>
+        </div>
     </div>
 
-    <input placeholder="test comments"></input>
-    <button onclick="postComment()">Post Comment</button>
 </body>
 </html>

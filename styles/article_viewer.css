@@ -1,7 +1,9 @@
 .articleBody {
     font-size: var(--article-content-font-size);
+    font-family: var(--readable-font-family);
     line-height: 1.5em;
     flex-basis: 100%;
+    margin-bottom: 5em;
 }
 
 .articleTitle {
@@ -45,7 +47,136 @@
     display: flex;
     flex-direction: row;
 }
-.commentReply {
-    padding-left: 0.5em;
+
+.comment {
+    max-width: 100%;
+    padding-left: 1em;
     border-left: 1px solid black;
+    margin: 2em 0;
+    font-family: var(--readable-font-family);
+    overflow-wrap: break-word;
+}
+
+.commentInputContainer {
+    margin-bottom: 2.5em;
+}
+
+.postComment {
+    font-family: var(--styled-font-family);
+    padding: 0.15em;
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+    text-decoration: none;
+    transition: all 0.5s;
+    width: fit-content;
+    margin-bottom: 2.5em;
+    cursor: pointer;
+}
+
+.postComment:hover {
+    background-color: black;
+    color: white;
+}
+
+.commentInput {
+    font-family: var(--readable-font-family);
+    background-color: white;
+    flex-basis: 100%;
+    height: 5em;
+    resize: none;
+    border: 1px solid transparent;
+    border-top: 1px solid black;
+    outline: 0;
+    transition: all 0.5s;
+    margin-bottom: 1em;
+}
+
+.commentInput:hover {
+    border: 1px solid black;
+}
+
+.commentInput:focus {
+    border: 1px solid black;
+    background-color: var(--transition-background-color);
+}
+
+.commentsWrapper {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+}
+
+.postCommentCover {
+    font-size: 20px;
+    background-color: white;
+    height: calc(1em + 0.3em);
+    width: 100%;
+    top: 0;
+    right: 0;
+    position: absolute;
+    transition: all 0.5s;
+}
+
+.commentContainer {
+    width: 100%;
+}
+
+.replyButton, .actionButton {
+    font-weight: bold;
+    color: black;
+    font-size: 12px;
+    position: relative;
+    padding-top: 1em;
+    padding-bottom: 0.25em;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.replyButton::after, .actionButton::after {
+    content: "";
+    position: absolute;
+    height: 1px;
+    width: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    transition: width 0.3s;
+}
+
+.replyButton:hover::after, .actionButton:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.actionButton {
+    margin: 0 1em;
+    padding: 0;
+}
+
+
+.commentUsername {
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    width: fit-content;
+    color: #777;
+    text-decoration: none;
+    transition: color 0.5s;
+}
+
+.commentUsername:hover {
+    color: black;
+}
+
+.commentContent {
+    padding-top: 0.5em;
+}
+
+.actionsWrapper {
+    margin-top: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
 }

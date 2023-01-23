@@ -1,7 +1,22 @@
 <link rel="stylesheet" href="/styles/root.css">
 
+<script> 
+    function onDashboard() {
+        const divTest = document.createElement("div");
+        const userButton = document.getElementById("userButton")
+        userButton.classList.add("test")
+        userButton.appendChild(divTest);
+    } 
+</script>
+
 <div class="header fixed">
     <a class="headerLink" href="/logout">Logout</a>
     <a class="logoLink" href="/home">TREEHOUSE</a>
-    <a class="headerLink" href="/{{ .signedInUsername }}">Profile</a>
+    <a href="/{{ .signedInUsername }}">
+        <button onclick="onDashboard()" id="userButton" class="userButton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-indicator-icon"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+            <img class="menu-trigger-image" src="http://localhost:8080/assets/pfptest.jpg">
+        </button>
+    </a>
 </div>
+

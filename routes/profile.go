@@ -108,7 +108,7 @@ func ServeProfile(c *gin.Context) {
             u.Username
         from Article a
         inner join User u on u.UserID = a.UserID
-		inner join Favorite f on f.UserID = ? and a.ArticleID = f.ArticleID`, localuserID)
+		inner join Favorite f on f.UserID = ? and a.ArticleID = f.ArticleID`, profileUserID)
 
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"errors": err})

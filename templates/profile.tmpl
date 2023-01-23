@@ -36,10 +36,14 @@
     {{ template "header.tmpl" .}}
 
     <div class="pageContentsScroll profileBody">
-        <div class="pageTitle">{{ .profileUsername }}</div>
+        <div class="pageTitle">
+            {{ .profileUsername }}
+            <img class="dashboardImage" src="http://localhost:8080/assets/pfptest.jpg">
+        </div>
 
         {{if .check}}
         <a class="linkButton" href="/create-article">Create</a>
+        <a class="linkButton">Edit Profile</a>
         {{else}}{{if .alreadySubscribed}}
         <button id="subscribe" class="linkButton" onclick="onSubscribe()">Unsubscribe</button>
         {{else}}
@@ -48,13 +52,16 @@
 
         <div class="contentContainer">
             <div class="linkList">
-                <div class="listHeader">Writings</div>
+                <div class="listHeader">Posts</div>
                 {{ range $a := .articles }}
                     <div class="linkContainer">
                         <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
                     </div>
                 {{ end }}
             </div>
+        </div>
+
+        <div class="contentContainer">
             <div class="linkList">
                 <div class="listHeader">Favorites</div>
                 {{ range $f := .favorites }}

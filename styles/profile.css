@@ -30,6 +30,18 @@
     border-top: 1px solid black;
 }
 
+.articleLinkContentContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    height: 10em;
+}
+ 
+.articleLinkContent {
+    height: auto;    
+    flex-basis: 100%;
+}
+
 .linkList {
     flex-basis: 33%;
     font-family: var(--styled-font-family);
@@ -58,7 +70,7 @@
 
 .articleLink {
     display: flex;
-    text-align: center;
+    margin-top:0.5em;
     background-color: transparent;
     position: relative;
     width: 100%;
@@ -66,7 +78,14 @@
     color: black;
     line-height: 4em;
     text-indent: 0.5em;
-    cursor: pointer;
+    cursor:pointer;
+}
+
+.articleLinkContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
 }
 
 .articleLink::after {

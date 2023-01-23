@@ -15,7 +15,6 @@ body {
     --animation-timing-fast: 0.2s;
     --animation-timing-slow: 0.5s;
     --animation-smoothing: cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-background-color: #808080;
     --animate-hover: color var(--animation-timing-fast) var(--animation-smoothing), background-color var(--animation-timing-fast) var(--animation-smoothing), box-shadow var(--animation-timing-fast) var(--animation-smoothing), opacity var(--animation-timing-fast) var(--animation-smoothing);
     
 

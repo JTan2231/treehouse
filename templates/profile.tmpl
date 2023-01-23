@@ -54,13 +54,13 @@
             <div class="postLinkList">
                 <div class="listHeader">Posts</div>
                 {{ range $a := .articles }}
-                    <div class="articleContainer"> 
                         <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">
-                            <div class="articleLink"> 
-                                {{ $a.Title }}
+                            <div class="articleLinkContainer">
+                                <div style="cursor:pointer;" class="">{{ $a.Title }}</div>
+                                <div style="cursor:pointer" class="">deez</div>
                             </div>
                         </a>
-                    </div>
+                    
                 {{ end }}
             </div>
         </div>

@@ -12,6 +12,8 @@ body {
     --header-border-width: 1px;
     --header-height: calc(1em + 2 * var(--header-border-width) + var(--header-padding-total));
 
+    --transition-background-color: #eee;
+
     margin: 0;
 }
 
@@ -72,7 +74,7 @@ div {
     align-self: center;
     top: var(--header-height);
     position: relative;
-    margin-bottom: 20em;
+    margin-bottom: 10em;
 }
 
 .flexWrapper {

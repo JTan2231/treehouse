@@ -51,11 +51,15 @@
         {{end}}{{end}}
 
         <div class="contentContainer">
-            <div class="linkList">
+            <div class="postLinkList">
                 <div class="listHeader">Posts</div>
                 {{ range $a := .articles }}
-                    <div class="linkContainer">
-                        <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
+                    <div class="articleContainer"> 
+                        <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">
+                            <div class="articleLink"> 
+                                {{ $a.Title }}
+                            </div>
+                        </a>
                     </div>
                 {{ end }}
             </div>

@@ -28,12 +28,15 @@
     flex-wrap: wrap;
     padding-top:10px;
     border-top: 1px solid black;
-    
 }
 
 .linkList {
     flex-basis: 33%;
     font-family: var(--styled-font-family);
+}
+
+.postLinkList {
+    flex-basis: 100%;
 }
 
 .linkContainer, .listHeader {
@@ -43,19 +46,27 @@
     border-bottom: 1px solid black;
 }
 
+.articleContainer {
+    position: relative;
+    padding: 0.5em 0;
+    width: calc(100% - 0.5em);
+}
+
 .listHeader {
     font-size: var(--header-link-font-size);
 }
 
 .articleLink {
+    display: flex;
+    text-align: center;
     background-color: transparent;
     position: relative;
     width: 100%;
     text-decoration: none;
     color: black;
-    line-height: 2em;
-    display: block;
+    line-height: 4em;
     text-indent: 0.5em;
+    cursor: pointer;
 }
 
 .articleLink::after {
@@ -73,4 +84,5 @@
 
 .articleLink:hover::after {
     opacity: 1;
+    border-radius: 0.5em;
 }

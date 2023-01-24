@@ -48,6 +48,7 @@ func main() {
 	authRouter.POST("/subscribe", routes.SubscribeToUser)
 	authRouter.POST("/favorite", routes.FavoriteArticle)
 	authRouter.POST("/articles", routes.CreateArticle)
+	authRouter.POST("/delete-article", routes.DeleteArticle)
 
 	router.Run(config.DOMAIN)
 }

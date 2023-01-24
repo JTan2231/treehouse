@@ -29,6 +29,27 @@
             alert(res.message);
         });
     }
+
+
+    function deleteArticle(element, event) {
+        event.preventDefault();
+        const grandparent = element.parentElement.parentElement;
+
+        fetch("/delete-article", {
+            method: "POST",
+            body: JSON.stringify({
+                articleID: parseInt(grandparent.id),
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then(res => res.json()).then(res => {
+            alert(res.message);
+        });
+
+        grandparent.remove();
+    }
+
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
@@ -54,15 +75,15 @@
             <div class="postLinkList">
                 <div class="listHeader">Posts</div>
                 {{ range $a := .articles }}
-                        <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">
+                        <a id={{ $a.ArticleID }} class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">
                             <div class="articleLinkContainer">
+                                <div onclick="deleteArticle(this, event)" class="delete-button">...</div>
                                 <div style="cursor:pointer;" class="title">{{ $a.Title }}</div>
                                 <div style="cursor:pointer;" class="subtitle">{{ $a.Subtitle }}</div>
                                 <div style="cursor:pointer;" class="date">{{ $a.TimestampPosted }}</div>
                                 <div style="cursor:pointer;" class="readTime">{{ $a.ReadTime }} • MIN READ</div>
                             </div>
                         </a>
-                    
                 {{ end }}
             </div>
         </div>

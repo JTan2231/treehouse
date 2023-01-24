@@ -22,6 +22,7 @@ type ProfileArticle struct {
 	TimestampPosted string `json:"timestampPosted"`
 	Content 	    string `json:"content"`
 	ReadTime        int `json:"readTime"`
+	ArticleID int64 `json:"articleid"`
 }
 
 func ServeProfile(c *gin.Context) {
@@ -49,7 +50,8 @@ func ServeProfile(c *gin.Context) {
 			a.Subtitle,
 			a.TimestampPosted,
 			a.Content,
-            u.Username
+            u.Username,
+			a.ArticleID
         from Article a
         inner join User u on u.UserID = a.UserID
         where u.Username = ?`, username)
@@ -69,7 +71,7 @@ func ServeProfile(c *gin.Context) {
 		for rows.Next() {
 			var article ProfileArticle
 
-			if err := rows.Scan(&article.Title, &article.Slug, &article.Subtitle, &article.TimestampPosted, &article.Content, &article.Username); err != nil {
+			if err := rows.Scan(&article.Title, &article.Slug, &article.Subtitle, &article.TimestampPosted, &article.Content, &article.Username, &article.ArticleID); err != nil {
 				return
 			}
 

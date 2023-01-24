@@ -8,6 +8,9 @@ import (
 	"treehouse/config"
 	"treehouse/db"
 	"treehouse/schema"
+	"strings"
+	"time"
+	"math"
 )
 
 type ProfileArticle struct {
@@ -15,6 +18,10 @@ type ProfileArticle struct {
 	Slug     string `json:"slug"`
 	UserID   int64  `json:"userid"`
 	Username string `json:"username"`
+	Subtitle        string `json:"subtitle"`
+	TimestampPosted string `json:"timestampPosted"`
+	Content 	    string `json:"content"`
+	ReadTime        int `json:"readTime"`
 }
 
 func ServeProfile(c *gin.Context) {
@@ -39,6 +46,9 @@ func ServeProfile(c *gin.Context) {
 		`select
             a.Title,
             a.Slug,
+			a.Subtitle,
+			a.TimestampPosted,
+			a.Content,
             u.Username
         from Article a
         inner join User u on u.UserID = a.UserID
@@ -59,9 +69,24 @@ func ServeProfile(c *gin.Context) {
 		for rows.Next() {
 			var article ProfileArticle
 
-			if err := rows.Scan(&article.Title, &article.Slug, &article.Username); err != nil {
+			if err := rows.Scan(&article.Title, &article.Slug, &article.Subtitle, &article.TimestampPosted, &article.Content, &article.Username); err != nil {
 				return
 			}
+
+			//formatting date to english
+			engDate := (strings.Split(article.TimestampPosted, " ")[0])
+			t, _ := time.Parse("2006-01-02", engDate)
+			article.TimestampPosted = t.Format("January 02, 2006")
+
+
+			//calculating read time
+			var words int
+			var length int
+			length = len(strings.Split(article.Content, " "))
+
+			words = int(math.Ceil(float64(length)/238))
+			article.ReadTime = words
+			
 
 			articles = append(articles, article)
 		}

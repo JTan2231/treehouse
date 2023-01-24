@@ -76,7 +76,7 @@
     width: 100%;
     text-decoration: none;
     color: black;
-    line-height: 4em;
+    line-height: 2em;
     text-indent: 0.5em;
     cursor:pointer;
 }
@@ -104,4 +104,24 @@
 .articleLink:hover::after {
     opacity: 1;
     border-radius: 0.5em;
+}
+
+
+.title {
+    font-size: var(--header-link-font-size);
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.subtitle {
+    font-family: var(--styled-font-family);
+    font-weight: 100;
+}
+
+.date {
+    font-family: var(--styled-font-family);
+}
+
+.readTime {
+    font-family: var(--styled-font-family);
 }

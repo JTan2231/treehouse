@@ -56,8 +56,10 @@
                 {{ range $a := .articles }}
                         <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">
                             <div class="articleLinkContainer">
-                                <div style="cursor:pointer;" class="">{{ $a.Title }}</div>
-                                <div style="cursor:pointer" class="">deez</div>
+                                <div style="cursor:pointer;" class="title">{{ $a.Title }}</div>
+                                <div style="cursor:pointer;" class="subtitle">{{ $a.Subtitle }}</div>
+                                <div style="cursor:pointer;" class="date">{{ $a.TimestampPosted }}</div>
+                                <div style="cursor:pointer;" class="readTime">{{ $a.ReadTime }} • MIN READ</div>
                             </div>
                         </a>
                     

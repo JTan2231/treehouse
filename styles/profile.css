@@ -27,7 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     padding-top:10px;
-    border-top: 1px solid black;
+    /*border-top: 1px solid black;*/
 }
 
 .articleLinkContentContainer {
@@ -43,7 +43,8 @@
 }
 
 .linkList {
-    flex-basis: 33%;
+    padding-top: 1em;
+    flex-basis: 100%;
     font-family: var(--styled-font-family);
 }
 

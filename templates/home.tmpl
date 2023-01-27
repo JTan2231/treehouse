@@ -11,11 +11,48 @@
 
     window.onload = () => {
         if (count === 0) {
-            document.getElementById('list').innerHTML = `
+            document.getElementById('subscriptionList').innerHTML = `
                 <div class="nothingText">There's nobody here...</div>
             `;
         }
+
+        updateProperties(document.getElementById('subscriptions'), ['#eee', '100%', '0', '']);
     };
+
+    function updateProperties(e, p) {
+        e.style.setProperty('--background-color', p[0]);
+        e.style.setProperty('--underline-width', p[1]);
+        e.style.setProperty('--underline-left', p[2]);
+        e.style.setProperty('--underline-right', p[3]);
+    };
+
+    function selectTab(event) {
+        const target = event.target;
+
+        // remove the styling from all other nodes
+        const parent = target.parentNode;
+        for (let i = 0; i < parent.childNodes.length; i++) {
+            const child = parent.childNodes[i];
+            if (child.nodeType === 1 && child.id !== target.id) {
+                updateProperties(child, ['transparent', '0', '', '0']);
+            }
+        }
+
+        updateProperties(target, ['#eee', '100%', '0', '']);
+    }
+
+    // this can probably be abstracted
+    function subscriptionsClick(event) {
+        selectTab(event);
+        document.getElementById('subscriptionList').style.setProperty('display', '');
+        document.getElementById('exploreList').style.setProperty('display', 'none');
+    }
+
+    function exploreClick(event) {
+        selectTab(event);
+        document.getElementById('subscriptionList').style.setProperty('display', 'none');
+        document.getElementById('exploreList').style.setProperty('display', '');
+    }
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
@@ -26,9 +63,20 @@
     <div class="flexWrapper pageContentsScroll">
         <div class="pageTitle">Home</div>
         <div class="homeList">
-            <div class="listHeader">Latest from your subscriptions</div>
-            <div id="list">
-                {{ range $a := .articles }}    
+            <div class="headerTabContainer">
+                <div id="subscriptions" class="headerTab headerTabSelected" onclick="subscriptionsClick(event)">Subscriptions</div>
+                <div id="explore" class="headerTab headerTabSelected" onclick="exploreClick(event)">Explore</div>
+            </div>
+            <div id="subscriptionList">
+                {{ range $a := .subscriptionArticles }}    
+                    <div class="linkContainer">
+                        <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
+                        <span class="author">{{ $a.Username }}</span>
+                    </div>
+                {{ end }}
+            </div>
+            <div id="exploreList" style="display:none;">
+                {{ range $a := .exploreArticles }}    
                     <div class="linkContainer">
                         <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
                         <span class="author">{{ $a.Username }}</span>

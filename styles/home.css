@@ -19,4 +19,68 @@
     line-height: 3em;
     display: block;
     text-indent: 0.5em;
+    user-select: none;
+}
+
+.headerTabContainer {
+    display: flex;
+    border-bottom: 1px solid black;
+    width: calc(100% - 0.5em);
+}
+
+.headerTab {
+    font-size: var(--header-link-font-size);
+    padding: 0 0.5em;
+    line-height: 2em;
+    height: 2em;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.headerTab::after {
+    content: '';
+    background-color: transparent;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+    transition: background-color 0.3s;
+}
+
+.headerTab:hover::after {
+    background-color: #eee;
+}
+
+.headerTabSelected {
+    --underline-width: 0;
+    --background-color: transparent;
+    --underline-right: 0;
+}
+
+.headerTabSelected::after {
+    content: '';
+    background-color: var(--background-color);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+    transition: background-color 0.3s;
+}
+
+.headerTabSelected::before {
+    content: '';
+    background-color: black;
+    position: absolute;
+    height: 0.15em;
+    width: var(--underline-width);
+    left: var(--underline-left);
+    right: var(--underline-right);
+    bottom: 0;
+    z-index: 1;
+    transition: width 0.3s;
 }

@@ -12,7 +12,7 @@ import (
 	"time"
 	"math"
 )
-
+			
 type ProfileArticle struct {
 	Title    string `json:"title"`
 	Slug     string `json:"slug"`

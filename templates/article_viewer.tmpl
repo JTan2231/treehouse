@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .title }}</title>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
     const root = {{ .API_ROOT }};
     const timestamp = {{ .timestamp }};
@@ -16,7 +17,17 @@
     let date = new Date(Date.parse(timestamp)).toDateString().split(' ');
     date = `${date[1]} ${date[2]}` + (date[3] === currentYear ? `` : `, ${date[3]}`);
 
-    window.onload = () => document.getElementById('timestamp').innerHTML = date;
+    window.onload = () => {
+        document.getElementById('timestamp').innerHTML = date;
+
+        const articleBody = document.getElementById('articleBody');
+        for (let i = 0; i < articleBody.childNodes.length; i++) {
+            const child = articleBody.childNodes[i];
+            if (child.nodeType === 1) {
+                child.innerHTML = marked.parse(child.innerHTML);
+            }
+        }
+    };
 
     function onFavorite() {
         const bookMark = document.getElementById("bookMark");
@@ -248,7 +259,7 @@
             <img onclick=onFavorite() id="bookMark" class="bookmark" src="http://localhost:8080/assets/emptyBookMark.png" alt="favorite">
             {{end}}
         </div>
-        <div class="articleBody">
+        <div class="articleBody" id="articleBody">
             {{ range $c := .content }}
                 <p>{{ $c }}</p>
             {{ end }}

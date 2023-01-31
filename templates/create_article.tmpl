@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
     const root = {{ .API_ROOT }};
 
@@ -46,16 +47,15 @@
             // some error handling
         }
     }
+
+    function onKeyUp() {
+        document.getElementById('preview').innerHTML = marked.parse(document.getElementById('content').value);
+    }
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/create_article.css">
 <body class="flexWrapperVertical">
-    
-    <div a href="/" class="header">
-        <a href="/" style="color: #000000; text-decoration: none;"> TREEHOUSE </a>
-    </div>
-    
-
+    {{ template "header.tmpl" .}}
     <div class="flexWrapper pageContents">
         <div class="pageTitle">Create New Article</div>
         <div class="articleTitleInputContainer">
@@ -64,10 +64,11 @@
         <div class="articleTitleInputContainer">
             <input class="articleTitleInput articleSubtitleInput" type="text" name="articleTitle" id="subtitle" placeholder="Subtitle">
         </div>
-        <textarea class="articleContentInput" name="content" id="content" placeholder="Start typing here"></textarea>
+        <textarea class="articleContentInput" name="content" id="content" placeholder="Start typing here" onkeyup="onKeyUp()"></textarea>
         <div class="buttonWrapper">
             <button class="postButton text" onclick="createArticleAttempt()">Post</button>
         </div>
+        <div id="preview" style="max-height:5em;"/>
     </div>
 </body>
 </html>

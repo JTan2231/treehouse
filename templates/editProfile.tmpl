@@ -18,29 +18,25 @@ function updateProfile() {
     const Bio = document.getElementById('Bio').value;
     const twitterURL = document.getElementById('twitterURL').value;
 
+
     fetch('/edit-profile', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
             Bio,
             twitterURL
-        })
-      })
-        .then(response => response.json())
-        .then(data => {
-            //href to profile page
-            console.log(data)
-            //window.location.href = `/${username}`;
-        })
-        .catch(error => {
-          // handle the error
-        });
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(res => res.json())
+    .then(data => {
+        const username = {{ .username }};
+        window.location.href = `/${username}`;
+    })
 }
-
-
 </script>
+
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
 <link rel="stylesheet" href="/styles/create_article.css">

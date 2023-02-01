@@ -41,17 +41,23 @@ func GetEditProfile(c *gin.Context) {
 func EditProfile(c *gin.Context)  {
 	dbConn := db.GetDB()
 	session, _ := config.Store.Get(c.Request, "session")
-
-	//print request body
-	fmt.Println(c.Request.Body)
+	userid := session.Values["userID"]
 
 	var profile Profile
 	c.BindJSON(&profile)
 
-	_ := dbConn.Exec(`insert into Profile (Bio, TwitterURL) values (?, ?)`, profile.Bio, profile.TwitterURL)
-	
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Profile Updated",
+	result,err := dbConn.Exec(`insert into Profile (UserID, Bio, TwitterURL) values (?, ?, ?)`, userid ,profile.Bio, profile.TwitterURL)
+	if(err != nil){
+		fmt.Println(result)
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Profile Update Failed",
+		})
+	}
+
+	//rehydrate html page with all new data from db
+	c.IndentedJSON(http.StatusOK, gin.H{
+		"bio" : profile.Bio,
 	})
 }
 
@@ -59,7 +65,7 @@ func GetHeaderProfilePic(c *gin.Context) {
 	dbConn := db.GetDB()
 	session, _ := config.Store.Get(c.Request, "session")
 
-	var username = session.Values["username"]
+	//var username = session.Values["username"]
 	var localuserID = session.Values["userID"]
 
 
@@ -222,9 +228,12 @@ func ServeProfile(c *gin.Context) {
 	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, profileUserID).Scan(&profilePicURL)
 	fmt.Println(profilePicURL)
 
-	var bio string
-	_ = dbConn.QueryRow(`select Bio from Profile where UserID = ?`, profileUserID).Scan(&bio)
 
+	//JOEY PEEP THIS THERE IS A PROBLEM WITH SCANNING SINCE I ADDED NULL TO THE COLUMN IN TEH SQL SCRIPT
+	var bio sql.NullString
+	result := dbConn.QueryRow(`select Bio from Profile where UserID = ?`, profileUserID).Scan(&bio)
+	fmt.Println(bio)
+	fmt.Println(result)
 
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
 		"API_ROOT":          config.API_ROOT,
@@ -237,6 +246,6 @@ func ServeProfile(c *gin.Context) {
 		"check":             check,
 		"alreadySubscribed": alreadySubscribedBool,
 		"profilePicURL" : profilePicURL,
-		"bio" : bio,
+		"bio" : bio.String,
 	})
 }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create new user</title>
 </head>
 <script>
     function keydown(e) {
@@ -14,30 +14,75 @@
         }
     }
 
+    function isEmailValid(email) {
+        const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+        return regex.test(email);
+    }
+
+    function isUsernameValid(username) {
+        return !username.includes(' ');
+    }
+
+    function checkErrors(values) {
+        let errors = [];
+        for (const key of Object.keys(values)) {
+            if (values[key] === '') {
+                errors.push(key);
+            }
+            else if (key === 'email' && !isEmailValid(values[key])) {
+                errors.push(key);
+            }
+            else if (key === 'username' && !isUsernameValid(values[key])) {
+                errors.push(key);
+            }
+        }
+
+        return errors;
+    }
+
+    function addErrorClasses(id) {
+        document.getElementById(id).classList.add('error');
+        document.getElementById(`${id}ErrorText`).classList.add('revealError');
+    }
+
+    function removeErrorClasses(id) {
+        document.getElementById(id).classList.remove('error');
+        document.getElementById(`${id}ErrorText`).classList.remove('revealError');
+    }
+
     function createUserAttempt() {
         const values = getFieldValues();
+        const errors = checkErrors(values);
+        console.log(errors);
 
-        if(values.email === "" || values.username === "" || values.password === "" || values.firstname === "" || values.lastname === ""){
-            alert("Please input all fields to sign up.");
+        for (const key of Object.keys(values)) {
+            if (errors.includes(key)) {
+                addErrorClasses(key);
+            }
+            else {
+                removeErrorClasses(key)
+            }
+        }
+
+        if (errors.length > 0) {
             return;
         }
 
-        fetch(`${ {{ .API_ROOT }} }/newuser`, {
+        fetch('/newuser', {
             method: 'POST',
             body: JSON.stringify({
                 username: values.username,
                 password: values.password,
-                firstname: values.firstname,
-                lastname: values.lastname,
+                firstName: values.firstName,
+                lastName: values.lastName,
                 email: values.email,
             }),
             headers: {
                 'Content-Type': 'application/json',
             },
         }).then(res => res.json()).then(res => {
-            //check res status and from there do accorindg changes
-            if (res.status === 400) {
-                alert(res.message)
+            if (res.errors) {
+                console.log(res);
             } else {
                 window.location.href = `/home`
             }
@@ -46,111 +91,53 @@
 
     function getFieldValues() {
         return {
-            username: document.getElementById('newUsername').value,
-            password: document.getElementById('newPassword').value,
-            firstname: document.getElementById('newFirstName').value,
-            lastname: document.getElementById('newLastName').value,
-            email: document.getElementById('newEmail').value,
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
         };
     }
         
 </script>
-<style>
-    body {
-        margin: 0;
-    }
-
-    body, input, button {
-        font-family: URW Gothic L;
-    }
-
-    input, button {
-        font-size: 16px;
-        margin: 0.5em;
-    }
-
-    input {
-        border: 1px solid transparent;
-        border-bottom: 1px solid black;
-        outline: 0;
-        transition: 0.5s all;
-        padding: 0.25em 0 0.25em 0.25em;
-        width: 20em;
-    }
-
-    input:hover {
-        border: 1px solid black;
-    }
-
-    input:focus {
-        border: 1px solid black;
-        background-color: #ddd;
-    }
-
-    button {
-        color: black;
-        background-color: white;
-        border: 1px solid black;
-        padding: 0.25em 0.25em 0 0.25em;
-        transition: all 0.5s;
-        cursor: pointer;
-    }
-
-    button:hover {
-        color: white;
-        background-color: black;
-    }
-
-    .container {
-        display: flex;
-        flex-wrap: wrap;
-        align-content: center;
-        justify-content: center;
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .item {
-        flex-basis: 100%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .title, .subtitle {
-        flex-basis: 100%;
-        text-align: center;
-    }
-
-    .title {
-        font-size: 96px;
-    }
-
-    .subtitle {
-        font-size: 30px;
-        margin-bottom: 1.5em;
-    }
-</style>
+<link rel="stylesheet" href="/styles/login.css">
+<link rel="stylesheet" href="/styles/root.css">
 <body>
     <div class="container">
         <div class="title">TREEHOUSE</div>
         <div class="subtitle">Lightweight blogging platform.</div>
         <div>
             <div class="item">
-                <input  id="newFirstName" type="text" placeholder="New first name" onkeydown="keydown(event)" />
+                <input  id="firstName" type="text" placeholder="New first name" onkeydown="keydown(event)" />
+            </div>
+            <div id="firstNameErrorText" class="errorText">
+                First name required
             </div>
             <div class="item">
-                <input  id="newLastName" type="text" placeholder="New last name" onkeydown="keydown(event)" />
+                <input  id="lastName" type="text" placeholder="New last name" onkeydown="keydown(event)" />
+            </div>
+            <div id="lastNameErrorText" class="errorText">
+                Last name required
             </div>
             <div class="item">
-                <input  id="newEmail" type="text" placeholder="New email" onkeydown="keydown(event)" />
+                <input  id="email" type="text" placeholder="New email" onkeydown="keydown(event)" />
+            </div>
+            <div id="emailErrorText" class="errorText">
+                Invalid email
             </div>
             <div class="item">
-                <input  id="newUsername" type="text" placeholder="New username" onkeydown="keydown(event)" />
+                <input  id="username" type="text" placeholder="New username" onkeydown="keydown(event)" />
+            </div>
+            <div id="usernameErrorText" class="errorText">
+                Invalid username
             </div>
             <div class="item">
-                <input  id="newPassword" type="password" placeholder="New password" onkeydown="keydown(event)" />
+                <input  id="password" type="password" placeholder="New password" onkeydown="keydown(event)" />
             </div>
-            <div class="item">
+            <div id="passwordErrorText" class="errorText">
+                Invalid password
+            </div>
+            <div class="item" style="position:relative;z-index:1;">
                 <button onclick="createUserAttempt()">Create</button>
             </div>
         </div>

@@ -59,12 +59,12 @@
     <div class="pageContentsScroll profileBody">
         <div class="pageTitle">
             {{ .profileUsername }}
-            <img class="dashboardImage" src="http://localhost:8080/assets/pfptest.jpg">
+            <img class="dashboardImage" src="{{ .profilePicURL }}">
         </div>
 
         {{if .check}}
         <a class="linkButton" href="/create-article">Create</a>
-        <a class="linkButton">Edit Profile</a>
+        <a class="linkButton" href="/edit-profile">Edit Profile</a>
         {{else}}{{if .alreadySubscribed}}
         <button id="subscribe" class="linkButton" onclick="onSubscribe()">Unsubscribe</button>
         {{else}}

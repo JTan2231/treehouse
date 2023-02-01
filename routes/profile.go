@@ -4,25 +4,31 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"math"
 	"net/http"
+	"strings"
+	"time"
 	"treehouse/config"
 	"treehouse/db"
 	"treehouse/schema"
-	"strings"
-	"time"
-	"math"
 )
-			
+
 type ProfileArticle struct {
-	Title    string `json:"title"`
-	Slug     string `json:"slug"`
-	UserID   int64  `json:"userid"`
-	Username string `json:"username"`
+	Title           string `json:"title"`
+	Slug            string `json:"slug"`
+	UserID          int64  `json:"userid"`
+	Username        string `json:"username"`
 	Subtitle        string `json:"subtitle"`
 	TimestampPosted string `json:"timestampPosted"`
-	Content 	    string `json:"content"`
-	ReadTime        int `json:"readTime"`
-	ArticleID int64 `json:"articleid"`
+	Content         string `json:"content"`
+	ReadTime        int    `json:"readTime"`
+	ArticleID       int64  `json:"articleid"`
+}
+
+func GetEditProfile(c *gin.Context) {
+	//need to send user data to edit page so we know which user we are editing
+
+	c.HTML(http.StatusOK, "editProfile.tmpl", gin.H{})
 }
 
 func ServeProfile(c *gin.Context) {
@@ -80,15 +86,13 @@ func ServeProfile(c *gin.Context) {
 			t, _ := time.Parse("2006-01-02", engDate)
 			article.TimestampPosted = t.Format("January 02, 2006")
 
-
 			//calculating read time
 			var words int
 			var length int
 			length = len(strings.Split(article.Content, " "))
 
-			words = int(math.Ceil(float64(length)/238))
+			words = int(math.Ceil(float64(length) / 238))
 			article.ReadTime = words
-			
 
 			articles = append(articles, article)
 		}
@@ -173,6 +177,11 @@ func ServeProfile(c *gin.Context) {
 
 	alreadySubscribedBool = alreadySubscribedCount > 0
 
+	var profilePicURL string
+	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, profileUserID).Scan(&profilePicURL)
+	fmt.Println(profilePicURL)
+	
+
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
 		"API_ROOT":          config.API_ROOT,
 		"articles":          articles,
@@ -183,5 +192,6 @@ func ServeProfile(c *gin.Context) {
 		"user_id":           profileUserID,
 		"check":             check,
 		"alreadySubscribed": alreadySubscribedBool,
+		"profilePicURL" : profilePicURL,
 	})
 }

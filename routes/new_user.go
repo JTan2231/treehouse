@@ -134,6 +134,24 @@ func addUser(user schema.User) (int64, error) {
 		return 0, fmt.Errorf("addUser: %v", err)
 	}
 
+	profileUserId, _ := result.LastInsertId()
+	defaultProfilePictureURL := "https://res.cloudinary.com/dubfvttoa/image/upload/v1675216906/defaultUser_fk4oe3.jpg"
+	profileInsert, profileInsertErr := conn.Exec(
+		`insert into Profile (
+        UserID,
+        ProfilePicture
+    ) values (?, ?)`,
+		profileUserId,
+		defaultProfilePictureURL,
+	)
+
+	fmt.Println(profileInsert)
+
+	if profileInsertErr != nil {
+		fmt.Println(profileInsertErr)
+		return 0, fmt.Errorf("addProfile: %v", err)
+	}
+
 	id, err := result.LastInsertId()
 	if err != nil {
 		return 0, fmt.Errorf("addUser: %v", err)

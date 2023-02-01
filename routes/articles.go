@@ -52,22 +52,22 @@ func CreateArticle(c *gin.Context) {
 
 func DeleteArticle(c *gin.Context) {
 	dbConn := db.GetDB()
-    var articleToDelete DeleteArticleType
+	var articleToDelete DeleteArticleType
 	c.BindJSON(&articleToDelete)
 
 	_, favoriteErr := dbConn.Exec("DELETE FROM Favorite WHERE Favorite.ArticleID = ?", articleToDelete.ArticleID)
-	if (favoriteErr != nil) {
+	if favoriteErr != nil {
 		fmt.Println(favoriteErr)
 		c.IndentedJSON(400, gin.H{"message": favoriteErr})
 		return
 	}
 
 	_, commentErr := dbConn.Exec("DELETE FROM Comment WHERE Comment.ArticleID = ?", articleToDelete.ArticleID)
-	if (commentErr != nil) {
+	if commentErr != nil {
 		fmt.Println(commentErr)
 		c.IndentedJSON(400, gin.H{"message": commentErr})
 		return
-	} 	
+	}
 
 	_, articleErr := dbConn.Exec("DELETE FROM Article WHERE ArticleID = ?", articleToDelete.ArticleID)
 	if articleErr != nil {
@@ -75,11 +75,10 @@ func DeleteArticle(c *gin.Context) {
 		c.IndentedJSON(400, gin.H{"message": articleErr})
 	} else {
 		c.IndentedJSON(200, gin.H{
-			"message" : "Article Deleted!",
+			"message": "Article Deleted!",
 		})
 	}
 }
-
 
 func GetCreateArticle(c *gin.Context) {
 	c.HTML(http.StatusOK, "create_article.tmpl", gin.H{

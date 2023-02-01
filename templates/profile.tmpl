@@ -61,7 +61,12 @@
             {{ .profileUsername }}
             <img class="dashboardImage" src="{{ .profilePicURL }}">
         </div>
-
+        <p>{{ .bio }}</p>
+        <div class="twitterContainer" id="twitter"> 
+            <img class="twitterLogo" src="http://localhost:8080/assets/twitterLogo.png">
+            <a class="twitterLink" href="https://twitter.com/RapSheet">{{ .profileUsername }}</a>
+        </div>
+        
         {{if .check}}
         <a class="linkButton" href="/create-article">Create</a>
         <a class="linkButton" href="/edit-profile">Edit Profile</a>

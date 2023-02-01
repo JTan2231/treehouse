@@ -25,10 +25,34 @@ type ProfileArticle struct {
 	ArticleID       int64  `json:"articleid"`
 }
 
-func GetEditProfile(c *gin.Context) {
-	//need to send user data to edit page so we know which user we are editing
+type Profile struct {
+	Bio 	  string `json:"Bio"`
+	TwitterURL string `json:"TwitterURL"`
+}
 
-	c.HTML(http.StatusOK, "editProfile.tmpl", gin.H{})
+func GetEditProfile(c *gin.Context) {
+	session, _ := config.Store.Get(c.Request, "session")
+	localusername := session.Values["username"]
+	c.HTML(http.StatusOK, "editProfile.tmpl", gin.H{
+		"username": localusername,
+	})
+}
+
+func EditProfile(c *gin.Context)  {
+	dbConn := db.GetDB()
+	session, _ := config.Store.Get(c.Request, "session")
+
+	//print request body
+	fmt.Println(c.Request.Body)
+
+	var profile Profile
+	c.BindJSON(&profile)
+
+	_ := dbConn.Exec(`insert into Profile (Bio, TwitterURL) values (?, ?)`, profile.Bio, profile.TwitterURL)
+	
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Profile Updated",
+	})
 }
 
 func GetHeaderProfilePic(c *gin.Context) {
@@ -198,6 +222,9 @@ func ServeProfile(c *gin.Context) {
 	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, profileUserID).Scan(&profilePicURL)
 	fmt.Println(profilePicURL)
 
+	var bio string
+	_ = dbConn.QueryRow(`select Bio from Profile where UserID = ?`, profileUserID).Scan(&bio)
+
 
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
 		"API_ROOT":          config.API_ROOT,
@@ -210,5 +237,6 @@ func ServeProfile(c *gin.Context) {
 		"check":             check,
 		"alreadySubscribed": alreadySubscribedBool,
 		"profilePicURL" : profilePicURL,
+		"bio" : bio,
 	})
 }

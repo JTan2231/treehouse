@@ -5,6 +5,23 @@
     justify-content: left;
 }
 
+.twitterLogo {
+    width: 2.5em;
+    height: 2.5em;
+    margin-right: 0.5em;
+}
+
+.twitterContainer {
+    display:inline-flex; 
+    margin-bottom:2em; 
+    align-items:center;
+}
+
+.twitterLink {
+    color: black;
+    text-decoration: none;
+}
+
 .linkButton {
     font-family: var(--styled-font-family);
     padding: 0.15em;

@@ -6,18 +6,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TREEHOUSE</title>
 </head>
+
 <script>
 
+function updateProfile() {
+    const url = document.getElementById("twitterURL").value;
+    if(!url.match(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/)) {
+        alert("Please enter a valid twitter profile link");
+        return;
+    }
+    const Bio = document.getElementById('Bio').value;
+    const twitterURL = document.getElementById('twitterURL').value;
+
+    fetch('/edit-profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            Bio,
+            twitterURL
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+            //href to profile page
+            console.log(data)
+            //window.location.href = `/${username}`;
+        })
+        .catch(error => {
+          // handle the error
+        });
+}
 
 
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
+<link rel="stylesheet" href="/styles/create_article.css">
+<link rel="stylesheet" href="/styles/edit_profile.css">
 <body class="flexWrapperVertical">
     {{ template "header.tmpl" .}}
+    <div class="flexWrapper pageContents">
+        <div class="pageTitle">Edit Profile</div>
 
-    <div class="pageContentsScroll profileBody">
-       
+        <div class="articleTitleInputContainer">
+            <textarea class="bio-input" id="Bio" placeholder="Bio"></textarea>
+        </div>
+        <div class="articleTitleInputContainer">
+            <input class="articleTitleInput articleSubtitleInput" type="text" id="twitterURL" placeholder="Twitter">
+        </div>
+        <div class="buttonWrapper">
+            <button class="postButton text" onclick="updateProfile()">Apply Changes</button>
+        </div>
+
     </div>
 </body>
 </html>

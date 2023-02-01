@@ -46,6 +46,7 @@ func main() {
 	authRouter := router.Group("/", routes.AuthRequired)
 	authRouter.GET("/create-article", routes.GetCreateArticle)
 	authRouter.GET("/edit-profile", routes.GetEditProfile)
+	authRouter.GET("/header-pfp", routes.GetHeaderProfilePic)
 	authRouter.POST("/subscribe", routes.SubscribeToUser)
 	authRouter.POST("/favorite", routes.FavoriteArticle)
 	authRouter.POST("/articles", routes.CreateArticle)

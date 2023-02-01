@@ -31,6 +31,23 @@ func GetEditProfile(c *gin.Context) {
 	c.HTML(http.StatusOK, "editProfile.tmpl", gin.H{})
 }
 
+func GetHeaderProfilePic(c *gin.Context) {
+	dbConn := db.GetDB()
+	session, _ := config.Store.Get(c.Request, "session")
+
+	var username = session.Values["username"]
+	var localuserID = session.Values["userID"]
+
+
+	var profilePicURL string
+	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, localuserID).Scan(&profilePicURL)
+	fmt.Println(profilePicURL)
+
+	c.JSON(http.StatusOK, gin.H{
+		"profilePicURL": profilePicURL,
+	})
+}
+
 func ServeProfile(c *gin.Context) {
 	session, _ := config.Store.Get(c.Request, "session")
 	localusername := session.Values["username"]
@@ -180,7 +197,7 @@ func ServeProfile(c *gin.Context) {
 	var profilePicURL string
 	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, profileUserID).Scan(&profilePicURL)
 	fmt.Println(profilePicURL)
-	
+
 
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
 		"API_ROOT":          config.API_ROOT,

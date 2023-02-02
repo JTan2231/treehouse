@@ -61,11 +61,14 @@
             {{ .profileUsername }}
             <img class="dashboardImage" src="{{ .profilePicURL }}">
         </div>
-        <p>{{ .bio }}</p>
-        <div class="twitterContainer" id="twitter"> 
-            <img class="twitterLogo" src="http://localhost:8080/assets/twitterLogo.png">
-            <a class="twitterLink" href="https://twitter.com/RapSheet">{{ .profileUsername }}</a>
-        </div>
+        <p style="display:inline-block; overflow-wrap: break-word;">{{ .bio }}</p>
+
+        {{if .twitterCheck}} 
+            <div class="twitterContainer" id="twitter"> 
+                <img class="twitterLogo" src="http://localhost:8080/assets/twitterLogo.png">
+                <a class="twitterLink" href="{{ .twitterURL }}">{{ .profileUsername }}</a>
+            </div>
+        {{end}}
         
         {{if .check}}
         <a class="linkButton" href="/create-article">Create</a>

@@ -11,7 +11,7 @@
 
 function updateProfile() {
     const url = document.getElementById("twitterURL").value;
-    if(!url.match(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/)) {
+    if(url.length !== 0 && !url.match(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/)) {
         alert("Please enter a valid twitter profile link");
         return;
     }
@@ -35,6 +35,23 @@ function updateProfile() {
         window.location.href = `/${username}`;
     })
 }
+
+function countChars(obj) {
+    document.getElementById("charCount").innerHTML = obj.value.length;
+    if(obj.value.length > 8000) {
+        document.getElementById("charCount").style.color = "red";
+        document.getElementById("maxChars").style.color = "red";
+    } else {
+        document.getElementById("charCount").style.color = "black";
+        document.getElementById("maxChars").style.color = "black";
+    }
+}
+
+window.onload = function checkCountOnMount() {
+    const bio = document.getElementById("Bio").value;
+    document.getElementById("charCount").innerHTML = bio.length;
+}
+
 </script>
 
 <link rel="stylesheet" href="/styles/root.css">
@@ -47,10 +64,17 @@ function updateProfile() {
         <div class="pageTitle">Edit Profile</div>
 
         <div class="articleTitleInputContainer">
-            <textarea class="bio-input" id="Bio" placeholder="Bio"></textarea>
+            <textarea onkeyup="countChars(this);" class="bio-input" id="Bio" placeholder="Bio">{{ .bio }}</textarea>
+            <div id="maxChars" style="display:inline-flex; align-items:center"> 
+            
+            <div id="charCount">0 </div>
+            
+            / 8000
+            </div>
         </div>
         <div class="articleTitleInputContainer">
-            <input class="articleTitleInput articleSubtitleInput" type="text" id="twitterURL" placeholder="Twitter">
+            <div class="pageTitle">Twitter URL</div>
+            <input class="articleTitleInput articleSubtitleInput" type="text" value="{{ .twitterURL }}" id="twitterURL" placeholder="URL">
         </div>
         <div class="buttonWrapper">
             <button class="postButton text" onclick="updateProfile()">Apply Changes</button>

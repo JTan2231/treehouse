@@ -31,10 +31,18 @@ type Profile struct {
 }
 
 func GetEditProfile(c *gin.Context) {
+	db := db.GetDB()
 	session, _ := config.Store.Get(c.Request, "session")
 	localusername := session.Values["username"]
+	localUserID := session.Values["userID"]
+
+	var profile Profile
+	db.QueryRow(`SELECT Bio, TwitterURL FROM Profile WHERE UserID = ?`, localUserID).Scan(&profile.Bio, &profile.TwitterURL)
+
 	c.HTML(http.StatusOK, "editProfile.tmpl", gin.H{
 		"username": localusername,
+		"twitterURL": profile.TwitterURL,
+		"bio": profile.Bio,
 	})
 }
 
@@ -46,7 +54,9 @@ func EditProfile(c *gin.Context)  {
 	var profile Profile
 	c.BindJSON(&profile)
 
-	result,err := dbConn.Exec(`insert into Profile (UserID, Bio, TwitterURL) values (?, ?, ?)`, userid ,profile.Bio, profile.TwitterURL)
+	result, err := dbConn.Exec(`UPDATE Profile SET Bio = ?, TwitterURL = ? WHERE UserID = ?`, profile.Bio, profile.TwitterURL, userid)
+
+	
 	if(err != nil){
 		fmt.Println(result)
 		fmt.Println(err)
@@ -235,6 +245,19 @@ func ServeProfile(c *gin.Context) {
 	fmt.Println(bio)
 	fmt.Println(result)
 
+
+	var twitterURL string
+	_ = dbConn.QueryRow(`select TwitterURL from Profile where UserID = ?`, profileUserID).Scan(&twitterURL)
+	fmt.Println(twitterURL)
+
+
+	var twitterCheck bool
+	if(twitterURL == "") {
+		twitterCheck = false
+	} else {
+		twitterCheck = true
+	}
+
 	c.HTML(http.StatusOK, "profile.tmpl", gin.H{
 		"API_ROOT":          config.API_ROOT,
 		"articles":          articles,
@@ -247,5 +270,7 @@ func ServeProfile(c *gin.Context) {
 		"alreadySubscribed": alreadySubscribedBool,
 		"profilePicURL" : profilePicURL,
 		"bio" : bio.String,
+		"twitterURL" : twitterURL,
+		"twitterCheck" : twitterCheck,
 	})
 }

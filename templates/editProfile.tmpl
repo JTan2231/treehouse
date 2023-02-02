@@ -34,6 +34,8 @@ function updateProfile() {
         const username = {{ .username }};
         window.location.href = `/${username}`;
     })
+
+    //use cloudinary sdk to upload image and change their PFP link in the db to the new link
 }
 
 function countChars(obj) {
@@ -46,6 +48,13 @@ function countChars(obj) {
         document.getElementById("maxChars").style.color = "black";
     }
 }
+
+function loadFile(event) {
+    var image = document.getElementById("changePFP");
+    image.src = URL.createObjectURL(event.target.files[0]);
+}
+
+
 
 window.onload = function checkCountOnMount() {
     const bio = document.getElementById("Bio").value;
@@ -61,7 +70,13 @@ window.onload = function checkCountOnMount() {
 <body class="flexWrapperVertical">
     {{ template "header.tmpl" .}}
     <div class="flexWrapper pageContents">
-        <div class="pageTitle">Edit Profile</div>
+        <div class="pageTitle">
+            Edit Profile
+            <div style="display:flex;">
+                <img id="changePFP" class="changePFP" src="{{ .profilePicture }}">
+                <input onchange="loadFile(event)" type="file" accept="image/jpeg, image/png, image/jpg">
+            </div>
+        </div>
 
         <div class="articleTitleInputContainer">
             <textarea onkeyup="countChars(this);" class="bio-input" id="Bio" placeholder="Bio">{{ .bio }}</textarea>

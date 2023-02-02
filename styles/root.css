@@ -82,6 +82,18 @@ div {
     width: 90px;
 }
 
+.changePFP {
+    border-radius: 50%;
+    border: 5px solid black;
+    height: 90px;
+    width: 90px;
+}
+
+.changePFP:hover {
+    cursor: pointer;
+    opacity: 0.3;
+}
+
 
 .headerLink, .logoLink {
     text-decoration: none;
@@ -96,12 +108,13 @@ div {
 .pageTitle {
     display:flex;
     align-items: center;
+    justify-content: space-between;
     font-size: var(--page-title-font-size);
     font-family: var(--styled-font-family);
     flex-basis: 100%;
     margin-bottom: 0.5em;
     margin-top: 2em;
-    justify-content: space-between
+    
 }
 
 .pageContents {

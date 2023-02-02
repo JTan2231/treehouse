@@ -44,6 +44,7 @@ func main() {
 	createGroup.POST("/create-article", routes.CreateArticle)
 
 	authRouter := router.Group("/", routes.AuthRequired)
+	authRouter.GET("/local-username", routes.GetLocalUserName)
 	authRouter.GET("/create-article", routes.GetCreateArticle)
 	authRouter.POST("/edit-profile", routes.EditProfile)
 	authRouter.GET("/edit-profile", routes.GetEditProfile)

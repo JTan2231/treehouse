@@ -37,11 +37,13 @@ func GetEditProfile(c *gin.Context) {
 	localUserID := session.Values["userID"]
 
 	var profile Profile
-	db.QueryRow(`SELECT Bio, TwitterURL FROM Profile WHERE UserID = ?`, localUserID).Scan(&profile.Bio, &profile.TwitterURL)
+	var profilePicURL string
+	db.QueryRow(`SELECT Bio, TwitterURL, ProfilePicture FROM Profile WHERE UserID = ?`, localUserID).Scan(&profile.Bio, &profile.TwitterURL, &profilePicURL)
 
 	c.HTML(http.StatusOK, "editProfile.tmpl", gin.H{
 		"username": localusername,
 		"twitterURL": profile.TwitterURL,
+		"profilePicture": profilePicURL,
 		"bio": profile.Bio,
 	})
 }
@@ -85,6 +87,14 @@ func GetHeaderProfilePic(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"profilePicURL": profilePicURL,
+	})
+}
+
+func GetLocalUserName(c *gin.Context) {
+	session, _ := config.Store.Get(c.Request, "session")
+	localusername := session.Values["username"]
+	c.JSON(http.StatusOK, gin.H{
+		"username": localusername,
 	})
 }
 

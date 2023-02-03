@@ -41,6 +41,7 @@
 
 .bookmark {
     height:2rem;
+    cursor:pointer;
 }
 
 .titleRow {

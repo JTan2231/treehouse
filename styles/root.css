@@ -11,8 +11,12 @@ body {
     --header-padding-total: calc(0.25em + 0.15em);
     --header-border-width: 1px;
     --header-height: calc(1em + 2 * var(--header-border-width) + var(--header-padding-total));
-
-    --transition-background-color: #eee;
+    --animation-timing-instant: 0s;
+    --animation-timing-fast: 0.2s;
+    --animation-timing-slow: 0.5s;
+    --animation-smoothing: cubic-bezier(0.16, 1, 0.3, 1);
+    --animate-hover: color var(--animation-timing-fast) var(--animation-smoothing), background-color var(--animation-timing-fast) var(--animation-smoothing), box-shadow var(--animation-timing-fast) var(--animation-smoothing), opacity var(--animation-timing-fast) var(--animation-smoothing);
+    
 
     margin: 0;
 }
@@ -45,6 +49,52 @@ div {
     z-index: 1;
 }
 
+.userButton {
+    margin-right: 1em;
+    cursor: pointer;
+    color: black;
+    background: #eeeeee;
+    padding: 5px 5px 5px 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 20px;
+    height: 40px;
+    border: 1px solid transparent;
+    transition: var(--animate-hover);
+}
+
+.userButton:hover {
+    background-color: #dddddd;
+  }
+
+.menu-trigger-image {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+}
+
+.dashboardImage {
+    border-radius: 50%;
+    border: 5px solid black;
+    height: 90px;
+    width: 90px;
+}
+
+.changePFP {
+    border-radius: 50%;
+    border: 5px solid black;
+    height: 90px;
+    width: 90px;
+}
+
+.changePFP:hover {
+    cursor: pointer;
+    opacity: 0.3;
+}
+
+
 .headerLink, .logoLink {
     text-decoration: none;
     color: black;
@@ -56,11 +106,15 @@ div {
 }
 
 .pageTitle {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: var(--page-title-font-size);
     font-family: var(--styled-font-family);
     flex-basis: 100%;
     margin-bottom: 0.5em;
     margin-top: 2em;
+    
 }
 
 .pageContents {
@@ -70,7 +124,7 @@ div {
 }
 
 .pageContentsScroll {
-    width: 40%;
+    width: 30%;
     align-self: center;
     top: var(--header-height);
     position: relative;
@@ -117,4 +171,10 @@ div {
 .fancyLink:hover::after {
     left: 0;
     width: 100%;
+}
+
+.test {
+    background-color:black;
+    height:100px;
+    width:100px;
 }

@@ -1,0 +1,12 @@
+.bio-input {
+    height:10em;
+    width: calc(100% - 0.35em - 4px);
+    resize: none;
+    font-size: 24px;
+    font-family: var(--readable-font-family);
+    padding-left: 0.35em;
+    outline: 0;
+    border: 1px solid transparent;
+    border-bottom: 1px solid black;
+    transition: all 0.5s;
+}

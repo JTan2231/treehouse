@@ -44,10 +44,16 @@ func main() {
 	createGroup.POST("/create-article", routes.CreateArticle)
 
 	authRouter := router.Group("/", routes.AuthRequired)
+	authRouter.GET("/local-username", routes.GetLocalUserName)
 	authRouter.GET("/create-article", routes.GetCreateArticle)
+	authRouter.POST("/edit-profile", routes.EditProfile)
+	authRouter.POST("/upload-profile-pic", routes.UploadProfilePic)
+	authRouter.GET("/edit-profile", routes.GetEditProfile)
+	authRouter.GET("/header-pfp", routes.GetHeaderProfilePic)
 	authRouter.POST("/subscribe", routes.SubscribeToUser)
 	authRouter.POST("/favorite", routes.FavoriteArticle)
 	authRouter.POST("/articles", routes.CreateArticle)
+	authRouter.POST("/delete-article", routes.DeleteArticle)
 
 	router.Run(config.DOMAIN)
 }

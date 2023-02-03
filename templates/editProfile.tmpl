@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TREEHOUSE</title>
+</head>
+
+<script>
+
+function updateProfile() {
+    if(document.getElementById("Bio").value.length > 8000) {
+        alert("Bio is too long");
+        return;
+    }
+    const url = document.getElementById("twitterURL").value;
+    if(url.length !== 0 && !url.match(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/)) {
+        alert("Please enter a valid twitter profile link");
+        return;
+    }
+    const Bio = document.getElementById('Bio').value;
+    const twitterURL = document.getElementById('twitterURL').value;
+
+
+    fetch('/edit-profile', {
+        method: 'POST',
+        body: JSON.stringify({
+            Bio,
+            twitterURL
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }).then(response => response.json())
+    .then((data) => {
+        //if profile picture is not uploaded then just reroute to profile page
+        if(document.querySelector('input[type=file]').files.length === 0) {
+            window.location.href = `/${data.username}`;
+            return;
+        }
+    })
+
+
+    const profilePicture = document.querySelector('input[type=file]').files[0];
+    var formdata = new FormData();
+    formdata.append("profilePicture", profilePicture);
+    
+    fetch("/upload-profile-pic", {
+        method: 'POST',
+        body: formdata,
+    })
+    .then(response => response.json())
+    .then((data) => {
+        const username = data.username;
+        window.location.href = `/${username}`;
+        console.log(data)
+    })
+    .catch(err => console.error(err));
+}
+
+function countChars(obj) {
+    document.getElementById("charCount").innerHTML = obj.value.length;
+    if(obj.value.length > 8000) {
+        document.getElementById("charCount").style.color = "red";
+        document.getElementById("maxChars").style.color = "red";
+    } else {
+        document.getElementById("charCount").style.color = "black";
+        document.getElementById("maxChars").style.color = "black";
+    }
+}
+
+function loadFile(event) {
+    var image = document.getElementById("changePFP");
+    image.src = URL.createObjectURL(event.target.files[0]);
+}
+
+
+
+window.onload = function checkCountOnMount() {
+    const bio = document.getElementById("Bio").value;
+    document.getElementById("charCount").innerHTML = bio.length;
+}
+
+</script>
+
+<link rel="stylesheet" href="/styles/root.css">
+<link rel="stylesheet" href="/styles/profile.css">
+<link rel="stylesheet" href="/styles/create_article.css">
+<link rel="stylesheet" href="/styles/edit_profile.css">
+<body class="flexWrapperVertical">
+    {{ template "header.tmpl" .}}
+    <div class="flexWrapper pageContents">
+        <div class="pageTitle">
+            Edit Profile
+            <div style="display:flex;">
+                <img id="changePFP" class="changePFP" src="{{ .profilePicture }}">
+                <input onchange="loadFile(event)" type="file" accept="image/jpeg, image/png, image/jpg">
+            </div>
+        </div>
+
+        <div class="articleTitleInputContainer">
+            <textarea onkeyup="countChars(this);" class="bio-input" id="Bio" placeholder="Bio">{{ .bio }}</textarea>
+            <div id="maxChars" style="display:inline-flex; align-items:center"> 
+            
+            <div id="charCount">0 </div>
+            
+            / 8000
+            </div>
+        </div>
+        <div class="articleTitleInputContainer">
+            <div class="pageTitle">Twitter URL</div>
+            <input class="articleTitleInput articleSubtitleInput" type="text" value="{{ .twitterURL }}" id="twitterURL" placeholder="URL">
+        </div>
+        <div class="buttonWrapper">
+            <button class="postButton text" onclick="updateProfile()">Apply Changes</button>
+        </div>
+
+    </div>
+</body>
+</html>

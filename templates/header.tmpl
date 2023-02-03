@@ -1,7 +1,46 @@
 <link rel="stylesheet" href="/styles/root.css">
 
+<script> 
+    function getHeaderProfilePic() {
+        //get request to get profile pic using fetch
+        fetch("/header-pfp", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('test')
+            document.querySelector(".menu-trigger-image").src = data.profilePicURL;
+        })
+    } 
+
+    function getLocalUserName() {
+        fetch("/local-username", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("userProfileButton").href = `/${data.username}`;
+        })
+    }
+
+    getHeaderProfilePic();
+    getLocalUserName();
+</script>
+
 <div class="header fixed">
     <a class="headerLink" href="/logout">Logout</a>
     <a class="logoLink" href="/home">TREEHOUSE</a>
-    <a class="headerLink" href="/{{ .signedInUsername }}">Profile</a>
+    <a id="userProfileButton">
+        <button onclick="onDashboard()" id="userButton" class="userButton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-indicator-icon"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+            <img class="menu-trigger-image">
+        </button>
+    </a>
 </div>
+

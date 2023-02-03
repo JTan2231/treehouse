@@ -29,6 +29,27 @@
             alert(res.message);
         });
     }
+
+
+    function deleteArticle(element, event) {
+        event.preventDefault();
+        const grandparent = element.parentElement.parentElement;
+
+        fetch("/delete-article", {
+            method: "POST",
+            body: JSON.stringify({
+                articleID: parseInt(grandparent.id),
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then(res => res.json()).then(res => {
+            alert(res.message);
+        });
+
+        grandparent.remove();
+    }
+
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
@@ -36,10 +57,22 @@
     {{ template "header.tmpl" .}}
 
     <div class="pageContentsScroll profileBody">
-        <div class="pageTitle">{{ .profileUsername }}</div>
+        <div class="pageTitle">
+            {{ .profileUsername }}
+            <img class="dashboardImage" src="{{ .profilePicURL }}">
+        </div>
+        <p style="display:inline-block; overflow-wrap: break-word;">{{ .bio }}</p>
 
+        {{if .twitterCheck}} 
+            <div class="twitterContainer" id="twitter"> 
+                <img class="twitterLogo" src="http://localhost:8080/assets/twitterLogo.png">
+                <a class="twitterLink" href="{{ .twitterURL }}">{{ .profileUsername }}</a>
+            </div>
+        {{end}}
+        
         {{if .check}}
         <a class="linkButton" href="/create-article">Create</a>
+        <a class="linkButton" href="/edit-profile">Edit Profile</a>
         {{else}}{{if .alreadySubscribed}}
         <button id="subscribe" class="linkButton" onclick="onSubscribe()">Unsubscribe</button>
         {{else}}
@@ -47,14 +80,23 @@
         {{end}}{{end}}
 
         <div class="contentContainer">
-            <div class="linkList">
-                <div class="listHeader">Writings</div>
+            <div class="postLinkList">
+                <div class="listHeader">Posts</div>
                 {{ range $a := .articles }}
-                    <div class="linkContainer">
-                        <a class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">{{ $a.Title }}</a>
-                    </div>
+                        <a id={{ $a.ArticleID }} class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">
+                            <div class="articleLinkContainer">
+                                <div onclick="deleteArticle(this, event)" class="delete-button">...</div>
+                                <div style="cursor:pointer;" class="title">{{ $a.Title }}</div>
+                                <div style="cursor:pointer;" class="subtitle">{{ $a.Subtitle }}</div>
+                                <div style="cursor:pointer;" class="date">{{ $a.TimestampPosted }}</div>
+                                <div style="cursor:pointer;" class="readTime">{{ $a.ReadTime }} • MIN READ</div>
+                            </div>
+                        </a>
                 {{ end }}
             </div>
+        </div>
+
+        <div class="contentContainer">
             <div class="linkList">
                 <div class="listHeader">Favorites</div>
                 {{ range $f := .favorites }}

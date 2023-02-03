@@ -13,6 +13,10 @@ import (
 	"treehouse/schema"
 )
 
+type DeleteArticleType struct {
+	ArticleID int64 `json:"articleID"`
+}
+
 func CreateArticle(c *gin.Context) {
 	if c.Request.Method != "POST" {
 		c.IndentedJSON(http.StatusMethodNotAllowed, gin.H{})
@@ -42,6 +46,36 @@ func CreateArticle(c *gin.Context) {
 		c.IndentedJSON(200, gin.H{
 			"slug":             newArticle.Slug,
 			"signedInUsername": session.Values["username"],
+		})
+	}
+}
+
+func DeleteArticle(c *gin.Context) {
+	dbConn := db.GetDB()
+	var articleToDelete DeleteArticleType
+	c.BindJSON(&articleToDelete)
+
+	_, favoriteErr := dbConn.Exec("DELETE FROM Favorite WHERE Favorite.ArticleID = ?", articleToDelete.ArticleID)
+	if favoriteErr != nil {
+		fmt.Println(favoriteErr)
+		c.IndentedJSON(400, gin.H{"message": favoriteErr})
+		return
+	}
+
+	_, commentErr := dbConn.Exec("DELETE FROM Comment WHERE Comment.ArticleID = ?", articleToDelete.ArticleID)
+	if commentErr != nil {
+		fmt.Println(commentErr)
+		c.IndentedJSON(400, gin.H{"message": commentErr})
+		return
+	}
+
+	_, articleErr := dbConn.Exec("DELETE FROM Article WHERE ArticleID = ?", articleToDelete.ArticleID)
+	if articleErr != nil {
+		fmt.Println(articleErr)
+		c.IndentedJSON(400, gin.H{"message": articleErr})
+	} else {
+		c.IndentedJSON(200, gin.H{
+			"message": "Article Deleted!",
 		})
 	}
 }

@@ -32,10 +32,15 @@ function updateProfile() {
         headers: {
             'Content-Type': 'application/json'
         },
+    }).then(response => response.json())
+    .then((data) => {
+        //if profile picture is not uploaded then just reroute to profile page
+        if(document.querySelector('input[type=file]').files.length === 0) {
+            window.location.href = `/${data.username}`;
+            return;
+        }
     })
-    .then(res => res.json())
-    .then(data => {
-    })
+
 
     const profilePicture = document.querySelector('input[type=file]').files[0];
     var formdata = new FormData();
@@ -52,7 +57,6 @@ function updateProfile() {
         console.log(data)
     })
     .catch(err => console.error(err));
-
 }
 
 function countChars(obj) {

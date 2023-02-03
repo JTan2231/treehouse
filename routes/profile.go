@@ -66,9 +66,9 @@ func EditProfile(c *gin.Context)  {
 		})
 	}
 
-	//rehydrate html page with all new data from db
 	c.IndentedJSON(http.StatusOK, gin.H{
 		"bio" : profile.Bio,
+		"username" : session.Values["username"],
 	})
 }
 

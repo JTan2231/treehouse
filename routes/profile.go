@@ -61,7 +61,6 @@ func EditProfile(c *gin.Context)  {
 	
 	if(err != nil){
 		fmt.Println(result)
-		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Profile Update Failed",
 		})
@@ -83,7 +82,6 @@ func GetHeaderProfilePic(c *gin.Context) {
 
 	var profilePicURL string
 	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, localuserID).Scan(&profilePicURL)
-	fmt.Println(profilePicURL)
 
 	c.JSON(http.StatusOK, gin.H{
 		"profilePicURL": profilePicURL,
@@ -248,17 +246,12 @@ func ServeProfile(c *gin.Context) {
 	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, profileUserID).Scan(&profilePicURL)
 	fmt.Println(profilePicURL)
 
-
-	//JOEY PEEP THIS THERE IS A PROBLEM WITH SCANNING SINCE I ADDED NULL TO THE COLUMN IN TEH SQL SCRIPT
 	var bio sql.NullString
-	result := dbConn.QueryRow(`select Bio from Profile where UserID = ?`, profileUserID).Scan(&bio)
-	fmt.Println(bio)
-	fmt.Println(result)
+	_ = dbConn.QueryRow(`select Bio from Profile where UserID = ?`, profileUserID).Scan(&bio)
 
 
 	var twitterURL string
 	_ = dbConn.QueryRow(`select TwitterURL from Profile where UserID = ?`, profileUserID).Scan(&twitterURL)
-	fmt.Println(twitterURL)
 
 
 	var twitterCheck bool

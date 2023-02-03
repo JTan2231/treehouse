@@ -10,6 +10,10 @@
 <script>
 
 function updateProfile() {
+    if(document.getElementById("Bio").value.length > 8000) {
+        alert("Bio is too long");
+        return;
+    }
     const url = document.getElementById("twitterURL").value;
     if(url.length !== 0 && !url.match(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/)) {
         alert("Please enter a valid twitter profile link");
@@ -31,11 +35,24 @@ function updateProfile() {
     })
     .then(res => res.json())
     .then(data => {
-        const username = {{ .username }};
-        window.location.href = `/${username}`;
     })
 
-    //use cloudinary sdk to upload image and change their PFP link in the db to the new link
+    const profilePicture = document.querySelector('input[type=file]').files[0];
+    var formdata = new FormData();
+    formdata.append("profilePicture", profilePicture);
+    
+    fetch("/upload-profile-pic", {
+        method: 'POST',
+        body: formdata,
+    })
+    .then(response => response.json())
+    .then((data) => {
+        const username = data.username;
+        window.location.href = `/${username}`;
+        console.log(data)
+    })
+    .catch(err => console.error(err));
+
 }
 
 function countChars(obj) {

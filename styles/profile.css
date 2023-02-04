@@ -120,11 +120,10 @@
 
 .delete-button:hover {
     cursor: default;
-    font-weight:bold;
     border-radius: 0.5em;
     cursor:pointer;
 }
-  
+
 
 .articleLinkContainer:hover .delete-button {
     visibility: visible;
@@ -152,6 +151,8 @@
 
 
 .title {
+    display:flex;
+    justify-content:space-between;
     font-size: var(--header-link-font-size);
     font-weight: bold;
     margin-bottom: 0.5em;

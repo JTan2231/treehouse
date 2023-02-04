@@ -41,7 +41,12 @@
 
 .bookmark {
     height:2rem;
-    cursor:pointer;
+}
+
+.bookmark:hover {
+    cursor: pointer;
+    border: 1px solid lightgray;
+    box-sizing: border-box;
 }
 
 .titleRow {

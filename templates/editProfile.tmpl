@@ -9,19 +9,20 @@
 
 <script>
 
+const localUsername = {{ .username }};
+
 function updateProfile() {
-    if(document.getElementById("Bio").value.length > 8000) {
+    if (document.getElementById("Bio").value.length > 8000) {
         alert("Bio is too long");
         return;
     }
     const url = document.getElementById("twitterURL").value;
-    if(url.length !== 0 && !url.match(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/)) {
+    if (url.length !== 0 && !url.match(/(?:http:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/)) {
         alert("Please enter a valid twitter profile link");
         return;
     }
     const Bio = document.getElementById('Bio').value;
     const twitterURL = document.getElementById('twitterURL').value;
-
 
     fetch('/edit-profile', {
         method: 'POST',
@@ -32,31 +33,23 @@ function updateProfile() {
         headers: {
             'Content-Type': 'application/json'
         },
-    }).then(response => response.json())
-    .then((data) => {
-        //if profile picture is not uploaded then just reroute to profile page
-        if(document.querySelector('input[type=file]').files.length === 0) {
-            window.location.href = `/${data.username}`;
-            return;
-        }
-    })
-
-
-    const profilePicture = document.querySelector('input[type=file]').files[0];
-    var formdata = new FormData();
-    formdata.append("profilePicture", profilePicture);
-    
-    fetch("/upload-profile-pic", {
-        method: 'POST',
-        body: formdata,
-    })
-    .then(response => response.json())
-    .then((data) => {
-        const username = data.username;
-        window.location.href = `/${username}`;
-        console.log(data)
-    })
-    .catch(err => console.error(err));
+    }).then(res => {
+        if (res.status === 200) {
+            if (document.querySelector('input[type=file]').files.length === 0) {
+                window.location.href = `/${localUsername}`;
+            }
+            else {
+                const profilePicture = document.querySelector('input[type=file]').files[0];
+                var formdata = new FormData();
+                formdata.append("profilePicture", profilePicture);
+                
+                fetch("/upload-profile-pic", {
+                    method: 'POST',
+                    body: formdata,
+                }).then(() => window.location.href = `/${localUsername}`);
+            }
+        } 
+    });
 }
 
 function countChars(obj) {

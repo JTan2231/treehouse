@@ -3,7 +3,7 @@
 <script> 
     function getHeaderProfilePic() {
         //get request to get profile pic using fetch
-        fetch("/header-pfp", {
+        fetch('/header-pfp', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -12,12 +12,12 @@
         .then(response => response.json())
         .then(data => {
             console.log('test')
-            document.querySelector(".menu-trigger-image").src = data.profilePicURL;
+            document.querySelector('.profileImage').src = data.profilePicURL;
         })
     } 
 
     function getLocalUserName() {
-        fetch("/local-username", {
+        fetch('/local-username', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,8 +25,25 @@
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById("userProfileButton").href = `/${data.username}`;
+            document.getElementById('userProfileButton').href = `/${data.username}`;
+            document.getElementById('userProfileLink').href = `/${data.username}`;
         })
+    }
+
+    function showHeaderDropdown() {
+        // height needs to be calculated
+        const dropdown = document.querySelector('.headerNavDropdown');
+        const dropdownItem = document.querySelector('.headerNavDropdownItemContainer');
+
+        const itemStyle = getComputedStyle(dropdownItem);
+        const itemHeight = parseInt(itemStyle.getPropertyValue('height'));
+        const itemCount = [...dropdown.childNodes].filter(e => e.nodeType === 1).length;
+
+        dropdown.style.height = `${itemCount * itemHeight}px`;
+    }
+
+    function hideHeaderDropdown() {
+        document.querySelector('.headerNavDropdown').style.height = '0';
     }
 
     getHeaderProfilePic();
@@ -36,11 +53,15 @@
 <div class="header fixed">
     <a class="headerLink" href="/logout">Logout</a>
     <a class="logoLink" href="/home">TREEHOUSE</a>
-    <a id="userProfileButton">
-        <button onclick="onDashboard()" id="userButton" class="userButton">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-indicator-icon"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
-            <img class="menu-trigger-image">
-        </button>
-    </a>
+    <div class="profileImageLink" onmouseenter="showHeaderDropdown()" onmouseleave="hideHeaderDropdown()">
+        <a id="userProfileButton">
+            <img class="profileImage" />
+        </a>
+        <div class="headerNavDropdown">
+            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem" id="userProfileLink" >Profile</a></div>
+            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem">dropdown item</a></div>
+            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem">dropdown item</a></div>
+        </div>
+    </div>
 </div>
 

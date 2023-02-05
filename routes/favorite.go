@@ -21,7 +21,6 @@ func FavoriteArticle(c *gin.Context) {
 	_ = db.QueryRow(
 		`select COUNT(*) from Favorite where UserID = ? and ArticleID= ?`, favorite.UserID, favorite.ArticleID).Scan(&alreadyFavoriteCount)
 
-
 	if alreadyFavoriteCount > 0 {
 		_, err := db.Exec(
 			`delete from Favorite where UserID = ? and ArticleID= ?`, favorite.UserID, favorite.ArticleID)

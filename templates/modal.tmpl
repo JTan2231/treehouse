@@ -1,0 +1,24 @@
+<script>
+    function createModal(cond, trueMessage, falseMessage) {
+        const modal = document.getElementById("modal");
+        modal.style.display = "block";
+        modal.style.bottom = "20px";
+        modal.style.right = "20px";
+        modal.style.color = "white";
+
+        if (cond) {
+            modal.innerHTML = trueMessage;
+        } else {
+            modal.innerHTML = falseMessage;
+        }
+
+        if(timer) clearTimeout(timer);
+
+        timer = setTimeout(function() {
+            modal.style.transition = "all 0.5s ease-out";
+            modal.style.right = "-500px";
+            
+        }, 5000);
+        modal.style.transition = "none"
+    }
+</script>

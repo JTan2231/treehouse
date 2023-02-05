@@ -6,9 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TREEHOUSE</title>
 </head>
+
+{{ template "modal.tmpl" .}}
+
 <script>
+    const SUBSCRIBE_STRING = 'Subscribe';
+    const UNSUBSCRIBE_STRING = 'Unsubscribe';
+
     const root = {{ .API_ROOT }};
     const subscribeeID = {{ .user_id }};
+
+    let timer = null;    
+
+    function subscribeModalWrapper() {
+        const cond = document.getElementById('subscribe').innerHTML === SUBSCRIBE_STRING;
+        const trueMessage = "❌ <span style='font-family: URW Gothic L'>Unsubscribed</span>";
+        const falseMessage = "✅ <span style='font-family: URW Gothic L'>Subscribed</span>";
+        createModal(cond, trueMessage, falseMessage);
+    }
 
     function onSubscribe() {
         fetch("/subscribe", {
@@ -20,37 +35,20 @@
                 "Content-Type": "application/json",
             }
         }).then(res => res.json()).then(res => {
-            if(document.getElementById("subscribe").innerHTML == "Subscribe") {
-                document.getElementById("subscribe").innerHTML = "Unsubscribe";
+            if(document.getElementById("subscribe").innerHTML == SUBSCRIBE_STRING) {
+                document.getElementById("subscribe").innerHTML = UNSUBSCRIBE_STRING;
             } else {
-                document.getElementById("subscribe").innerHTML = "Subscribe";
+                document.getElementById("subscribe").innerHTML = SUBSCRIBE_STRING;
             }
 
-            alert(res.message);
+            subscribeModalWrapper();
         });
     }
 
-    let timer = null;    
-    function createModal() {
-        const modal = document.getElementById("modal");
-        modal.style.display = "block";
-        modal.style.bottom = "20px";
-        modal.style.right = "20px";
-        modal.style.color = "white";
-
-        modal.innerHTML = "❌ <span style='font-family: URW Gothic L'> Article Deleted </span>";
-        
-
-        if(timer) clearTimeout(timer);
-
-        timer = setTimeout(function() {
-            modal.style.transition = "all 0.5s ease-out";
-            modal.style.right = "-500px";
-            
-        }, 5000);
-        modal.style.transition = "none"
+    function articleDeleteModalWrapper() {
+        const message = "❌ <span style='font-family: URW Gothic L'> Article Deleted </span>";
+        createModal(true, message, message);
     }
-
 
     function deleteArticle(element, event) {
         event.preventDefault();
@@ -67,10 +65,8 @@
         })
 
         grandparent.remove();
-        createModal();
+        articleDeleteModalWrapper();
     }
-
-    
 
 </script>
 <link rel="stylesheet" href="/styles/root.css">
@@ -82,35 +78,43 @@
     {{ template "header.tmpl" .}}
 
     <div class="pageContentsScroll profileBody">
-        <div class="pageTitle">
-            {{ .profileUsername }}
-            <img class="dashboardImage" src="{{ .profilePicURL }}">
-        </div>
-        <p style="display:inline-block; overflow-wrap: break-word;">{{ .bio }}</p>
-
-        {{if .twitterCheck}} 
-            <div class="twitterContainer" id="twitter"> 
-                <img class="twitterLogo" src="http://localhost:8080/assets/twitterLogo.png">
-                <a class="twitterLink" href="{{ .twitterURL }}">{{ .profileUsername }}</a>
+        <div class="profileInfoContainer">
+            <div class="pictureContainer">
+                <img class="dashboardImage" src="{{ .profilePicURL }}">
+                
+                {{if .check}}
+                    <div><a href="/edit-profile" class="editProfile">Edit profile</a></div>
+                {{else}}{{if .alreadySubscribed}}
+                    <a id="subscribe" class="editProfile" onclick="onSubscribe()">Unsubscribe</a>
+                {{else}}
+                    <a id="subscribe" class="editProfile" onclick="onSubscribe()">Subscribe</a>
+                {{end}}{{end}}
             </div>
-        {{end}}
-        
-        {{if .check}}
-        <a class="linkButton" href="/create-article">Create</a>
-        <a class="linkButton" href="/edit-profile">Edit Profile</a>
-        {{else}}{{if .alreadySubscribed}}
-        <button id="subscribe" class="linkButton" onclick="onSubscribe()">Unsubscribe</button>
-        {{else}}
-        <button id="subscribe" class="linkButton" onclick="onSubscribe()">Subscribe</button>
-        {{end}}{{end}}
+
+            <div class="userInfoContainer">
+                <div class="profileUsername">{{ .profileUsername }}</div>
+                <div class="profileBio">{{ .bio }}</div>
+                {{if .twitterCheck}} 
+                    <div class="twitterContainer" id="twitter"> 
+                        
+                        <a class="twitterLink" href="{{ .twitterURL }}"><img class="twitterLogo" src="http://localhost:8080/assets/twitterLogo.png"></a>
+                    </div>
+                {{end}}
+            </div>
+        </div>
 
         <div class="contentContainer">
-            <div class="postLinkList">
-                <div class="listHeader">Posts</div>
+            <div class="linkList">
+                <div class="listHeader">
+                    <span style="align-self:center;height:fit-content;">Articles</span>
+                    {{if .check}}
+                        <a class="newArticleButton" href="/create-article">Add</a>
+                    {{end}}
+                </div>
                 {{ range $a := .articles }}
                         <a id={{ $a.ArticleID }} class="articleLink" href="/{{ $a.Username }}/{{ $a.Slug }}">
                             <div class="articleLinkContainer">
-                                <div onclick="deleteArticle(this, event)" class="delete-button">...</div>
+                                <div onclick="deleteArticle(this, event)" class="delete-button">…</div>
                                 <div style="cursor:pointer;" class="title"> {{ $a.Title }} </div>
                                 <div style="cursor:pointer;" class="subtitle">{{ $a.Subtitle }}</div>
                                 <div style="cursor:pointer;" class="date">{{ $a.TimestampPosted }}</div>
@@ -125,9 +129,15 @@
             <div class="linkList">
                 <div class="listHeader">Favorites</div>
                 {{ range $f := .favorites }}
-                    <div class="linkContainer">
-                        <a class="articleLink" href="/{{ $f.Username }}/{{ $f.Slug }}">{{ $f.Title }}</a>
-                    </div>
+                    <a id={{ $f.ArticleID }} class="articleLink" href="/{{ $f.Username }}/{{ $f.Slug }}">
+                        <div class="articleLinkContainer">
+                            <div onclick="deleteArticle(this, event)" class="delete-button">…</div>
+                            <div style="cursor:pointer;" class="title"> {{ $f.Title }} </div>
+                            <div style="cursor:pointer;" class="subtitle">{{ $f.Subtitle }}</div>
+                            <div style="cursor:pointer;" class="date">{{ $f.TimestampPosted }}</div>
+                            <div style="cursor:pointer;" class="readTime">{{ $f.ReadTime }} • MIN READ</div>
+                        </div>
+                    </a>
                 {{ end }}
             </div>
             <div class="linkList">

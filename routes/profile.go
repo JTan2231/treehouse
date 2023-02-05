@@ -94,6 +94,23 @@ func GetLocalUserName(c *gin.Context) {
 	})
 }
 
+func formatProfileArticle(article ProfileArticle) ProfileArticle {
+	//formatting date to english
+	engDate := (strings.Split(article.TimestampPosted, " ")[0])
+	t, _ := time.Parse("2006-01-02", engDate)
+	article.TimestampPosted = t.Format("January 02, 2006")
+
+	//calculating read time
+	var words int
+	var length int
+	length = len(strings.Split(article.Content, " "))
+
+	words = int(math.Ceil(float64(length) / 238))
+	article.ReadTime = words
+
+	return article
+}
+
 func ServeProfile(c *gin.Context) {
 	session, _ := config.Store.Get(c.Request, "session")
 	localusername := session.Values["username"]
@@ -140,23 +157,17 @@ func ServeProfile(c *gin.Context) {
 		for rows.Next() {
 			var article ProfileArticle
 
-			if err := rows.Scan(&article.Title, &article.Slug, &article.Subtitle, &article.TimestampPosted, &article.Content, &article.Username, &article.ArticleID); err != nil {
+			if err := rows.Scan(&article.Title,
+				&article.Slug,
+				&article.Subtitle,
+				&article.TimestampPosted,
+				&article.Content,
+				&article.Username,
+				&article.ArticleID); err != nil {
 				return
 			}
 
-			//formatting date to english
-			engDate := (strings.Split(article.TimestampPosted, " ")[0])
-			t, _ := time.Parse("2006-01-02", engDate)
-			article.TimestampPosted = t.Format("January 02, 2006")
-
-			//calculating read time
-			var words int
-			var length int
-			length = len(strings.Split(article.Content, " "))
-
-			words = int(math.Ceil(float64(length) / 238))
-			article.ReadTime = words
-
+			article = formatProfileArticle(article)
 			articles = append(articles, article)
 		}
 	}
@@ -198,6 +209,9 @@ func ServeProfile(c *gin.Context) {
 		`select
             a.Title,
             a.Slug,
+            a.Subtitle,
+            a.TimestampPosted,
+            a.Content,
             u.UserID,
             u.Username
         from Article a
@@ -216,10 +230,17 @@ func ServeProfile(c *gin.Context) {
 		for rows.Next() {
 			var favorite ProfileArticle
 
-			if err := rows.Scan(&favorite.Title, &favorite.Slug, &favorite.UserID, &favorite.Username); err != nil {
+			if err := rows.Scan(&favorite.Title,
+				&favorite.Slug,
+				&favorite.Subtitle,
+				&favorite.TimestampPosted,
+				&favorite.Content,
+				&favorite.UserID,
+				&favorite.Username); err != nil {
 				return
 			}
 
+			favorite = formatProfileArticle(favorite)
 			favorites = append(favorites, favorite)
 		}
 	}

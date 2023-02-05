@@ -17,6 +17,7 @@ body {
     --animation-smoothing: cubic-bezier(0.16, 1, 0.3, 1);
     --animate-hover: color var(--animation-timing-fast) var(--animation-smoothing), background-color var(--animation-timing-fast) var(--animation-smoothing), box-shadow var(--animation-timing-fast) var(--animation-smoothing), opacity var(--animation-timing-fast) var(--animation-smoothing);
     
+    --header-height: calc(1.5 * var(--header-font-size));
 
     margin: 0;
 }
@@ -38,9 +39,19 @@ div {
     flex-direction: row;
     justify-content: space-between;
     align-content: center;
-    width: calc(100% - 2px);
+    width: 100%;
+    height: var(--header-height);
     background-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(15px);
+}
+
+.headerDummy {
+    font-size: var(--header-font-size);
+    font-family: var(--styled-font-family);
+    padding-top: 0.25em;
+    width: 100%;
+    height: var(--header-height);
+    background-color: transparent;
 }
 
 .profileImageLink {
@@ -143,10 +154,11 @@ div {
 }
 
 .dashboardImage {
-    border-radius: 50%;
-    border: 5px solid black;
-    height: 90px;
-    width: 90px;
+    border-radius: 0.5em;
+    border: 1px solid #888888;
+    height: 100%;
+    max-height: 7em;
+    width: 100%;
 }
 
 .changePFP {
@@ -168,6 +180,10 @@ div {
     align-self: center;
 }
 
+.logoLink {
+    margin: 0 0.5em;
+}
+
 .headerLink {
     font-size: var(--header-link-font-size);
     margin: 0 1em;
@@ -182,7 +198,6 @@ div {
     flex-basis: 100%;
     margin-bottom: 0.5em;
     margin-top: 2em;
-    
 }
 
 .pageContents {

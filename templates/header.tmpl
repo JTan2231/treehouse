@@ -51,17 +51,17 @@
 </script>
 
 <div class="header fixed">
-    <a class="headerLink" href="/logout">Logout</a>
     <a class="logoLink" href="/home">TREEHOUSE</a>
     <div class="profileImageLink" onmouseenter="showHeaderDropdown()" onmouseleave="hideHeaderDropdown()">
         <a id="userProfileButton">
             <img class="profileImage" />
         </a>
         <div class="headerNavDropdown">
-            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem" id="userProfileLink" >Profile</a></div>
-            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem">dropdown item</a></div>
-            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem">dropdown item</a></div>
+            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem" href="/home">Home</a></div>
+            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem" id="userProfileLink">Profile</a></div>
+            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem" href="/create-article">Write</a></div>
+            <div class="headerNavDropdownItemContainer"><a class="headerNavDropdownItem" href="/logout">Logout</a></div>
         </div>
     </div>
 </div>
-
+<div class="headerDummy"></div>

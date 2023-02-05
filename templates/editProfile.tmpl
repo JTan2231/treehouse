@@ -12,7 +12,7 @@
 const localUsername = {{ .username }};
 
 function updateProfile() {
-    if (document.getElementById("Bio").value.length > 8000) {
+    if(document.getElementById("Bio").value.length > 500) {
         alert("Bio is too long");
         return;
     }
@@ -54,7 +54,7 @@ function updateProfile() {
 
 function countChars(obj) {
     document.getElementById("charCount").innerHTML = obj.value.length;
-    if(obj.value.length > 8000) {
+    if(obj.value.length > 500) {
         document.getElementById("charCount").style.color = "red";
         document.getElementById("maxChars").style.color = "red";
     } else {
@@ -68,12 +68,28 @@ function loadFile(event) {
     image.src = URL.createObjectURL(event.target.files[0]);
 }
 
-
-
 window.onload = function checkCountOnMount() {
     const bio = document.getElementById("Bio").value;
     document.getElementById("charCount").innerHTML = bio.length;
 }
+
+
+function getHeaderProfilePic() {
+    //get request to get profile pic using fetch
+    fetch("/header-pfp", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('test')
+        document.getElementById("changePFP").src = data.profilePicURL;
+    })
+} 
+
+getHeaderProfilePic()
 
 </script>
 
@@ -87,7 +103,7 @@ window.onload = function checkCountOnMount() {
         <div class="pageTitle">
             Edit Profile
             <div style="display:flex;">
-                <img id="changePFP" class="changePFP" src="{{ .profilePicture }}">
+                <img id="changePFP" class="changePFP">
                 <input onchange="loadFile(event)" type="file" accept="image/jpeg, image/png, image/jpg">
             </div>
         </div>
@@ -98,7 +114,7 @@ window.onload = function checkCountOnMount() {
             
             <div id="charCount">0 </div>
             
-            / 8000
+            / 500
             </div>
         </div>
         <div class="articleTitleInputContainer">

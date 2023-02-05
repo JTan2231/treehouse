@@ -192,7 +192,7 @@ div {
 }
 
 .pageContentsScroll {
-    width: 30%;
+    width: 40%;
     align-self: center;
     top: var(--header-height);
     position: relative;

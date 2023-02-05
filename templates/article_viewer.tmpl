@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .title }}</title>
 </head>
+
+<link rel="stylesheet" href="/styles/root.css">
+<link rel="stylesheet" href="/styles/profile.css">
+<link rel="stylesheet" href="/styles/article_viewer.css">
+
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
     const root = {{ .API_ROOT }};
@@ -29,6 +34,31 @@
         }
     };
 
+    let timer = null;    
+    function createModal() {
+        const modal = document.getElementById("modal");
+        modal.style.display = "block";
+        modal.style.bottom = "20px";
+        modal.style.right = "20px";
+        modal.style.color = "white";
+
+        if(bookMark.src === "http://localhost:8080/assets/filledBookMark.png") {
+            modal.innerHTML = "🔖 <span style='font-family: URW Gothic L'> Article ✕ from favorites </span>";
+        } else {
+            modal.innerHTML = "🔖 <span style='font-family: URW Gothic L'> Article ✔ to favorites </span>";
+        }
+
+        if(timer) clearTimeout(timer);
+
+        timer = setTimeout(function() {
+            modal.style.transition = "all 0.5s ease-out";
+            modal.style.right = "-500px";
+            
+        }, 5000);
+        modal.style.transition = "none"
+    }
+    
+
     function onFavorite() {
         const bookMark = document.getElementById("bookMark");
             fetch("/favorite", {
@@ -50,6 +80,7 @@
                     } 
                 } 
             })
+            createModal();
     }
 
     const authorUsername = {{ .authorUsername }};
@@ -230,6 +261,8 @@
         }
     }
 
+    
+
     getComments();
 </script>
 <style>
@@ -238,9 +271,10 @@
         justify-content: space-between;
     }
 </style>
-<link rel="stylesheet" href="/styles/root.css">
-<link rel="stylesheet" href="/styles/profile.css">
-<link rel="stylesheet" href="/styles/article_viewer.css">
+
+<div class="modal" id="modal"></div>
+
+
 <body class="flexWrapperVertical">
     {{ template "header.tmpl" .}}
 

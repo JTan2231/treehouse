@@ -145,9 +145,8 @@ func addUser(user schema.User) (int64, error) {
 		defaultProfilePictureURL,
 	)
 
-	fmt.Println(profileInsert)
-
 	if profileInsertErr != nil {
+		fmt.Println(profileInsert)
 		fmt.Println(profileInsertErr)
 		return 0, fmt.Errorf("addProfile: %v", err)
 	}

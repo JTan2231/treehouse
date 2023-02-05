@@ -65,6 +65,19 @@
     font-family: var(--styled-font-family);
 }
 
+.modal {
+    display:none;
+    position:fixed;
+    bottom:100px;
+    right:100px;
+    opacity:1;
+    height:20px;
+    width:140px;
+    background-color:black;
+    padding:20px;
+    border-radius:5px;
+}
+
 .postLinkList {
     flex-basis: 100%;
 }
@@ -120,11 +133,11 @@
 
 .delete-button:hover {
     cursor: default;
-    font-weight:bold;
     border-radius: 0.5em;
     cursor:pointer;
+    border: 1px light gray
 }
-  
+
 
 .articleLinkContainer:hover .delete-button {
     visibility: visible;
@@ -152,6 +165,8 @@
 
 
 .title {
+    display:flex;
+    justify-content:space-between;
     font-size: var(--header-link-font-size);
     font-weight: bold;
     margin-bottom: 0.5em;

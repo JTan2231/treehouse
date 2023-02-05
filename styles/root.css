@@ -33,14 +33,25 @@ div {
     font-size: var(--header-font-size);
     font-family: var(--styled-font-family);
     line-height: 1em;
-    padding: 0.35em 0 0.25em 0;
-    border: var(--header-border-width) solid black;
+    padding-top: 0.25em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-content: center;
     width: calc(100% - 2px);
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+}
+
+.profileImageLink {
+    margin: 0 1em;
+    font-size: 20px;
+    align-self: center;
+    --image-dim: 2em;
+    height: var(--image-dim);
+    position: relative;
+    text-decoration: none;
+    color: black;
 }
 
 .fixed {
@@ -69,10 +80,66 @@ div {
     background-color: #dddddd;
   }
 
-.menu-trigger-image {
+.profileImage {
     border-radius: 50%;
-    height: 30px;
-    width: 30px;
+    height: var(--image-dim);
+    width: var(--image-dim);
+    opacity: 1;
+    transition: all 0.2s;
+}
+
+.profileImage:hover {
+    opacity: 0.5;
+}
+
+.headerNavDropdown {
+    --dropdown-dim: 10em;
+    background-color: white;
+    width: var(--dropdown-dim);
+    height: 0;
+    position: absolute;
+    top: calc(var(--image-dim) + 0.25em);
+    left: calc(var(--image-dim) - var(--dropdown-dim));
+    transition: height 0.4s;
+    border-radius: 0.5em;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.headerNavDropdownItemContainer {
+    --item-padding: 0.33em;
+    font-size: 18px;
+    width: 100%;
+    height: calc(1.2em + 2*var(--item-padding));
+}
+
+.headerNavDropdownItem {
+    position: relative;
+    cursor: pointer;
+    background-color: transparent;
+    z-index: 2;
+    display: block;
+    padding: var(--item-padding);
+    text-decoration: none;
+    color: black;
+    height: calc(100% - 2*var(--item-padding));
+}
+
+.headerNavDropdownItem::after {
+    content: '';
+    background-color: black;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 1;
+}
+
+.headerNavDropdownItem:hover::after {
+    opacity: 0.1;
 }
 
 .dashboardImage {
@@ -98,6 +165,7 @@ div {
 .headerLink, .logoLink {
     text-decoration: none;
     color: black;
+    align-self: center;
 }
 
 .headerLink {
@@ -171,10 +239,4 @@ div {
 .fancyLink:hover::after {
     left: 0;
     width: 100%;
-}
-
-.test {
-    background-color:black;
-    height:100px;
-    width:100px;
 }

@@ -26,7 +26,7 @@ type ProfileArticle struct {
 }
 
 type Profile struct {
-	Bio 	  string `json:"Bio"`
+	Bio        string `json:"Bio"`
 	TwitterURL string `json:"TwitterURL"`
 }
 
@@ -41,14 +41,14 @@ func GetEditProfile(c *gin.Context) {
 	db.QueryRow(`SELECT Bio, TwitterURL, ProfilePicture FROM Profile WHERE UserID = ?`, localUserID).Scan(&profile.Bio, &profile.TwitterURL, &profilePicURL)
 
 	c.HTML(http.StatusOK, "editProfile.tmpl", gin.H{
-		"username": localusername,
-		"twitterURL": profile.TwitterURL,
+		"username":       localusername,
+		"twitterURL":     profile.TwitterURL,
 		"profilePicture": profilePicURL,
-		"bio": profile.Bio,
+		"bio":            profile.Bio,
 	})
 }
 
-func EditProfile(c *gin.Context)  {
+func EditProfile(c *gin.Context) {
 	dbConn := db.GetDB()
 	session, _ := config.Store.Get(c.Request, "session")
 	userid := session.Values["userID"]
@@ -58,8 +58,7 @@ func EditProfile(c *gin.Context)  {
 
 	result, err := dbConn.Exec(`UPDATE Profile SET Bio = ?, TwitterURL = ? WHERE UserID = ?`, profile.Bio, profile.TwitterURL, userid)
 
-	
-	if(err != nil){
+	if err != nil {
 		fmt.Println(result)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Profile Update Failed",
@@ -67,8 +66,8 @@ func EditProfile(c *gin.Context)  {
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"bio" : profile.Bio,
-		"username" : session.Values["username"],
+		"bio":      profile.Bio,
+		"username": session.Values["username"],
 	})
 }
 
@@ -78,7 +77,6 @@ func GetHeaderProfilePic(c *gin.Context) {
 
 	//var username = session.Values["username"]
 	var localuserID = session.Values["userID"]
-
 
 	var profilePicURL string
 	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, localuserID).Scan(&profilePicURL)
@@ -243,19 +241,19 @@ func ServeProfile(c *gin.Context) {
 	alreadySubscribedBool = alreadySubscribedCount > 0
 
 	var profilePicURL string
-	_ = dbConn.QueryRow(`select ProfilePicture from Profile where UserID = ?`, profileUserID).Scan(&profilePicURL)
-	fmt.Println(profilePicURL)
-
 	var bio sql.NullString
-	_ = dbConn.QueryRow(`select Bio from Profile where UserID = ?`, profileUserID).Scan(&bio)
-
-
 	var twitterURL string
-	_ = dbConn.QueryRow(`select TwitterURL from Profile where UserID = ?`, profileUserID).Scan(&twitterURL)
+	row := dbConn.QueryRow(
+		`select
+            ProfilePicture,
+            Bio,
+            TwitterURL
+        from Profile where UserID = ?`, profileUserID)
 
+	row.Scan(&profilePicURL, &bio, &twitterURL)
 
 	var twitterCheck bool
-	if(twitterURL == "") {
+	if twitterURL == "" {
 		twitterCheck = false
 	} else {
 		twitterCheck = true
@@ -271,9 +269,9 @@ func ServeProfile(c *gin.Context) {
 		"user_id":           profileUserID,
 		"check":             check,
 		"alreadySubscribed": alreadySubscribedBool,
-		"profilePicURL" : profilePicURL,
-		"bio" : bio.String,
-		"twitterURL" : twitterURL,
-		"twitterCheck" : twitterCheck,
+		"profilePicURL":     profilePicURL,
+		"bio":               bio.String,
+		"twitterURL":        twitterURL,
+		"twitterCheck":      twitterCheck,
 	})
 }

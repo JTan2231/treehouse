@@ -30,6 +30,11 @@ type Profile struct {
 	TwitterURL string `json:"TwitterURL"`
 }
 
+type Subscriber struct {
+	Username string `json:"username"`
+	Picture string  `json:"picture"`
+}
+
 func GetEditProfile(c *gin.Context) {
 	db := db.GetDB()
 	session, _ := config.Store.Get(c.Request, "session")
@@ -181,23 +186,25 @@ func ServeProfile(c *gin.Context) {
 
 	rows, err = dbConn.Query(
 		`select
-            u.Username
+            u.Username,
+			p.ProfilePicture
         from User u
-        inner join Subscribe s on s.SubscriberID = ? and u.UserID = s.SubscribeeID`, profileUserID)
+        inner join Subscribe s on s.SubscriberID = ? and u.UserID = s.SubscribeeID
+		inner join Profile p on p.UserID = s.SubscribeeID`, profileUserID)
 
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"errors": err})
 		return
 	}
 
-	var subscriptions []string
+	var subscriptions []Subscriber
 
 	if rows != nil {
 		defer rows.Close()
 		for rows.Next() {
-			var subscription string
+			var subscription Subscriber
 
-			if err := rows.Scan(&subscription); err != nil {
+			if err := rows.Scan(&subscription.Username, &subscription.Picture); err != nil {
 				return
 			}
 

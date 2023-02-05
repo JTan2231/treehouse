@@ -144,7 +144,10 @@
                 <div class="listHeader">Subscriptions</div>
                 {{ range $s := .subscriptions }}
                     <div class="linkContainer">
-                        <a class="articleLink" href="/{{ $s }}">{{ $s }}</a>
+                        <div style="display:flex; cursor:pointer;"> 
+                            <img class="subscribeImage" src="{{ $s.Picture }}">
+                            <a class="articleLink" href="/{{ $s.Username }}">{{ $s.Username }}</a>
+                        </div>
                     </div>
                 {{ end }}
             </div>

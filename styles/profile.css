@@ -135,11 +135,21 @@
     flex-basis: 100%;
 }
 
+.subscribeImage {
+    width: 4em;
+    height: 4em;
+    margin-right: 0.5em;
+}
+
 .linkContainer, .listHeader {
     position: relative;
     padding: 0.5em 0;
     width: calc(100% - 0.5em);
     border-bottom: 1px solid black;
+}
+
+.linkContainer:hover {
+    background-color: #eee;
 }
 
 .articleContainer {
@@ -223,6 +233,13 @@
     visibility: visible;
 }
 
+.subscriberContainer {
+    position: relative;
+    cursor:pointer;
+    padding: 0.5em 0;
+    width: calc(100% - 0.5em);
+    border-bottom: 1px solid black;
+}
 
 
 .articleLink::after {
@@ -237,6 +254,7 @@
     opacity: 0;
     transition: all 0.2s;
 }
+
 
 .articleLink:hover::after {
     opacity: 1;

@@ -43,9 +43,22 @@
     height:2rem;
 }
 
+.modal {
+    display:none;
+    position:fixed;
+    bottom:100px;
+    right:100px;
+    opacity:1;
+    height:20px;
+    width:215px;
+    background-color:black;
+    padding:20px;
+    border-radius:5px;
+}
+
 .bookmark:hover {
     cursor: pointer;
-    border: 1px solid lightgray;
+    outline: 1px solid lightgray;
     box-sizing: border-box;
 }
 

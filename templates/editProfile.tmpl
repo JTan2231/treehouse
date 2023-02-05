@@ -75,12 +75,28 @@ function loadFile(event) {
     image.src = URL.createObjectURL(event.target.files[0]);
 }
 
-
-
 window.onload = function checkCountOnMount() {
     const bio = document.getElementById("Bio").value;
     document.getElementById("charCount").innerHTML = bio.length;
 }
+
+
+function getHeaderProfilePic() {
+    //get request to get profile pic using fetch
+    fetch("/header-pfp", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('test')
+        document.getElementById("changePFP").src = data.profilePicURL;
+    })
+} 
+
+getHeaderProfilePic()
 
 </script>
 
@@ -94,7 +110,7 @@ window.onload = function checkCountOnMount() {
         <div class="pageTitle">
             Edit Profile
             <div style="display:flex;">
-                <img id="changePFP" class="changePFP" src="{{ .profilePicture }}">
+                <img id="changePFP" class="changePFP">
                 <input onchange="loadFile(event)" type="file" accept="image/jpeg, image/png, image/jpg">
             </div>
         </div>

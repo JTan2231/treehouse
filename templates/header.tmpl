@@ -13,7 +13,6 @@
         .then(data => {
             console.log('test')
             document.querySelector(".menu-trigger-image").src = data.profilePicURL;
-            
         })
     } 
 
@@ -29,6 +28,8 @@
             document.getElementById("userProfileButton").href = `/${data.username}`;
         })
     }
+
+    
 
     getHeaderProfilePic();
     getLocalUserName();

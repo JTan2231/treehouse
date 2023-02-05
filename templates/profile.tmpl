@@ -30,6 +30,27 @@
         });
     }
 
+    let timer = null;    
+    function createModal() {
+        const modal = document.getElementById("modal");
+        modal.style.display = "block";
+        modal.style.bottom = "20px";
+        modal.style.right = "20px";
+        modal.style.color = "white";
+
+        modal.innerHTML = "❌ <span style='font-family: URW Gothic L'> Article Deleted </span>";
+        
+
+        if(timer) clearTimeout(timer);
+
+        timer = setTimeout(function() {
+            modal.style.transition = "all 0.5s ease-out";
+            modal.style.right = "-500px";
+            
+        }, 5000);
+        modal.style.transition = "none"
+    }
+
 
     function deleteArticle(element, event) {
         event.preventDefault();
@@ -43,16 +64,20 @@
             headers: {
                 "Content-Type": "application/json",
             }
-        }).then(res => res.json()).then(res => {
-            alert(res.message);
-        });
+        })
 
         grandparent.remove();
+        createModal();
     }
+
+    
 
 </script>
 <link rel="stylesheet" href="/styles/root.css">
 <link rel="stylesheet" href="/styles/profile.css">
+
+<div class="modal" id="modal"></div>
+
 <body class="flexWrapperVertical">
     {{ template "header.tmpl" .}}
 

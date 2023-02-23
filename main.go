@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"treehouse/config"
 	"treehouse/db"
 	"treehouse/routes"
 )
@@ -55,5 +54,5 @@ func main() {
 	authRouter.POST("/articles", routes.CreateArticle)
 	authRouter.POST("/delete-article", routes.DeleteArticle)
 
-	router.Run(config.DOMAIN)
+	router.Run()
 }

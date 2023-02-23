@@ -13,11 +13,11 @@ var initialized = false
 
 func InitDB() {
 	config := mysql.Config{
-		User:                 os.Getenv("DBUSER"),
-		Passwd:               os.Getenv("DBPASS"),
+		User:                 os.Getenv("RDS_USERNAME"),
+		Passwd:               os.Getenv("RDS_PASSWORD"),
 		Net:                  "tcp",
-		Addr:                 "127.0.0.1:3306",
-		DBName:               "treehouse",
+		Addr:                 os.Getenv("RDS_HOSTNAME") + ":" + os.Getenv("RDS_PORT"),
+		DBName:               os.Getenv("RDS_DB_NAME"),
 		AllowNativePasswords: true,
 	}
 

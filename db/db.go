@@ -16,7 +16,7 @@ func InitDB() {
 		User:                 os.Getenv("MYSQLUSER"),
 		Passwd:               os.Getenv("MYSQLPASSWORD"),
 		Net:                  "tcp",
-		Addr:                 os.Getenv("MYSQL_URL"),
+		Addr:                 os.Getenv("MYSQLHOST") + ":" + os.Getenv("MYSQLPORT"),
 		DBName:               os.Getenv("MYSQLDATABASE"),
 		AllowNativePasswords: true,
 	}
